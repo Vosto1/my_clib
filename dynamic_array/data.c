@@ -1,11 +1,7 @@
 #include "data.h"
 
-resultType compareData(Data x, Data y) {
-    return x.value - y.value;
-}
-
-void printData(size_t used, Data a[]) {
-    for (int i = 0; i < used; i++) {
-        printf("value at %d: %d\n", i, a[i].value);
-    } printf("\n");
+int compareItems(void* i1, void* i2) {
+    Item* item1 = (Item*)i1;
+    Item* item2 = (Item*)i2;
+    return item1->value - item2->value;
 }

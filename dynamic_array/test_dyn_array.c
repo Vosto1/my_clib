@@ -8,6 +8,10 @@
 #include <stdlib.h>
 #include <assert.h>
 
+// datatype -->
+#include "data.h"
+// datatype <--
+
 typedef struct {
     int used;
     int size;
@@ -43,22 +47,40 @@ void print_status(stats stat) {
     printf("-------------------------\n\n");
 }
 
+Item* createItem(int value) {
+    Item* item = (Item*)malloc(sizeof(Item));
+    item->value = value;
+    return item;
+}
+
+void printData(array* a) {
+    Item* item;
+    for (int i = 0; i < a->used; i++) {
+        item = (Item*)a->array[i];
+        printf("value at %d: %d\n", i, item->value);
+    }
+    printf("used: %d\nsize: %d\n\n", a->used, a->size);
+}
+
 void insert_n(array * a, int n) {
-    ErrorCode e;
-    Item item;
+    size_t e;
+    Item* item;
     for (int j = 0; j < n; j++) {
-        item.value = rand() % 1000;
-        e = arrayInsert(a, item);
-        errorHandler(e);
+        item = createItem(rand() % 1000);
+        e = a->used + 1;
+        assert(arrayInsert(a, (void*)item) == e);
+        errorHandler();
     }
     assert(a->used == n);
 }
 
 void remove_all(array* a) {
-    ErrorCode e;
+    Item* d;
     for (int j = 0; a->used != 0; j++) {
-        e = arrayRemoveLast(a);
-        errorHandler(e);
+        d = (Item*)arrayRemoveLast(a);
+        assert(d != NULL);
+        free(d);
+        errorHandler();
     }
     assert(a->used == 0);
 }
@@ -69,13 +91,14 @@ void auto_tests(int n, int mod) {
     assert(a.size == 0);
     assert(a.used == 0);
 
-    ErrorCode e = initDynamicArray(&a, 10);
-    errorHandler(e);
+    assert(initDynamicArray(&a, 10, &compareItems) == 10);
+    errorHandler();
     assert(a.array != NULL);
     assert(a.size == 10);
     assert(a.used == 0);
 
     Item item;
+    Item* d;
     srand(time(0));
     stats stat;
     test_result test_r;
@@ -92,9 +115,9 @@ void auto_tests(int n, int mod) {
                 sprintf(operation, "insert item");
                 start = now();
                 for (int j = 0; j < next_tests; j++) {
-                    item.value = rand() % 1000;
-                    e = arrayInsert(&a, item);
-                    errorHandler(e);
+                    d = createItem(rand() % 1000);
+                    assert(arrayInsert(&a, (void*)d) != -1);
+                    errorHandler();
                 }
                 end = now();
                 remove_all(&a);
@@ -104,8 +127,10 @@ void auto_tests(int n, int mod) {
                 insert_n(&a, next_tests);
                 start = now();
                 for (int j = 0; j < next_tests; j++) {
-                    e = arrayRemoveItem(&a, a.array[rand() % a.used]);
-                    errorHandler(e);
+                    d = (Item*)arrayRemoveItem(&a, a.array[rand() % a.used]);
+                    assert(d != NULL);
+                    free(d);
+                    errorHandler();
                 }
                 end = now();
             break;
@@ -114,8 +139,10 @@ void auto_tests(int n, int mod) {
                 insert_n(&a, next_tests);
                 start = now();
                 for (int j = 0; j < next_tests; j++) {
-                    e = arrayRemoveAt(&a, rand() % a.used);
-                    errorHandler(e);
+                    d = (Item*)arrayRemoveAt(&a, rand() % a.used);
+                    assert(d != NULL);
+                    free(d);
+                    errorHandler();
                 }
                 end = now();
             break;
@@ -124,8 +151,10 @@ void auto_tests(int n, int mod) {
                 insert_n(&a, next_tests);
                 start = now();
                 for (int j = 0; j < next_tests; j++) {
-                    e = arrayRemoveLast(&a);
-                    errorHandler(e);
+                    d = (Item*)arrayRemoveLast(&a);
+                    assert(d != NULL);
+                    free(d);
+                    errorHandler();
                 }
                 end = now();
             break;
@@ -134,21 +163,21 @@ void auto_tests(int n, int mod) {
                 start = now();
                 for (int j = 0; j < next_tests; j++) {
                     int size = rand() % 100;
-                    Data* b = (Data*)malloc(sizeof(Data)*size);
+                    Item** b = (Item**)malloc(sizeof(Item*)*size);
                     if (!b) {
                         printf("malloc error in test function.\n");
                         exit(-100);
                     }
                     for (int k = 0; k < size; k++)
-                        b[k].value = rand() % 1000;
+                        b[k] = createItem(rand() % 1000);
                     dynamicArray c = createEmptyDynamicArray();
-                    e = initDynamicArray(&c, size);
-                    errorHandler(e);
-                    e = convert(b, &c, size);
-                    errorHandler(e);
+                    assert(initDynamicArray(&c, size, &compareItems) == size);
+                    errorHandler();
+                    assert(convert(&c, (void*)b, size, &compareItems) == size);
+                    errorHandler();
+                    assert(arrayUnion(&a, &c) != -1);
+                    errorHandler();
                     free(b);
-                    e = arrayUnion(&a, &c);
-                    errorHandler(e);
                 }
                 end = now();
                 remove_all(&a);
@@ -167,78 +196,91 @@ void auto_tests(int n, int mod) {
 
 void test_sequence() {
     Item item;
+    Item* itemptr;
 
     array a = createEmptyDynamicArray();
     assert(a.array == NULL);
     assert(a.size == 0);
     assert(a.used == 0);
 
-    ErrorCode e = initDynamicArray(&a, 10);
-    errorHandler(e);
+    assert(initDynamicArray(&a, 10, &compareItems) != -1);
+    errorHandler();
     assert(a.array != NULL);
     assert(a.size == 10);
     assert(a.used == 0);
 
     for (int i = 0; i < 10; i++) {
-        item.value = i;
-        e = arrayInsert(&a, item);
-        errorHandler(e);
+        itemptr = createItem(i);
+        assert(arrayInsert(&a, (void*)itemptr) != -1);
+        errorHandler();
         assert(a.used == (i + 1));
-        assert(a.array[i].value == i);
+        itemptr = (Item*)a.array[i];
+        assert(itemptr->value == i);
     }
 
-    printData(a.used, a.array);
-    printf("%d\n\n", a.used);
+    printData(&a);
 
     for (int i = 0; i < 5; i++) {
-        item.value = (i + a.used);
-        e = arrayInsert(&a, item);
-        errorHandler(e);
+        itemptr = createItem(i + a.used);
+        assert(arrayInsert(&a, (void*)itemptr) != -1);
+        errorHandler();
+        itemptr = (Item*)a.array[a.used - 1];
+        assert(itemptr->value == i + (a.used - 1));
     }
     assert(a.size == 20);
     assert(a.used == 15);
 
-    printData(a.used, a.array);
-    printf("%d\n\n", a.used);
+    printData(&a);
     
-    item.value = 1;
-    arrayInsert(&a, item);
+    itemptr = createItem(1);
+    assert(arrayInsert(&a, (void*)itemptr) != -1);
 
-    item.value = 2;
-    arrayInsert(&a, item);
+    itemptr = createItem(2);
+    assert(arrayInsert(&a, (void*)itemptr) != -1);
 
-    item.value = 3;
-    arrayInsert(&a, item);
+    itemptr = createItem(3);
+    assert(arrayInsert(&a, (void*)itemptr) != -1);
 
-    item.value = 4;
-    arrayInsert(&a, item);
+    itemptr = createItem(4);
+    assert(arrayInsert(&a, (void*)itemptr) != -1);
 
-    item.value = 5;
-    arrayInsert(&a, item);
+    printData(&a);
+    printf("%d %d\n\n", a.used, a.size);
+
+    itemptr = createItem(5);
+    assert(arrayInsert(&a, (void*)itemptr) != -1);
     for (int i = a.used; i > 5; i--) {
-        arrayRemoveLast(&a);
+        itemptr = (Item*)arrayRemoveLast(&a);
+        assert(itemptr != NULL);
+        free(itemptr);
         assert(a.used == (i - 1));
     }
     assert(a.size == 10);
 
-    printData(a.used, a.array);
-    printf("%d\n\n", a.used);
+    printData(&a);
 
     item.value = 4;
-    arrayRemoveItem(&a, item);
+    itemptr = (Item*)arrayRemoveItem(&a, (void*)&item);
+    assert(itemptr != NULL);
+    assert(itemptr->value == item.value);
+    free(itemptr);
 
     item.value = 2;
-    arrayRemoveItem(&a, item);
+    itemptr = (Item*)arrayRemoveItem(&a, (void*)&item);
+    assert(itemptr != NULL);
+    assert(itemptr->value == item.value);
+    free(itemptr);
     assert(a.used == 3);
     
-    printData(a.used, a.array);
-    printf("%d\n\n", a.used);
-
-    arrayRemoveAt(&a, 0);
+    printData(&a);
+    
+    itemptr = (Item*)arrayRemoveAt(&a, 0);
+    assert(itemptr != NULL);
+    assert(itemptr->value == 0);
+    free(itemptr);
     assert(a.size == 5);
 
-    printData(a.used, a.array);
-    printf("%d\n\n", a.used);
+    printData(&a);
 
     freeArray(&a);
     printf("Tests passed.\n");

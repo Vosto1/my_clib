@@ -3,22 +3,24 @@
 dynamicArray createEmptyDynamicArray() {
     dynamicArray a;
     a.array = NULL;
+    a.compare = NULL;
     a.size = 0;
     a.used = 0;
     return a;
 }
 
-size_t initDynamicArray(dynamicArray* a, size_t initSize) {
+size_t initDynamicArray(dynamicArray* a, size_t initSize, int (*compare)(Data a, Data b)) {
     a->size = 0;
     a->used = 0;
     Data* temp;
-    temp = (Data*)malloc(sizeof(Data)*initSize);
+    temp = (void**)malloc(sizeof(Data)*initSize);
     if (temp != NULL) {
         a->array = temp;
         a->size = initSize;
+        a->compare = compare;
         return initSize;
     } else {
-        a->array = NULL;
+        *a = createEmptyDynamicArray();
         errcset(EMEM_ALLOC);
         return -1;
     }
@@ -45,7 +47,6 @@ size_t arrayInsert(dynamicArray* a, Data item) {
         temp = (Data*)realloc(a->array, sizeof(Data)*a->size);
         if (temp != NULL) {
             a->array = temp;
-            return a->used;
         } else {
             errcset(EMEM_IREALLOC);
             return -1;
@@ -56,45 +57,49 @@ size_t arrayInsert(dynamicArray* a, Data item) {
     return a->used;
 }
 
-size_t arrayRemoveLast(dynamicArray* a) {
-    if (a->used != 0) {
-        a->used -= 1;
-    } else {
+Data* arrayRemoveLast(dynamicArray* a) {
+    if (a->used == 0) {
         errcset(EARR_EMPTY);
-        return -1;
+        return NULL;
     }
+    a->used -= 1;
     MEM m = memoryDecrease(a);
-    if (m =! NMEM_DECREASE) {
-        return a->used;
+    if (m != NMEM_DECREASE) {
+        Data* data = a->array[a->used];
+        return data;
     } else {
-        return -1;
+        a->used += 1; // rollback
+        return NULL;
     }
 }
 
-size_t arrayRemoveItem(dynamicArray* a, Data item) {
+Data* arrayRemoveItem(dynamicArray* a, Data item) {
     for (int i = 0; i < a->used; i++) {
-        if (compareData(item, a->array[i]) == 0) { // compare with user defined compareData function
+        if ((*a->compare)(item, a->array[i]) == 0) { // compare with user defined compareData function
             return arrayRemoveAt(a, i);
         }
     }
     errcset(EDATA_NEXIST);
-    return -1;
+    return NULL;
 }
 
-int arrayRemoveAt(dynamicArray* a, int index) {
+Data* arrayRemoveAt(dynamicArray* a, int index) {
     if (index > a->used) {
         errcset(EINDEX_OUT_OF_BOUNDS);
-        return -1;
+        return NULL;
     }
+    Data* data = a->array[index];
     for (int i = index; i < a->used; i++) {
         a->array[i] = a->array[i + 1];
     }
     a->used -= 1;
     MEM m = memoryDecrease(a);
-    if (m =! NMEM_DECREASE) {
-        return index;
+    if (m != NMEM_DECREASE) {
+        return data;
     } else {
-        return -1;
+        a->used += 1; // rollback
+        a->array[a->used] = data; // rollback
+        return NULL;
     }
 }
 
@@ -113,18 +118,18 @@ MEM memoryDecrease(dynamicArray* a) {
             return NMEM_DECREASE;
         }
     }
-    return MEM_MS_REACHED;
+    return MEM_MS_REACHED_NO_NEED;
 } 
 
-size_t convert(Data b[], dynamicArray* a, size_t size) {
+size_t convert(dynamicArray* a, Data b[], size_t bsize, int (*compare)(Data a, Data b)) {
     *a = createEmptyDynamicArray();
-    if(initDynamicArray(a, size) != size) {
+    if(initDynamicArray(a, bsize, compare) != bsize) {
         return -1;
     } 
-    for (int i = 0; i < size; i++) {
+    for (int i = 0; i < bsize; i++) {
         arrayInsert(a, b[i]);
     }
-    return size;
+    return bsize;
 }
 
 size_t arrayUnion(dynamicArray* a, dynamicArray* b) {
