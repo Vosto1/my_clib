@@ -26,6 +26,7 @@
  * function from the user to be able to function correctly.
  * The void* pointer is typedefed to Data to make it easier to read.
  */
+
 typedef void* Data;
 typedef unsigned long long size_t;
 
@@ -39,7 +40,7 @@ typedef struct {
     Data* array;
     size_t size;
     size_t used;
-    int (*compare)(Data a, Data b);
+    int (*compare)(Data x, Data y);
 }dynamicArray;
 
 typedef dynamicArray array;
@@ -58,7 +59,7 @@ dynamicArray createEmptyDynamicArray();
  */
 size_t initDynamicArray(dynamicArray* a, size_t initSize, int (*compare)(Data a, Data b));
 /**
- * free allocated memory for the dynamic array
+ * remove (free) all items in array and then free allocated memory for the dynamic array
  * 
  * @param a array to free
  */
@@ -77,7 +78,7 @@ size_t arrayInsert(dynamicArray* a, Data item);
  * @param a array to remove from
  * @return a pointer to the removed item
  */
-Data* arrayRemoveLast(dynamicArray* a);
+Data arrayRemoveLast(dynamicArray* a);
 /**
  * remove a specific item from the dynamic array
  * 
@@ -85,7 +86,7 @@ Data* arrayRemoveLast(dynamicArray* a);
  * @param item item to remove
  * @return a pointer to the removed item
  */
-Data* arrayRemoveItem(dynamicArray* a, Data item);
+Data arrayRemoveItem(dynamicArray* a, Data item);
 /**
  * remove an item at a specific index from the dynamic array
  * 
@@ -93,7 +94,7 @@ Data* arrayRemoveItem(dynamicArray* a, Data item);
  * @param index index to remove item from
  * @return a pointer to the removed item
  */
-Data* arrayRemoveAt(dynamicArray* a, int index);
+Data arrayRemoveAt(dynamicArray* a, int index);
 /**
  * checks if the memory should be halved and does so if check is positive
  * 
@@ -120,15 +121,29 @@ size_t convert(dynamicArray* a, Data b[], size_t bsize, int (*compare)(Data a, D
  */
 size_t arrayUnion(dynamicArray* a, dynamicArray* b); // add array b on the end of array a O(n)
 /**
- * remove all items in the array
+ * remove (free) all items in the array
  * 
  * @param a array to remove from
  * @return the amount of items that was removed
  */
 size_t arrayClear(array* a);
+/**
+ * check if the dynamic array is uninitialized
+ * 
+ * @param a array to try
+ * @return true if a.array == NULL
+ */
+bool a_is_null(array* a);
+/**
+ * check if the dynamic array is empty
+ * 
+ * @param a array to try
+ * @return true if a.used == 0
+ */
+bool a_is_empty(array* a);
 
 // framtida funktioner
-ErrorCode find(Data item, int* index); // return index (by ref) error if not exists
+int find(Data item); // return index error if not exists
 bool exists(Data item); // returns true if item exists in the array
 
 #endif

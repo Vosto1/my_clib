@@ -13,7 +13,7 @@ size_t initDynamicArray(dynamicArray* a, size_t initSize, int (*compare)(Data a,
     a->size = 0;
     a->used = 0;
     Data* temp;
-    temp = (void**)malloc(sizeof(Data)*initSize);
+    temp = (Data*)malloc(sizeof(Data)*initSize);
     if (temp != NULL) {
         a->array = temp;
         a->size = initSize;
@@ -27,7 +27,9 @@ size_t initDynamicArray(dynamicArray* a, size_t initSize, int (*compare)(Data a,
 }
 
 void freeArray(dynamicArray* a) {
-    if (a->array != NULL) {
+    if (!a_is_null(a)) {
+        if (!a_is_empty(a))
+            arrayClear(a);
         free(a->array);
         *a = createEmptyDynamicArray();
     } else {
@@ -57,15 +59,15 @@ size_t arrayInsert(dynamicArray* a, Data item) {
     return a->used;
 }
 
-Data* arrayRemoveLast(dynamicArray* a) {
-    if (a->used == 0) {
+Data arrayRemoveLast(dynamicArray* a) {
+    if (a_is_empty(a)) {
         errcset(EARR_EMPTY);
         return NULL;
     }
     a->used -= 1;
     MEM m = memoryDecrease(a);
     if (m != NMEM_DECREASE) {
-        Data* data = a->array[a->used];
+        Data data = a->array[a->used];
         return data;
     } else {
         a->used += 1; // rollback
@@ -73,9 +75,9 @@ Data* arrayRemoveLast(dynamicArray* a) {
     }
 }
 
-Data* arrayRemoveItem(dynamicArray* a, Data item) {
+Data arrayRemoveItem(dynamicArray* a, Data item) {
     for (int i = 0; i < a->used; i++) {
-        if ((*a->compare)(item, a->array[i]) == 0) { // compare with user defined compareData function
+        if ((*a->compare)(item, a->array[i]) == 0) { // compare with user defined function
             return arrayRemoveAt(a, i);
         }
     }
@@ -83,7 +85,7 @@ Data* arrayRemoveItem(dynamicArray* a, Data item) {
     return NULL;
 }
 
-Data* arrayRemoveAt(dynamicArray* a, int index) {
+Data arrayRemoveAt(dynamicArray* a, int index) {
     if (index > a->used) {
         errcset(EINDEX_OUT_OF_BOUNDS);
         return NULL;
@@ -140,19 +142,35 @@ size_t arrayUnion(dynamicArray* a, dynamicArray* b) {
     for (int i = 0; i < b->used; i++) {
         arrayInsert(a, b->array[i]);
     }
-    freeArray(b);
+    // free only array not the elements (freeArray frees all items in the array as well)
+    free(b->array);
+    b->size = 0;
+    b->used = 0;
     b->array = NULL;
     return a->size;
 }
 
 size_t arrayClear(array* a) {
-    if(a == NULL) {
+    if(a_is_empty(a)) {
         errcset(EARR_EMPTY);
+        return -1;
+    } else if (a_is_null(a)) {
+        errcset(ENULL_ARG);
         return -1;
     }
     int amount = a->used;
+    Data d;
     for (int i = 0; i < amount; i++) {
-        arrayRemoveLast(a);
+        d = arrayRemoveLast(a);
+        free(d);
     }
     return amount;
+}
+
+bool a_is_null(array* a) {
+    return a->array == NULL;
+}
+
+bool a_is_empty(array* a) {
+    return a->used == 0;
 }

@@ -75,13 +75,7 @@ void insert_n(array * a, int n) {
 }
 
 void remove_all(array* a) {
-    Item* d;
-    for (int j = 0; a->used != 0; j++) {
-        d = (Item*)arrayRemoveLast(a);
-        assert(d != NULL);
-        free(d);
-        errorHandler();
-    }
+    arrayClear(a);
     assert(a->used == 0);
 }
 
@@ -107,7 +101,7 @@ void auto_tests(int n, int mod) {
     char operation[64];
 
     for (int i = 0; i < n; i++) {
-        int next_tests = rand() % mod;
+        int next_tests = rand() % mod + 1;
         int type = rand() % 5;
         
         switch (type) {
@@ -159,10 +153,10 @@ void auto_tests(int n, int mod) {
                 end = now();
             break;
             case 4:
-                sprintf(operation, "convert + union");
                 start = now();
+                unsigned long long operations = 0;
                 for (int j = 0; j < next_tests; j++) {
-                    int size = rand() % 100;
+                    int size = rand() % 100 + 1;
                     Item** b = (Item**)malloc(sizeof(Item*)*size);
                     if (!b) {
                         printf("malloc error in test function.\n");
@@ -174,13 +168,15 @@ void auto_tests(int n, int mod) {
                     assert(initDynamicArray(&c, size, &compareItems) == size);
                     errorHandler();
                     assert(convert(&c, (void*)b, size, &compareItems) == size);
+                    free(b);
                     errorHandler();
                     assert(arrayUnion(&a, &c) != -1);
                     errorHandler();
-                    free(b);
+                    operations += size + size;
                 }
                 end = now();
                 remove_all(&a);
+                sprintf(operation, "convert + union (%lld insertions)", operations);
             break;
         }
         end = now();
@@ -282,13 +278,17 @@ void test_sequence() {
 
     printData(&a);
 
+    assert(arrayClear(&a) != -1);
+    assert(a.used == 0);
+
     freeArray(&a);
+    assert(a.array == NULL);
     printf("Tests passed.\n");
 }
 
 // dyn array test
 int main(void) {
     //test_sequence();
-    auto_tests(100, 1000000);
+    auto_tests(100, 100000);
     return SUCCESS;
 }

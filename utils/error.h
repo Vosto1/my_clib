@@ -6,12 +6,6 @@
 
 #define errc errcget()
 
-/* if (errcget() == SUCCESS) {
-        return initSize;
-    } else {
-        errcset("error code here");
-    } */
-
 typedef enum ErrorCodes {
     SUCCESS = 0,
     EMEM_ALLOC = 1,
@@ -22,13 +16,14 @@ typedef enum ErrorCodes {
     EDATA_NEXIST = 6,
     EARR_EMPTY = 7,
     ENULL_ARG = 8,
-    ENEW_KEY = 9,
-    EH_DATA_DOESNT_EXIST = 10,
-    EPQ_EMPTY = 11,
-    EWRITE_BINARY = 12,
-    EFILE_OPENWRITE = 13,
-    EFILE_OPENREAD = 14,
-    EARR_INDEX_OCCUPIED = 15,
+    EWRITE_BINARY = 9,
+    EFILE_OPENWRITE = 10,
+    EFILE_OPENREAD = 11,
+    EARR_INDEX_OCCUPIED = 12,
+    EHNEW_KEY = 13,
+    EH_DATA_DOESNT_EXIST = 14,
+    EHEAP_EMPTY = 15,
+    EPQ_EMPTY = -1,
 }ErrorCode;
 
 /**

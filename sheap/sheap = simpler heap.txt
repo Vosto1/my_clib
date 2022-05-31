@@ -1,0 +1,6 @@
+remove some functionality
+only keep:
+peek (_min)
+extract min
+insert
+(+ freeHeap and other utilities ofc)
