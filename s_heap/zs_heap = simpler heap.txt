@@ -1,4 +1,4 @@
-remove some functionality
+remove some functionality from the original heap
 only keep:
 peek (_min)
 extract min

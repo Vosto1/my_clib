@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "dynamic_array.h": "c",
+        "stdbool.h": "c",
+        "userdefined.h": "c"
+    }
+}

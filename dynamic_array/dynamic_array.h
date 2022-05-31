@@ -124,7 +124,7 @@ size_t arrayUnion(dynamicArray* a, dynamicArray* b); // add array b on the end o
  * remove (free) all items in the array
  * 
  * @param a array to remove from
- * @return the amount of items that was removed
+ * @return the amount of items that was removed or -1 if something went wrong
  */
 size_t arrayClear(array* a);
 /**

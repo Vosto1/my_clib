@@ -1,0 +1,57 @@
+---------------------------------------------
+--------         Bubble sort        ---------
+---------------------------------------------
+
+Osorterat: 
+  10 element:    68 jämförelser,     6 byten
+  20 element:   400 jämförelser,   113 byten
+  40 element:  1634 jämförelser,   474 byten
+
+Sorterat: 
+  10 element:    20 jämförelser,     0 byten
+  20 element:    40 jämförelser,     0 byten
+  40 element:    80 jämförelser,     0 byten
+
+Bakåtsorterat: 
+  10 element:   110 jämförelser,    45 byten
+  20 element:   420 jämförelser,   190 byten
+  40 element:  1640 jämförelser,   780 byten
+
+---------------------------------------------
+--------       Insertion sort       ---------
+---------------------------------------------
+
+Osorterat: 
+  10 element:    41 jämförelser,     6 byten
+  20 element:   282 jämförelser,   113 byten
+  40 element:  1066 jämförelser,   474 byten
+
+Sorterat: 
+  10 element:    30 jämförelser,     0 byten
+  20 element:    60 jämförelser,     0 byten
+  40 element:   120 jämförelser,     0 byten
+
+Bakåtsorterat: 
+  10 element:   111 jämförelser,    45 byten
+  20 element:   421 jämförelser,   190 byten
+  40 element:  1641 jämförelser,   780 byten
+
+---------------------------------------------
+--------         Merge sort         ---------
+---------------------------------------------
+
+Osorterat: 
+  10 element:   209 jämförelser,    34 byten
+  20 element:   537 jämförelser,    88 byten
+  40 element:  1282 jämförelser,   216 byten
+
+Sorterat: 
+  10 element:   203 jämförelser,    34 byten
+  20 element:   493 jämförelser,    88 byten
+  40 element:  1153 jämförelser,   216 byten
+
+Bakåtsorterat: 
+  10 element:   204 jämförelser,    34 byten
+  20 element:   496 jämförelser,    88 byten
+  40 element:  1160 jämförelser,   216 byten
+
