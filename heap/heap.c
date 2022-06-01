@@ -88,6 +88,10 @@ Data heapRemove(heap* h, Data item) {
 * The item is also removed from the heap
 */
 Data extractMin(heap* h) {
+    if (h_is_null(h)) {
+        errcset(EHEAP_NULL);
+        return NULL;
+    }
     if (h_is_empty(h)) {
         errcset(EHEAP_EMPTY);
         return NULL;

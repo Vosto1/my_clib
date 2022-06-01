@@ -23,7 +23,7 @@ typedef unsigned long long size_t;
  * dynamic memory. The void* pointer is typedefed to Data to
  * make it easier to read.
  * 
- * To enable testing functions define _HEAP_TESTING_
+ * To enable testing functions define __TESTING__
  * 
  * The data structure needs a couple of functions defined
  * by the user to function correctly.
@@ -31,7 +31,8 @@ typedef unsigned long long size_t;
  * - Data to Data comparison (compare)
  * It should return 1 when the left value is bigger
  * than the right value, -1 when the opposite is true and
- * 0 when they are equal.
+ * 0 when they are equal. It it up to the user to define
+ * how you want to sort your items but this is the default way.
  * 
  * - update key of an element (setKey)
  * It should take an in variable "key" and an out variable "item"
@@ -133,7 +134,7 @@ Data heapRemove(heap* h, Data item);
  * @brief extracts the top item (with the smallest key) and removes it from the heap
  * 
  * @param h heap to extract from
- * @return a pointer to the extracted item
+ * @return a pointer to the extracted item or null if something went wrong
  */
 Data extractMin(heap* h);
 /**
@@ -161,7 +162,7 @@ heap buildMinHeap(Data* unorderedList,
                 Data (*setKey)(Data x, Data key),
                 void (*minKey)(Data base, Data* out));
 
-#ifdef _HEAP_TESTING_
+#ifdef __TESTING__
 /**
  * @brief tests the integrity of the heap
  * 

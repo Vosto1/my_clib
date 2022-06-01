@@ -23,7 +23,8 @@ typedef enum ErrorCodes {
     EHNEW_KEY = 13,
     EH_DATA_DOESNT_EXIST = 14,
     EHEAP_EMPTY = 15,
-    EHNEWKEY_NOT_SET = 16,
+    EHEAP_NULL = 16,
+    EHNEWKEY_NOT_SET = 17,
     EPQ_EMPTY = -1,
 }ErrorCode;
 

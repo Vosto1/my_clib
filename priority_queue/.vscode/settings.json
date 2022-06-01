@@ -1,6 +1,7 @@
 {
     "files.associations": {
         "dynamic_array.h": "c",
-        "heap.h": "c"
+        "heap.h": "c",
+        "s_heap.h": "c"
     }
 }

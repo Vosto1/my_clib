@@ -1,26 +1,61 @@
 #include "test_priority_queue.h"
 
-Item createItem(int priority) {
-    Item item;
-    item.p = priority;
-    item.e = (char)priority;
+typedef int priority;
+typedef char element;
+
+typedef struct {
+    priority p;
+    element e;
+}Item;
+
+int compare(Data x, Data y);
+void print(size_t used, Data a[]);
+
+int compare(Data x, Data y) {
+    Item* item1 = (Item*)x;
+    Item* item2 = (Item*)y;
+    return item1->p - item2->p;
+}
+
+void print(size_t used, Data a[]) {
+    Item* itemArr = (Item*)a;
+     for (int i = 0; i < used; i++) {
+        printf("value at %d: [%d;%c]\n", i, itemArr[i].p, itemArr[i].e);
+    } printf("\n");
+}
+
+Item* createItem(int priority) {
+    Item* item = (Item*)malloc(sizeof(Item));
+    item->p = priority;
+    item->e = (char)priority;
     return item;
 }
 
-/* Item randomElement(PriorityQueue* pq) {
-    int index = rand() % count(pq);
-    return pq->h.items.array[index];
-} */
+void heapPrintTree(s_heap* h) {
+    int y = 0;
+    int x = 0;
+    for (int i = 0; i < s_heapSize(h); i++) {
+        for (int j = 0; j < pow(2, i) && j + pow(2, i) <= s_heapSize(h); j++) {
+            x = j + (int)pow(2, i) - 1;
+            y = h->items.used;
+            if (y > x) {
+                Item* item = (Item*)h->items.array[x];
+                printf("[k%f|%c]", item->p, item->e);
+            }
+            else printf("----");
+        }
+        printf("\n");
+    }
+}
 
 bool integrity_check(int n) {
     srand(time(NULL));
-    PriorityQueue pq = createEmptyPriorityQueue();
-    ErrorCode e = initPriorityQueue(&pq);
-    errorHandler(e);
-    Item item;
-    Item toDequeue;
-    Item out;
-    Item min;
+    PriorityQueue pq = createEmptyPQ();
+    assert(initPQ(&pq, 1, &compare) == 1);
+    errorHandler();
+    Item* item;
+    Item* out;
+    Item* min;
     int result = 0; // must be initialized to 0
     bool operation;
     ticks start;
@@ -41,39 +76,43 @@ bool integrity_check(int n) {
             if (val < 81)
             { //80%
                 item = createItem(val);
-                e = enqueuePQ(&pq, item);
-                errorHandler(e);
+                assert(enqueuePQ(&pq, (void*)item) != -1);
+                errorHandler();
                 // inc enqs
                 enqcount++;
             }
             else if(val > 80 && val < 88)
             { //20%
                 if (count(&pq) != 0) {
-                    min = _min(&pq.h);
-                    e = dequeuePQ(&pq, &out);
-                    errorHandler(e);
-                    result = compareData(min, out);
+                    min = s_peek(&pq.h);
+                    item = dequeuePQ(&pq);
+                    assert(item != NULL);
+                    errorHandler();
+                    result = compare(min, item);
+                    free(item);
                     // inc dqs
                     dqcount++;
                 } 
             }
             else if(val > 87 && val < 95) {
-                min = _min(&pq.h);
-                if(trydequeuePQ(&pq, &out)) {
-                    result = compareData(min, out);
+                min = s_peek(&pq.h);
+                if(trydequeuePQ(&pq, (void*)&out)) {
+                    assert(out != NULL);
+                    result = compare(min, out);
+                    free(out);
                 }
                 // inc tdqs
                 tdqcount++;
             }
             else { // if (val > 94)
-                min = _min(&pq.h);
-                if(peekPQ(&pq, &out)) {
-                    result = compareData(min, out);
+                min = s_peek(&pq.h);
+                if(peekPQ(&pq, (void*)&out)) {
+                    result = compare(min, out);
                 }
                 // inc peeks
                 pcount++;
             }
-            if(!testHeapIntegrity(&pq.h)){
+            if(!s_testHeapIntegrity(&pq.h)){
                 system("clear");
                 printf("PriorityQueue: heap integrity broken\n");
                 printf("Structure at error:\n");
@@ -102,7 +141,7 @@ bool integrity_check(int n) {
     printf("Computed a total of %ld operations and tests.\n", totalTests);
     printf("Total test running time: %fs\n", passed);
     printf("Integrity test exiting...\n");
-    e = freePriorityQueue(&pq);
-    errorHandler(e);
+    freePQ(&pq);
+    errorHandler();
     return true;
 }

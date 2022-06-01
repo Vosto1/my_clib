@@ -60,6 +60,10 @@ size_t s_heapInsert(s_heap* h, Data item) {
 * The item is also removed from the heap
 */
 Data s_extractMin(s_heap* h) {
+    if (sh_is_null(h)) {
+        errcset(EHEAP_NULL);
+        return NULL;
+    }
     if (sh_is_empty(h)) {
         errcset(EHEAP_EMPTY);
         return NULL;

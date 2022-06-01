@@ -11,11 +11,10 @@
 				"${file}",
 				"../utils/error.c",
 				"../utils/timer.c",
-				"./min_heap/heap.c",
-				"./min_heap/dynamic_array.c",
+				"../dynamic_array/dynamic_array.c",
+				"../s_heap/s_heap.c",
 				"priority_queue.c",
 				"test_priority_queue.c",
-				"data.c",
 				"-o",
 				"${fileDirname}\\out.exe"
 			],

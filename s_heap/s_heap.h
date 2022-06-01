@@ -24,13 +24,14 @@ typedef unsigned long long size_t;
  * dynamic memory.The void* pointer is typedefed to Data
  * to make it easier to read.
  * 
- * To enable testing functions define _HEAP_TESTING_
+ * To enable testing functions define __TESTING__
  * 
  * The data structure needs a Data to Data comparison function
  * (compare) from the user to be able to function correctly.
  * The function should return 1 when the left value is bigger
  * than the right value, -1 when the opposite is true and
- * 0 when they are equal.
+ * 0 when they are equal. It it up to the user to define
+ * how you want to sort your items but this is the default way.
  * 
  * The differences between the s_heap (this) and the heap is functionality.
  * The s_heap has less functionality than the heap,
@@ -107,7 +108,7 @@ size_t s_heapInsert(s_heap* h, Data item);
  * @brief extracts the top item (with the smallest key) and removes it from the s_heap
  * 
  * @param h s_heap to extract from
- * @return a pointer to the extracted item
+ * @return a pointer to the extracted item or null if something went wrong
  */
 Data s_extractMin(s_heap* h);
 /**
@@ -120,7 +121,7 @@ Data s_extractMin(s_heap* h);
  */
 s_heap s_buildMinHeap(Data* unorderedList, size_t size, int (*compare)(Data x, Data y));
 
-#ifdef _HEAP_TESTING_
+#ifdef __TESTING__
 /**
  * @brief tests the integrity of the s_heap
  * 

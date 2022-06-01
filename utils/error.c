@@ -49,6 +49,8 @@ const char* error(ErrorCode e) {
             return "heap data did not exist";
         case EHEAP_EMPTY:
             return "heap was empty";
+        case EHEAP_NULL:
+            return "heap was null";
         case EHNEWKEY_NOT_SET:
             return "couldn't set the new key on the item";
         case EPQ_EMPTY:

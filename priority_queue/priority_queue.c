@@ -1,49 +1,48 @@
 #include "priority_queue.h"
 
-PriorityQueue createEmptyPriorityQueue() {
+PriorityQueue createEmptyPQ() {
     PriorityQueue pq;
-    pq.h = createEmptyHeap();
+    pq.h = s_createEmptyHeap();
     return pq;
 }
 
-ErrorCode initPriorityQueue(PriorityQueue* pq) {
-    return initHeap(&pq->h, 1);
+size_t initPQ(PriorityQueue* pq, size_t size, int (*compare)(Data x, Data y)) {
+    return s_initHeap(&pq->h, size, compare);
 }
 
-ErrorCode freePriorityQueue(PriorityQueue* pq) {
-    ErrorCode e = freeHeap(&pq->h);
-    *pq = createEmptyPriorityQueue();
-    return e;
+void freePQ(PriorityQueue* pq) {
+    s_freeHeap(&pq->h);
+    *pq = createEmptyPQ();
 }
 
-int count(PriorityQueue* pq) {
-    return heapSize(&pq->h.items);
+size_t count(PriorityQueue* pq) {
+    return s_heapSize(&pq->h);
 }
 
-ErrorCode enqueuePQ(PriorityQueue* pq, Item item) {
-    return heapInsert(&pq->h, item);
+size_t enqueuePQ(PriorityQueue* pq, Data item) {
+    return s_heapInsert(&pq->h, item);
 }
 
-ErrorCode dequeuePQ(PriorityQueue* pq, Item* out) {
-    if(count(pq) == 0) return PQ_EMPTY;
-    else {
-        *out = extractMin(&pq->h);
-        return SUCCESS;
+Data dequeuePQ(PriorityQueue* pq) {
+    if(count(pq) == 0) {
+        errcset(EPQ_EMPTY);
+        return NULL;
     }
+    else return s_extractMin(&pq->h);
 }
 
-bool trydequeuePQ(PriorityQueue* pq, Item* out) {
+bool trydequeuePQ(PriorityQueue* pq, Data* out) {
     if (count(pq) == 0) return false;
     else {
-        *out = extractMin(&pq->h);
+        *out = s_extractMin(&pq->h);
         return true;
     }
 }
 
-bool peekPQ(PriorityQueue* pq, Item* out) {
+bool peekPQ(PriorityQueue* pq, Data* out) {
     if (count(pq) == 0) return false;
     else {
-        *out = _min(&pq->h);
+        *out = s_peek(&pq->h);
         return true;
     }
 }
