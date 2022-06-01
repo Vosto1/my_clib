@@ -1,9 +1,7 @@
 #include "heap.h"
 /*
 * min-heap -> the smallest key is the root of each sub-tree
-* max-heap -> the largest key is the root of each sub-tree
 */
-// (*h->compare)
 
 heap createEmptyHeap() {
     heap h;
@@ -38,8 +36,8 @@ size_t heapSize(heap* h) {
 }
 
 /*
-* return the item with the smallest key (== highest priority).
-* The item remains in the queue.
+* return the item with the smallest key (the top of the heap).
+* The item remains in the heap.
 */
 Data _min(heap* h) {
     return h->items.array[0];
@@ -54,7 +52,7 @@ bool h_is_empty(heap* h) {
 }
 
 /*
-* Add to the queue.
+* Add to the heap.
 */
 size_t heapInsert(heap* h, Data item) {
     arrayInsert(&(h->items), item);
@@ -62,14 +60,14 @@ size_t heapInsert(heap* h, Data item) {
         return -1;
     }
     minHeapifyUp(h, heapSize(h) - 1);
-    return h->items.used;
+    return heapSize(h);
 }
 
 /*
-* PRECONDITIONS: the item is in the queue
-* removes the item from the queue
-* set key to a sufficiently small key (example: minInt or current root key - 1)
-* to give the item to be removed highest priority, then use extractMin
+* removes the item from the heap
+* set key to a sufficiently small key using userdefined minKey function
+* (example: minInt or current root key - 1) to give the item to be removed
+* highest priority, then use extractMin
 */
 Data heapRemove(heap* h, Data item) {
     if (heapSize(h) == 0) {
@@ -87,7 +85,7 @@ Data heapRemove(heap* h, Data item) {
 
 /*
 * Return the item with the smallest key (== highest priority).
-* The item is also removed from the queue
+* The item is also removed from the heap
 */
 Data extractMin(heap* h) {
     if (h_is_empty(h)) {
@@ -107,7 +105,8 @@ Data extractMin(heap* h) {
 /*
 * PRECONDITION: newKey > item.Key and item already exists in the queue
 * POSTCONDITION: x.Key == newKey
-* Increases the items priority by assigning it a higher value Key. The properties of the structures must be preserved.
+* Increases the items priority by assigning it a higher value Key.
+* The properties of the data structure must be preserved.
 */
 int decreaseKey(heap* h, Data item, Data newKey) {
     for (int i = 0; i < heapSize(h); i++) {
@@ -118,6 +117,10 @@ int decreaseKey(heap* h, Data item, Data newKey) {
             }
             (*h->setKey)(h->items.array[i], newKey);
             minHeapifyUp(h, i);
+            if ((*h->compare)(h->items.array[i], newKey) != 0) {
+                errcset(EHNEWKEY_NOT_SET);
+                return -1;
+            }
             return i;
         }
     }
@@ -126,7 +129,8 @@ int decreaseKey(heap* h, Data item, Data newKey) {
 }
 
 /*
-* Howto: start at index heapSize/2 (all elements after are leafs) go through the non-leafs "backwards" and heapify-down
+* start at index heapSize/2 (all elements after are leafs)
+* go through the non-leafs "backwards" and heapify-down
 * builds heap from an unordered list (array)
 */
 heap buildMinHeap(Data* unorderedList,
@@ -140,18 +144,10 @@ heap buildMinHeap(Data* unorderedList,
         arrayInsert(&h.items, unorderedList[i]);
     for (int j = size / 2; j >= 0; j--)
         minHeapifyDown(&h, j);
-    // debug
-    /* for (int j = size / 2; j >= 0; j--) {
-        minHeapifyDown(&h, j);
-        printf("heap\n");
-        heapPrintTree(&h);
-        printf("array\n");
-        (*h.items.printfn)(h.items.used, h.items.array);
-        printf("\n");
-    } */
     return h;
 }
 
+/*test if there are any heap violations*/
 bool testHeapIntegrity(heap* h) {
     for (int i = 0; i < heapSize(h); i++) {
         int l = left(i);
@@ -175,32 +171,33 @@ bool testHeapIntegrity(heap* h) {
 }
 
 /*
-* Guide for index calculation:
+* index calculation:
 * https://stackoverflow.com/questions/22900388/why-in-a-heap-implemented-by-array-the-index-0-is-left-unused 
 */
 /*given index for an item, returns index of parent*/
-int parent(int i) {
+static int parent(int i) {
     return (i - 1) / 2;
 }
 
 /*given index for an item, returns index of its left child*/
-int left(int i) {
+static int left(int i) {
     return (2 * i) + 1;
 }
 
 /*given index for an item, returns index of its right child*/
-int right(int i) {
+static int right(int i) {
     return (2 * i) + 2;
 }
 
-void swap(array* a, int i1, int i2) {
+/*swap two items in a dynamic array*/
+static void swap(array* a, int i1, int i2) {
     Data temp1 = a->array[i1];
     a->array[i1] = a->array[i2];
     a->array[i2] = temp1;
 }
 
 /*Maintains the heap properties*/
-void minHeapifyDown(heap* h, int index)
+static void minHeapifyDown(heap* h, int index)
 {
     int l = left(index);
     int r = right(index);
@@ -218,7 +215,7 @@ void minHeapifyDown(heap* h, int index)
     }
 }
 /*Maintains the heap properties*/
-void minHeapifyUp(heap* h, int index)
+static void minHeapifyUp(heap* h, int index)
 {
     int p = parent(index);
     int smallest;

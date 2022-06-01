@@ -7,7 +7,7 @@ Item* createItem(int x) {
     return item;
 }
 
-void insert_n(heap * h, int n) {
+void insert_n(s_heap * h, int n) {
     size_t e;
     Item* item;
     for (int j = 0; j < n; j++) {
@@ -19,13 +19,13 @@ void insert_n(heap * h, int n) {
     assert(s_heapSize(h) == n);
 }
 
-void remove_all(heap* h) {
+void remove_all(s_heap* h) {
     assert(arrayClear(&h->items) != -1);
     assert(s_heapSize(h) == 0);
 }
 
 void compute_1_to_n_sequences_of_operations(long n, Test type) {
-    heap h = s_createEmptyHeap();
+    s_heap h = s_createEmptyHeap();
     assert(s_initHeap(&h, 1, &compare) == 1);
     errorHandler();
     long j = 1;
@@ -68,7 +68,7 @@ void compute_1_to_n_sequences_of_operations(long n, Test type) {
 
 bool heap_integrity_test(int n) {
     srand(time(NULL));
-    heap h = s_createEmptyHeap();
+    s_heap h = s_createEmptyHeap();
     assert(s_initHeap(&h, 10, &compare) == 10);
     errorHandler();
     Item* item;
@@ -113,7 +113,7 @@ bool heap_integrity_test(int n) {
             totalTests++;
         }
         end = now();
-        printf("Computed %d operations (%d insertions and %d extract min) during %f seconds, passed integrity check.\n", x, inscount, delcount, diff(start, end));
+        printf("Computed %d operations and integrity checks (%d insertions and %d extract min) during %f seconds, integrity check passed.\n", x, inscount, delcount, diff(start, end));
         // reset counters
         delcount = 0;
         inscount = 0;
@@ -130,7 +130,7 @@ bool heap_integrity_test(int n) {
 
 void test_sequence() {
     srand(time(NULL));
-    heap h = s_createEmptyHeap();
+    s_heap h = s_createEmptyHeap();
     assert(s_initHeap(&h, 10, &compare) == 10);
     errorHandler();
     ticks programStart = now();
@@ -161,7 +161,7 @@ void test_sequence() {
     printf("print 1\n");
     heapPrintTree(&h);
 
-    assert(compare(s_min(&h), item5) == 0);
+    assert(compare(s_peek(&h), item5) == 0);
 
     rm = s_extractMin(&h);
     assert(compare(rm, item5) == 0);
@@ -177,7 +177,7 @@ void test_sequence() {
     printf("print 2\n");
     heapPrintTree(&h);
 
-    assert(compare(s_min(&h), item8) == 0);
+    assert(compare(s_peek(&h), item8) == 0);
     rm = s_extractMin(&h);
     assert(compare(rm, item8) == 0);
     free(rm);
@@ -239,7 +239,7 @@ void test_sequence() {
 
     h = s_buildMinHeap((void*)&b, 10, &compare);
 
-    printf("build min heap\n");
+    printf("build min s_heap\n");
     heapPrintTree(&h);
 
     assert(s_testHeapIntegrity(&h));

@@ -13,7 +13,7 @@ typedef enum ErrorCodes {
     EMEM_DREALLOC = 3,
     EINDEX_OUT_OF_BOUNDS = 4,
     EFREE_NULLPTR = 5,
-    EDATA_NEXIST = 6,
+    EARRDATA_DOESNT_EXIST = 6,
     EARR_EMPTY = 7,
     ENULL_ARG = 8,
     EWRITE_BINARY = 9,
@@ -23,6 +23,7 @@ typedef enum ErrorCodes {
     EHNEW_KEY = 13,
     EH_DATA_DOESNT_EXIST = 14,
     EHEAP_EMPTY = 15,
+    EHNEWKEY_NOT_SET = 16,
     EPQ_EMPTY = -1,
 }ErrorCode;
 

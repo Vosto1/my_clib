@@ -1,6 +1,8 @@
 #ifndef TEST_HEAP_H
 #define TEST_HEAP_H
 
+#define _HEAP_TESTING_ // define heap testing to use testing functions
+
 #include <stdbool.h>
 #include <assert.h>
 #include "heap.h"

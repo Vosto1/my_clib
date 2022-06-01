@@ -122,7 +122,8 @@ bool heap_integrity_test(int n) {
             totalTests++;
         }
         end = now();
-        printf("Computed %d operations (%d insertions and %d deletions) during %f seconds, passed integrity check.\n", x, inscount, delcount, diff(start, end));
+        printf("Computed %d operations and integrity checks (%d insertions and %d deletions) during %f seconds, integrity check passed.\n", x, inscount, delcount, diff(start, end));
+
         // reset counters
         delcount = 0;
         inscount = 0;

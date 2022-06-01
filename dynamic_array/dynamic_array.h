@@ -22,9 +22,14 @@
 /**
  * The dynamic array stores pointers to the data as void* pointers.
  * This way the type is generic, but all data must be allocated as
- * dynamic memory. The data structure needs a Data to Data comparison
- * function from the user to be able to function correctly.
- * The void* pointer is typedefed to Data to make it easier to read.
+ * dynamic memory. The void* pointer is typedefed to Data
+ * to make it easier to read.
+ * 
+ * The data structure needs a Data to Data comparison function
+ * from the user to be able to function correctly.
+ * The function should return 1 when the left value is bigger
+ * than the right value, -1 when the opposite is true and
+ * 0 when they are equal.
  */
 
 typedef void* Data;
@@ -96,13 +101,6 @@ Data arrayRemoveItem(dynamicArray* a, Data item);
  */
 Data arrayRemoveAt(dynamicArray* a, int index);
 /**
- * checks if the memory should be halved and does so if check is positive
- * 
- * @param a to decrease memory for
- * @return result of memory reduction
- */
-MEM memoryDecrease(dynamicArray* a);
-/**
  * convert a Data[] array to a dynamic array
  * 
  * @param a out array
@@ -141,6 +139,13 @@ bool a_is_null(array* a);
  * @return true if a.used == 0
  */
 bool a_is_empty(array* a);
+/**
+ * checks if the memory should be halved and does so if check is positive
+ * 
+ * @param a to decrease memory for
+ * @return result of memory reduction
+ */
+static MEM memoryDecrease(dynamicArray* a);
 
 // framtida funktioner
 int find(Data item); // return index error if not exists

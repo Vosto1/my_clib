@@ -10,8 +10,8 @@ int compare(void* x, void* y) {
     else return 0;
 }
 
-// heap
-void heapPrintTree(heap* h) {
+// s_heap
+void heapPrintTree(s_heap* h) {
     int y = 0;
     int x = 0;
     for (int i = 0; i < s_heapSize(h); i++) {

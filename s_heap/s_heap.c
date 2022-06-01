@@ -1,23 +1,21 @@
 #include "s_heap.h"
 /*
 * min-heap -> the smallest key is the root of each sub-tree
-* max-heap -> the largest key is the root of each sub-tree
 */
-// (*h->compare)
 
-heap s_createEmptyHeap() {
-    heap h;
+s_heap s_createEmptyHeap() {
+    s_heap h;
     h.compare = NULL;
     h.items = createEmptyDynamicArray();
     return h;
 }
 
-size_t s_initHeap(heap* h, size_t size, int (*compare)(Data x, Data y)) {
+size_t s_initHeap(s_heap* h, size_t size, int (*compare)(Data x, Data y)) {
     h->compare = compare;
     return initDynamicArray(&(h->items), size, compare);
 }
 
-void s_freeHeap(heap* h) {
+void s_freeHeap(s_heap* h) {
     if (!sh_is_null(h)) {
         freeArray(&h->items);
     } else { 
@@ -25,30 +23,30 @@ void s_freeHeap(heap* h) {
     }
 }
 
-size_t s_heapSize(heap* h) {
+size_t s_heapSize(s_heap* h) {
     return h->items.used;
 }
 
 /*
-* return the item with the smallest key (== highest priority).
-* The item remains in the queue.
+* return the item with the smallest key (the top of the heap).
+* The item remains in the heap.
 */
-Data s_min(heap* h) {
+Data s_peek(s_heap* h) {
     return h->items.array[0];
 }
 
-bool sh_is_null(heap* h) {
+bool sh_is_null(s_heap* h) {
     return a_is_null(&h->items);
 }
 
-bool sh_is_empty(heap* h) {
+bool sh_is_empty(s_heap* h) {
     return a_is_empty(&h->items);
 }
 
 /*
-* Add to the queue.
+* Add to the heap.
 */
-size_t s_heapInsert(heap* h, Data item) {
+size_t s_heapInsert(s_heap* h, Data item) {
     arrayInsert(&(h->items), item);
     if (errc != SUCCESS) {
         return -1;
@@ -59,9 +57,9 @@ size_t s_heapInsert(heap* h, Data item) {
 
 /*
 * Return the item with the smallest key (== highest priority).
-* The item is also removed from the queue
+* The item is also removed from the heap
 */
-Data s_extractMin(heap* h) {
+Data s_extractMin(s_heap* h) {
     if (sh_is_empty(h)) {
         errcset(EHEAP_EMPTY);
         return NULL;
@@ -77,11 +75,12 @@ Data s_extractMin(heap* h) {
 }
 
 /*
-* Howto: start at index heapSize/2 (all elements after are leafs) go through the non-leafs "backwards" and heapify-down
+* start at index heapSize/2 (all elements after are leafs)
+* go through the non-leafs "backwards" and heapify-down
 * builds heap from an unordered list (array)
 */
-heap s_buildMinHeap(Data* unorderedList, size_t size, int (*compare)(Data x, Data y)) {
-    heap h;
+s_heap s_buildMinHeap(Data* unorderedList, size_t size, int (*compare)(Data x, Data y)) {
+    s_heap h;
     s_initHeap(&h, size, compare);
     for (int i = 0; i < size; i++)
         arrayInsert(&h.items, unorderedList[i]);
@@ -90,7 +89,8 @@ heap s_buildMinHeap(Data* unorderedList, size_t size, int (*compare)(Data x, Dat
     return h;
 }
 
-bool s_testHeapIntegrity(heap* h) {
+/*test if there are any heap violations*/
+bool s_testHeapIntegrity(s_heap* h) {
     for (int i = 0; i < s_heapSize(h); i++) {
         int l = s_left(i);
         int r = s_right(i);
@@ -113,32 +113,33 @@ bool s_testHeapIntegrity(heap* h) {
 }
 
 /*
-* Guide for index calculation:
+* index calculation:
 * https://stackoverflow.com/questions/22900388/why-in-a-heap-implemented-by-array-the-index-0-is-left-unused 
 */
 /*given index for an item, returns index of parent*/
-int s_parent(int i) {
+static int s_parent(int i) {
     return (i - 1) / 2;
 }
 
 /*given index for an item, returns index of its left child*/
-int s_left(int i) {
+static int s_left(int i) {
     return (2 * i) + 1;
 }
 
 /*given index for an item, returns index of its right child*/
-int s_right(int i) {
+static int s_right(int i) {
     return (2 * i) + 2;
 }
 
-void s_swap(array* a, int i1, int i2) {
+/*swap two items in a dynamic array*/
+static void s_swap(array* a, int i1, int i2) {
     Data temp1 = a->array[i1];
     a->array[i1] = a->array[i2];
     a->array[i2] = temp1;
 }
 
 /*Maintains the heap properties*/
-void s_minHeapifyDown(heap* h, int index)
+static void s_minHeapifyDown(s_heap* h, int index)
 {
     int l = s_left(index);
     int r = s_right(index);
@@ -156,7 +157,7 @@ void s_minHeapifyDown(heap* h, int index)
     }
 }
 /*Maintains the heap properties*/
-void s_minHeapifyUp(heap* h, int index)
+static void s_minHeapifyUp(s_heap* h, int index)
 {
     int p = s_parent(index);
     int smallest;

@@ -42,6 +42,7 @@ size_t arrayInsert(dynamicArray* a, Data item) {
         errcset(ENULL_ARG);
         return -1;
     }
+    // memory increase
     if (a->used == a->size) { // index < size, is a guard
         // when array is full on insert, double the size
         a->size *= 2;
@@ -81,7 +82,7 @@ Data arrayRemoveItem(dynamicArray* a, Data item) {
             return arrayRemoveAt(a, i);
         }
     }
-    errcset(EDATA_NEXIST);
+    errcset(EARRDATA_DOESNT_EXIST);
     return NULL;
 }
 
@@ -104,24 +105,6 @@ Data arrayRemoveAt(dynamicArray* a, int index) {
         return NULL;
     }
 }
-
-MEM memoryDecrease(dynamicArray* a) {
-    double ratio = (double)a->used / (double)a->size;
-    // if 1/4 of the allocated space is used, halve it
-    if(ratio <= QUARTER && a->size != 1) {
-        a->size /= 2;
-        Data* temp;
-        temp = (Data*)realloc(a->array, sizeof(Data)*a->size);
-        if (temp != NULL) {
-            a->array = temp;
-            return MEM_HALVED;
-        } else {
-            errcset(EMEM_DREALLOC);
-            return NMEM_DECREASE;
-        }
-    }
-    return MEM_MS_REACHED_NO_NEED;
-} 
 
 size_t convert(dynamicArray* a, Data b[], size_t bsize, int (*compare)(Data a, Data b)) {
     *a = createEmptyDynamicArray();
@@ -174,3 +157,22 @@ bool a_is_null(array* a) {
 bool a_is_empty(array* a) {
     return a->used == 0;
 }
+
+// memory check and increase is done in arrayInsert function
+static MEM memoryDecrease(dynamicArray* a) {
+    double ratio = (double)a->used / (double)a->size;
+    // if 1/4 of the allocated space is used, halve it
+    if(ratio <= QUARTER && a->size != 1) {
+        a->size /= 2;
+        Data* temp;
+        temp = (Data*)realloc(a->array, sizeof(Data)*a->size);
+        if (temp != NULL) {
+            a->array = temp;
+            return MEM_HALVED;
+        } else {
+            errcset(EMEM_DREALLOC);
+            return NMEM_DECREASE;
+        }
+    }
+    return MEM_MS_REACHED_NO_NEED;
+} 

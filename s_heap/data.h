@@ -18,5 +18,5 @@ typedef unsigned long long size_t;
 
 // user defined functions
 int compare(Data x, Data y);
-void heapPrintTree(heap* h);
+void heapPrintTree(s_heap* h);
 #endif
