@@ -7,6 +7,11 @@
 #include <assert.h>
 #include <stdbool.h>
 
+// test function
 bool integrity_check(int n);
+
+// user defined functions needed for the s_heap
+int compare(cvoidp x, cvoidp y);
+void print(size_t used, voidp a[]);
 
 #endif

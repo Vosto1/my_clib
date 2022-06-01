@@ -3,6 +3,7 @@
 
 #include "stdio.h"
 #include "stdlib.h"
+#include "print_color.h"
 
 #define errc errcget()
 
@@ -16,16 +17,16 @@ typedef enum ErrorCodes {
     EARRDATA_DOESNT_EXIST = 6,
     EARR_EMPTY = 7,
     ENULL_ARG = 8,
-    EWRITE_BINARY = 9,
-    EFILE_OPENWRITE = 10,
-    EFILE_OPENREAD = 11,
-    EARR_INDEX_OCCUPIED = 12,
-    EHNEW_KEY = 13,
-    EH_DATA_DOESNT_EXIST = 14,
-    EHEAP_EMPTY = 15,
-    EHEAP_NULL = 16,
-    EHNEWKEY_NOT_SET = 17,
-    EPQ_EMPTY = -1,
+    EFILE_OPENWRITE = 9,
+    EFILE_OPENREAD = 10,
+    EARR_INDEX_OCCUPIED = 11,
+    EHNEW_KEY = 12,
+    EH_DATA_DOESNT_EXIST = 13,
+    EHEAP_EMPTY = 14,
+    EHEAP_NULL = 15,
+    EHNEWKEY_NOT_SET = 16,
+    EPQ_EMPTY = 17,
+    EWRITE_BINARY = 18,
 }ErrorCode;
 
 /**

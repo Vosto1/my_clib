@@ -10,9 +10,9 @@
                 "${file}",
                 "../dynamic_array/dynamic_array.c",
                 "../utils/error.c",
-                "s_heap.c",
                 "../utils/timer.c",
-                "data.c",
+                "s_heap.c",
+                "test.c",
                 "-o",
                 "${fileDirname}\\out.exe"
             ],

@@ -35,8 +35,6 @@ const char* error(ErrorCode e) {
             return "array empty";
         case ENULL_ARG:
             return "null argument";
-        case EWRITE_BINARY:
-            return "couldn't write bitvector to file";
         case EFILE_OPENWRITE:
             return "couln't open file to write";
         case EFILE_OPENREAD:
@@ -55,6 +53,8 @@ const char* error(ErrorCode e) {
             return "couldn't set the new key on the item";
         case EPQ_EMPTY:
             return "priority queue is empty";
+        case EWRITE_BINARY:
+            return "couldn't write bitvector to file";
         default:
             printf("Error: %d", e);
             return " unknown error";

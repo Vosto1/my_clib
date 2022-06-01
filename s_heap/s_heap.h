@@ -15,18 +15,19 @@
 #include "../utils/error.h"
 
 
-typedef void* Data;
+typedef void* voidp;
+typedef const void* cvoidp;
 typedef unsigned long long size_t;
 
 /**
  * The s_heap stores pointers to the data as void* pointers.
  * This way the type is generic, but all data must be allocated as
- * dynamic memory.The void* pointer is typedefed to Data
+ * dynamic memory.The void* pointer is typedefed to voidp
  * to make it easier to read.
  * 
  * To enable testing functions define __TESTING__
  * 
- * The data structure needs a Data to Data comparison function
+ * The data structure needs a comparison function
  * (compare) from the user to be able to function correctly.
  * The function should return 1 when the left value is bigger
  * than the right value, -1 when the opposite is true and
@@ -35,12 +36,12 @@ typedef unsigned long long size_t;
  * 
  * The differences between the s_heap (this) and the heap is functionality.
  * The s_heap has less functionality than the heap,
- * s_heap has minimum heap functionality: insert, peek 
+ * s_heap has minimum main heap functionality: insert, peek, extract
  */
 
 typedef struct {
     array items;
-    int (*compare)(Data x, Data y);
+    int (*compare)(cvoidp x, cvoidp y);
 }s_heap;
 
 /**
@@ -55,9 +56,9 @@ s_heap s_createEmptyHeap();
  * @param h pointer to the s_heap to initialize
  * @param size the initial size of the s_heap
  * @param compare a function that can compare two items of your data type
- * @return the size the heap is initialized to or -1 if something went wrong
+ * @return the size the heap is initialized to or -1 if error
  */
-size_t s_initHeap(s_heap* h, size_t size, int (*compare)(Data x, Data y));
+size_t s_initHeap(s_heap* h, size_t size, int (*compare)(cvoidp x, cvoidp y));
 /**
  * @brief remove (free) all items in the s_heap and free the s_heap
  * 
@@ -78,7 +79,7 @@ size_t s_heapSize(s_heap* h);
  * @param h s_heap to peek
  * @return pointer to the item with the smallest key
  */
-Data s_peek(s_heap* h);
+voidp s_peek(s_heap* h);
 /**
  * @brief check if a s_heap is null
  * 
@@ -101,16 +102,16 @@ bool sh_is_empty(s_heap* h);
  * 
  * @param h s_heap to insert into
  * @param item a pointer to the memory of the item
- * @return the item count in the heap or -1 if something went wrong
+ * @return the item count in the heap or -1 if error
  */
-size_t s_heapInsert(s_heap* h, Data item);
+size_t s_heapInsert(s_heap* h, voidp item);
 /**
  * @brief extracts the top item (with the smallest key) and removes it from the s_heap
  * 
  * @param h s_heap to extract from
- * @return a pointer to the extracted item or null if something went wrong
+ * @return a pointer to the extracted item or null if error
  */
-Data s_extractMin(s_heap* h);
+voidp s_extractMin(s_heap* h);
 /**
  * @brief build an s_heap from an array of your data type (Data)
  * 
@@ -119,7 +120,7 @@ Data s_extractMin(s_heap* h);
  * @param compare a function that can compare two items of your data type
  * @return the heap that was created
  */
-s_heap s_buildMinHeap(Data* unorderedList, size_t size, int (*compare)(Data x, Data y));
+s_heap s_buildMinHeap(voidp* unorderedList, size_t size, int (*compare)(cvoidp x, cvoidp y));
 
 #ifdef __TESTING__
 /**

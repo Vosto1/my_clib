@@ -6,7 +6,7 @@ PriorityQueue createEmptyPQ() {
     return pq;
 }
 
-size_t initPQ(PriorityQueue* pq, size_t size, int (*compare)(Data x, Data y)) {
+size_t initPQ(PriorityQueue* pq, size_t size, int (*compare)(cvoidp x, cvoidp y)) {
     return s_initHeap(&pq->h, size, compare);
 }
 
@@ -19,11 +19,11 @@ size_t count(PriorityQueue* pq) {
     return s_heapSize(&pq->h);
 }
 
-size_t enqueuePQ(PriorityQueue* pq, Data item) {
+size_t enqueuePQ(PriorityQueue* pq, voidp item) {
     return s_heapInsert(&pq->h, item);
 }
 
-Data dequeuePQ(PriorityQueue* pq) {
+voidp dequeuePQ(PriorityQueue* pq) {
     if(count(pq) == 0) {
         errcset(EPQ_EMPTY);
         return NULL;
@@ -31,7 +31,7 @@ Data dequeuePQ(PriorityQueue* pq) {
     else return s_extractMin(&pq->h);
 }
 
-bool trydequeuePQ(PriorityQueue* pq, Data* out) {
+bool trydequeuePQ(PriorityQueue* pq, voidp* out) {
     if (count(pq) == 0) return false;
     else {
         *out = s_extractMin(&pq->h);
@@ -39,7 +39,7 @@ bool trydequeuePQ(PriorityQueue* pq, Data* out) {
     }
 }
 
-bool peekPQ(PriorityQueue* pq, Data* out) {
+bool peekPQ(PriorityQueue* pq, voidp* out) {
     if (count(pq) == 0) return false;
     else {
         *out = s_peek(&pq->h);

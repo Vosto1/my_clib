@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "error.h": "c",
+        "assert.h": "c",
+        "dynamic_array.h": "c",
+        "chrono": "c",
+        "stdlib.h": "c",
+        "math.h": "c"
+    }
+}

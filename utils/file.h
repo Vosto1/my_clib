@@ -8,8 +8,6 @@ skriva läsa till fil
 #include <stdlib.h>
 #include "error.h"
 
-typedef char byte;
-
 /**
  * read contents of a file
  * 

@@ -6,13 +6,12 @@
             "command": "E:\\Program Files\\MinGW64\\bin\\gcc.exe",
             "args": [
                 "-fdiagnostics-color=always",
-                "-g",
+                "-g3",
                 "${file}",
-                "../dynamic_array/dynamic_array.c",
-                "../utils/error.c",
                 "../utils/timer.c",
+                "../utils/error.c",
+                "s_dynamic_array.c",
                 "test.c",
-                "heap.c",
                 "-o",
                 "${fileDirname}\\out.exe"
             ],

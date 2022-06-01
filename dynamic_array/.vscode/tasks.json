@@ -8,10 +8,10 @@
                 "-fdiagnostics-color=always",
                 "-g3",
                 "${file}",
-                "dynamic_array.c",
-                "../utils/error.c",
                 "../utils/timer.c",
-                "data.c",
+                "../utils/error.c",
+                "dynamic_array.c",
+                "test.c",
                 "-o",
                 "${fileDirname}\\out.exe"
             ],

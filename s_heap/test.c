@@ -1,13 +1,40 @@
 #include "test.h"
 
-Item* createItem(int x) {
+// dynamic array
+static int compare(const void* x, const void* y) {
+    Item* item0 = (Item*)x;
+    Item* item1 = (Item*)y;
+    if(item0->key > item1->key) return 1;
+    else if (item0->key < item1->key) return -1;
+    else return 0;
+}
+
+// s_heap
+static void heapPrintTree(s_heap* h) {
+    int y = 0;
+    int x = 0;
+    for (int i = 0; i < s_heapSize(h); i++) {
+        for (int j = 0; j < pow(2, i) && j + pow(2, i) <= s_heapSize(h); j++) {
+            x = j + (int)pow(2, i) - 1;
+            y = h->items.used;
+            if (y > x) {
+                Item* item = (Item*)h->items.array[x];
+                printf("[k%f|%c]", item->key, item->element);
+            }
+            else printf("----");
+        }
+        printf("\n");
+    }
+}
+
+static Item* createItem(int x) {
     Item* item = (Item*)malloc(sizeof(Item));
     item->element = (char)x;
     item->key = x;
     return item;
 }
 
-void insert_n(s_heap * h, int n) {
+static void insert_n(s_heap * h, int n) {
     size_t e;
     Item* item;
     for (int j = 0; j < n; j++) {
@@ -19,7 +46,7 @@ void insert_n(s_heap * h, int n) {
     assert(s_heapSize(h) == n);
 }
 
-void remove_all(s_heap* h) {
+static void remove_all(s_heap* h) {
     assert(arrayClear(&h->items) != -1);
     assert(s_heapSize(h) == 0);
 }
@@ -67,7 +94,6 @@ void compute_1_to_n_sequences_of_operations(long n, Test type) {
 }
 
 bool heap_integrity_test(int n) {
-    srand(time(NULL));
     s_heap h = s_createEmptyHeap();
     assert(s_initHeap(&h, 10, &compare) == 10);
     errorHandler();
@@ -249,10 +275,4 @@ void test_sequence() {
     printf("Tests passed.\n");
 }
 
-int main(void) {
-    test_sequence();
-    compute_1_to_n_sequences_of_operations(1000000, INSERTION);
-    compute_1_to_n_sequences_of_operations(1000000, DELETION);
-    return heap_integrity_test(300) ? 0 : -1;
-    return 0;
-}
+

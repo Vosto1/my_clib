@@ -8,16 +8,13 @@ typedef struct {
     element e;
 }Item;
 
-int compare(Data x, Data y);
-void print(size_t used, Data a[]);
-
-int compare(Data x, Data y) {
+int compare(cvoidp x, cvoidp y) {
     Item* item1 = (Item*)x;
     Item* item2 = (Item*)y;
     return item1->p - item2->p;
 }
 
-void print(size_t used, Data a[]) {
+void print(size_t used, voidp a[]) {
     Item* itemArr = (Item*)a;
      for (int i = 0; i < used; i++) {
         printf("value at %d: [%d;%c]\n", i, itemArr[i].p, itemArr[i].e);
@@ -129,7 +126,7 @@ bool integrity_check(int n) {
             totalTests++;
         }
         end = now();
-        printf("Computed %d operations (%d enqueues, %d dequeues %d trydequeue and %d peeks) during %f seconds, passed integrity check.\n", x, enqcount, dqcount, tdqcount, pcount, diff(start, end));
+        printf("Computed %d operations (%d enqueues, %d dequeues %d trydequeue and %d peeks) during %f seconds, passed integrity test.\n", x, enqcount, dqcount, tdqcount, pcount, diff(start, end));
         // reset counters
         dqcount = 0;
         enqcount = 0;
@@ -138,7 +135,7 @@ bool integrity_check(int n) {
     }
     ticks testEnd = now();
     seconds passed = diff(testStart, testEnd);
-    printf("Computed a total of %ld operations and tests.\n", totalTests);
+    printf("Computed a total of %ld operations and integrity tests.\n", totalTests);
     printf("Total test running time: %fs\n", passed);
     printf("Integrity test exiting...\n");
     freePQ(&pq);

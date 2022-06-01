@@ -1,5 +1,7 @@
 #include "file.h"
 
+#define BYTE 1
+
 // return size of file (bytes)
 size_t readFile(const char* filepath, void** out) {
 	// make filepointer and open file
@@ -22,7 +24,7 @@ size_t readFile(const char* filepath, void** out) {
 	}
 
 	// read file contents
-	size_t readBytes = fread(file, 1, length, rfp);
+	size_t readBytes = fread(file, BYTE, length, rfp);
 	// close file
 	fclose(rfp);
 
@@ -44,7 +46,7 @@ size_t writeFile(const char* filepath, void* contents, size_t size) {
 		return 0;
     }
 
-	size_t writtenBytes =  fwrite(contents, sizeof(byte), size, wfp);
+	size_t writtenBytes =  fwrite(contents, BYTE, size, wfp);
 	// close file
 	fclose(wfp);
 	return writtenBytes;

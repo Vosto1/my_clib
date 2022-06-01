@@ -10,7 +10,7 @@ s_heap s_createEmptyHeap() {
     return h;
 }
 
-size_t s_initHeap(s_heap* h, size_t size, int (*compare)(Data x, Data y)) {
+size_t s_initHeap(s_heap* h, size_t size, int (*compare)(cvoidp x, cvoidp y)) {
     h->compare = compare;
     return initDynamicArray(&(h->items), size, compare);
 }
@@ -31,7 +31,7 @@ size_t s_heapSize(s_heap* h) {
 * return the item with the smallest key (the top of the heap).
 * The item remains in the heap.
 */
-Data s_peek(s_heap* h) {
+voidp s_peek(s_heap* h) {
     return h->items.array[0];
 }
 
@@ -46,7 +46,7 @@ bool sh_is_empty(s_heap* h) {
 /*
 * Add to the heap.
 */
-size_t s_heapInsert(s_heap* h, Data item) {
+size_t s_heapInsert(s_heap* h, voidp item) {
     arrayInsert(&(h->items), item);
     if (errc != SUCCESS) {
         return -1;
@@ -59,7 +59,7 @@ size_t s_heapInsert(s_heap* h, Data item) {
 * Return the item with the smallest key (== highest priority).
 * The item is also removed from the heap
 */
-Data s_extractMin(s_heap* h) {
+voidp s_extractMin(s_heap* h) {
     if (sh_is_null(h)) {
         errcset(EHEAP_NULL);
         return NULL;
@@ -68,8 +68,8 @@ Data s_extractMin(s_heap* h) {
         errcset(EHEAP_EMPTY);
         return NULL;
     }
-    Data tempMin = h->items.array[0];
-    Data tempLast = h->items.array[s_heapSize(h) - 1];
+    voidp tempMin = h->items.array[0];
+    voidp tempLast = h->items.array[s_heapSize(h) - 1];
     arrayRemoveAt(&(h->items), s_heapSize(h) - 1); // remove at last index
     if (s_heapSize(h) != 0) { // if the heap is not empty after removal
         h->items.array[0] = tempLast;
@@ -83,7 +83,7 @@ Data s_extractMin(s_heap* h) {
 * go through the non-leafs "backwards" and heapify-down
 * builds heap from an unordered list (array)
 */
-s_heap s_buildMinHeap(Data* unorderedList, size_t size, int (*compare)(Data x, Data y)) {
+s_heap s_buildMinHeap(voidp* unorderedList, size_t size, int (*compare)(cvoidp x, cvoidp y)) {
     s_heap h;
     s_initHeap(&h, size, compare);
     for (int i = 0; i < size; i++)
@@ -98,16 +98,16 @@ bool s_testHeapIntegrity(s_heap* h) {
     for (int i = 0; i < s_heapSize(h); i++) {
         int l = s_left(i);
         int r = s_right(i);
-        Data i1 = h->items.array[i];
+        voidp i1 = h->items.array[i];
         if (l < s_heapSize(h)) {
-            Data l1 = h->items.array[l];
+            voidp l1 = h->items.array[l];
             if ((*h->compare)(i1, l1) > 0)
             {
                 return false;
             }
         }
         if (r < s_heapSize(h)) {
-            Data r1 = h->items.array[r];
+            voidp r1 = h->items.array[r];
             if ((*h->compare)(i1, r1) > 0) {
                 return false;
             }
@@ -137,7 +137,7 @@ static int s_right(int i) {
 
 /*swap two items in a dynamic array*/
 static void s_swap(array* a, int i1, int i2) {
-    Data temp1 = a->array[i1];
+    voidp temp1 = a->array[i1];
     a->array[i1] = a->array[i2];
     a->array[i2] = temp1;
 }

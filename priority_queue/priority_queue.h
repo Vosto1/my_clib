@@ -14,7 +14,8 @@
 #include "../s_heap/s_heap.h"
 #include "../utils/error.h"
 
-typedef void* Data;
+typedef void* voidp;
+typedef const void* cvoidp;
 typedef unsigned long long size_t;
 
 typedef struct {
@@ -23,11 +24,11 @@ typedef struct {
 /**
  * The priority queue stores pointers to data as void* pointers.
  * This way the type is generic, but all data must be allocated as
- * dynamic memory. The void* pointer is typedefed to Data to
+ * dynamic memory. The void* pointer is typedefed to voidp to
  * make it easier to read.
  * 
- * The data structure needs a Data to Data comparison function
- * (compare) from the user to be able to function correctly.
+ * The data structure needs a comparison function (compare)
+ * from the user to be able to function correctly.
  * The function should return 1 when the left value is bigger
  * than the right value, -1 when the opposite is true and
  * 0 when they are equal. It it up to the user to define
@@ -50,9 +51,9 @@ PriorityQueue createEmptyPQ();
  * @param pq pointer to the priority queue to initialize
  * @param size the initial size of the priority queue
  * @param compare a function that can compare two items of your data type
- * @return the size the priority queue is initialized to or -1 if something went wrong
+ * @return the size the priority queue is initialized to or -1 if error
  */
-size_t initPQ(PriorityQueue* pq, size_t size, int (*compare)(Data x, Data y));
+size_t initPQ(PriorityQueue* pq, size_t size, int (*compare)(cvoidp x, cvoidp y));
 /**
  * @brief remove (free) all items in the priority queue and free it
  * 
@@ -72,16 +73,16 @@ size_t count(PriorityQueue* pq);
  * 
  * @param pq the priority queue to enqueue the item
  * @param item the item to enqueue
- * @return  the item count in the priority queue or -1 if something went wrong
+ * @return  the item count in the priority queue or -1 if error
  */
-size_t enqueuePQ(PriorityQueue* pq, Data item);
+size_t enqueuePQ(PriorityQueue* pq, voidp item);
 /**
  * @brief dequeue an item from the priority queue
  * 
  * @param pq priority queue to dequeue from
  * @return a pointer to the item that was dequeued
  */
-Data dequeuePQ(PriorityQueue* pq);
+voidp dequeuePQ(PriorityQueue* pq);
 /**
  * @brief try to dequeue an item
  * 
@@ -90,7 +91,7 @@ Data dequeuePQ(PriorityQueue* pq);
  * @return true if there was an item to dequeue
  * @return false if there wasn't an item to dequeue
  */
-bool trydequeuePQ(PriorityQueue* pq, Data* out);
+bool trydequeuePQ(PriorityQueue* pq, voidp* out);
 /**
  * @brief peek at the top of the priority queue
  * 
@@ -99,6 +100,6 @@ bool trydequeuePQ(PriorityQueue* pq, Data* out);
  * @return true if there was an item
  * @return false if there was no item
  */
-bool peekPQ(PriorityQueue* pq, Data* out);
+bool peekPQ(PriorityQueue* pq, voidp* out);
 
 #endif
