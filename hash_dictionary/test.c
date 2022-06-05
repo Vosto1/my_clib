@@ -22,12 +22,28 @@ entry* createEntry(key k, value v) {
 }
 
 entry* randomElement(hashtable* ht) {
+    size_t size = ht_size(ht);
     size_t i = 0;
-    for (; i < ht_size(ht); i++)
+    for (; i < size; i++) {
         if (ht->entries[i] != UNUSED)
-            break;
-    return (entry*)ht->entries[i];
+            return (entry*)ht->entries[i];
+    }
+    return UNUSED;
 }
+
+// better random concept but not working (too lazy to fix rn)
+/* entry* randomElement(hashtable* ht) {
+    size_t size = ht_size(ht);
+    size_t startIndex = rand() % ht_size(ht);
+    size_t i = startIndex;
+    size_t index = 0;
+    for (; i < size + startIndex; i++) {
+        index = i % size; // "wrap around"
+        if (ht->entries[index] != UNUSED)
+            return (entry*)ht->entries[i];
+    }
+    return UNUSED;
+} */
 
 // debug
 void print(hashtable* ht) {
@@ -40,38 +56,111 @@ void print(hashtable* ht) {
     printf("\n");
 }
 
+void pvalue(entry* e) {
+    printf("key: %c value: %d\n", e->k, e->v);
+}
 
-void auto_tests(int tests, int mod) {
+
+unsigned int auto_tests(int tests, int mod) {
     srand(time(NULL));
 
     hashtable ht = ht_createEmpty();
     ht_init(&ht, 10, &hash, &compare);
     ticks start, end, prgStart, prgEnd;
-    unsigned int operations, deletions, insertions, lookups;
-    unsigned int random, val;
+    unsigned int count;
+    unsigned int operations = 0, deletions = 0, insertions = 0, lookups = 0;
+    unsigned int random, nexttests, val;
     entry* element;
-    entry* e; 
+    entry* e;
+    entry* del; 
+    bool existsht = false;
 
     prgStart = now();
     for (unsigned int i = 0; i < tests; i++) {
-        random = rand() % 100;
-        val = rand() % 94 + 32; // ascii character value span
+        nexttests = rand() % mod;
         start = now();
-        if (random < 70) { // insert
-            element = createEntry((char)val, val);
-            assert(ht_insert(&ht, element) != -1);
-        }
-        else if (random > 70 && random < 90) { // delete
-            ht_delete(&ht, )
-
-        }
-        else { // look up
-
+        for (unsigned int j = 0; j < nexttests; j++) {
+            val = rand() % 94 + 32; // ascii character value span
+            random = rand() % 100;
+            if (random < 80) { // insert
+                //printf("insertion, element count: %d\n", ht_count(&ht));
+                element = createEntry((char)val, val);
+                existsht = ht_lookup(&ht, element) != NULL; // check if element already exists in ht
+                count = ht_count(&ht);
+                // debug
+                //print(&ht);
+                assert(ht_insert(&ht, element) != -1);
+                // debug
+                //print(&ht);
+                if (!existsht) // if it already existed the element was "updated" (its not visible since its updated to the same values)
+                    assert(ht_count(&ht) == count + 1);
+                assert(ht_lookup(&ht, element) != NULL); // check if the element was inserted
+                insertions++;
+            }
+            else if (random > 80 && random < 90) { // delete
+                if (ht_count(&ht) > 0) {
+                    //printf("deletion, element count: %d\n", ht_count(&ht));
+                    e = randomElement(&ht);
+                    // debug
+                    //pvalue(e);
+                    count = ht_count(&ht);
+                    del = ht_delete(&ht, e);
+                    assert(del != NULL); // make sure that the element was deleted (e cannot be a element that doesnt exist in ht)
+                    assert(ht_count(&ht) == (count - 1));
+                    e = ht_lookup(&ht, del);
+                    assert(e == NULL); // del shouldnt be in ht
+                    free(del);
+                    deletions++;
+                }
+            }
+            else { // look up
+                if (ht_count(&ht) > 0) {
+                    //printf("lookup, element count: %d\n", ht_count(&ht));
+                    element = randomElement(&ht);
+                    // debug
+                    //pvalue(element);
+                    //print(&ht);
+                    e = ht_lookup(&ht, element);
+                    assert(element == e); // make sure we found the right element
+                    lookups++;
+                }
+            }
+            operations++;
         }
         end = now();
+        seconds subtest = diff(start, end);
+        printf("Computed %d operations (%d insertions %d deletions %d lookups) during %f\n", nexttests, insertions, deletions, lookups, subtest);
+        insertions = 0;
+        deletions = 0;
+        lookups = 0;
     }
+    // test trim
+    s_array a = sda_createEmpty();
+    sda_init(&a, 1);
+    for (size_t i = 0; i < ht_size(&ht); i++)
+        if (ht.entries[i] != UNUSED)
+            sda_insert(&a, ht.entries[i]);
+    
+    size_t count1 = ht_count(&ht);
+    ht_trim(&ht);
+    //print(&ht);
+    size_t count2 = ht_count(&ht);
+    assert(count1 == count2);
+    size_t acount = sda_count(&a);
+    size_t h;
+    entry* en;
+    for (size_t i = 0; i < acount; i++) {
+        en = sda_removeLast(&a);
+        h = hash(en, &ht);
+        assert(ht.entries[h] != UNUSED);
+    }
+
+
     prgEnd = now();
     seconds programTime = diff(prgStart, prgEnd);
+    printf("Test completed, computed %d operations during %fs\n", operations, programTime);
+    ht_free(&ht);
+    return operations;
 }
 
 void test_sequence() {
@@ -82,6 +171,10 @@ void test_sequence() {
     entry* e2 = createEntry('/', 3);
     entry* e3 = createEntry('#', 7);
     entry* e4 = createEntry('<', 5);
+
+    assert(ht_delete(&ht, e1) == UNUSED);
+    assert(ht_lookup(&ht, e1) == UNUSED);
+
     ht_insert(&ht, e1);
     ht_insert(&ht, e2);
     ht_insert(&ht, e3);

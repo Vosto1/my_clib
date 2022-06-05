@@ -41,6 +41,43 @@ void ht_free(hashtable* ht) {
     }
 }
 
+size_t ht_trim(hashtable* ht) {
+    size_t size = ht_size(ht);
+    s_array a = sda_createEmpty();
+    if (sda_init(&a, 1) != 1) {
+        errcset(EHASH_TRIM_BUFFER);
+        return -1;
+    }
+    
+    // move all elements from the hashtable to an array
+    for (size_t i = 0; i < size; i++)
+        if (ht->entries[i] != UNUSED)
+            sda_insert(&a, ht->entries[i]);
+    
+    // trim memory
+    size_t elementCount = sda_count(&a);
+    voidp* temp = (voidp*)realloc(ht->entries, elementCount * sizeof(voidp));
+    if (temp == NULL) {
+        errcset(EHASH_TRIM_MEMALLOC);
+        return -1;
+    }
+    ht->entries = temp;
+    ht->size = elementCount;
+
+    // initialize ht
+    for (size_t i = 0; i < elementCount; i++)
+        ht->entries[i] = UNUSED;
+
+    // re-insert elements
+    voidp e;
+    for (size_t i = 0; i < elementCount; i++) {
+        e = sda_removeLast(&a);
+        ht_insert(ht, e);
+    }
+
+    return ht->size;
+}
+
 size_t ht_insert(hashtable* ht, voidp element) {
     size_t index = linear_probe(ht, element);
     voidp e = ht->entries[index];
@@ -54,22 +91,23 @@ size_t ht_insert(hashtable* ht, voidp element) {
 }
 
 voidp ht_delete(hashtable* ht, cvoidp element) {
-    if (ht_lookup(ht, element) != UNUSED) {
+    if (ht_size(ht) > 0 && ht_lookup(ht, element) != UNUSED) {
         size_t index = indexof(ht, element);
-        // save deleted element for later and free its' former slot
+        // save deleted element for later and unoccupy its' former slot
         voidp del = ht->entries[index];
         ht->entries[index] = UNUSED;
 
-        // re-insert entries that might have been inserted with linear probing
+        // re-insert entries that might have been inserted with linear probing before
         voidp temp;
+        size_t size = ht_size(ht);
         size_t i = 1;
-        size_t entry = (index + i) % ht_size(ht);
+        size_t entry = (index + i) % size;
         while (i < ht_size(ht) && ht->entries[entry] != UNUSED) {
             temp = ht->entries[entry];
             ht->entries[entry] = UNUSED;
             ht_insert(ht, temp);
             i++;
-            entry = (index + i) % ht_size(ht);
+            entry = (index + i) % size;
         }
         // return the deleted element
         return del;
@@ -81,9 +119,10 @@ voidp ht_lookup(const hashtable* ht, cvoidp element) {
     size_t size = ht_size(ht);
     size_t index = 0;
     size_t i = 0;
+    size_t hash = (*ht->hash)(element, ht);
     voidp e;
     for (size_t i = 0; i < size; i++) {
-        index = ((*ht->hash)(element, ht) + i) % size;  // modulu size to "wrap around"
+        index = (hash + i) % size;  // modulu size to "wrap around"
         e = ht->entries[index];
         if (e == UNUSED) {
             return UNUSED; // element not in table
@@ -114,9 +153,10 @@ static size_t indexof(hashtable* ht, cvoidp valueToSearchFor)
     size_t size = ht_size(ht);
     size_t index = 0;
     size_t i = 0;
+    size_t hash = (*ht->hash)(valueToSearchFor, ht);
     voidp e;
     for (size_t i = 0; i < size; i++) {
-        index = (*ht->hash)(valueToSearchFor, ht) + i;
+        index = (hash + i) % size;
         e = ht->entries[index];
         if ((*ht->compare)(valueToSearchFor, e) == 0) {
             return index; // found element at index: [index]
@@ -134,8 +174,9 @@ static size_t indexof(hashtable* ht, cvoidp valueToSearchFor)
 static size_t linear_probe(hashtable* ht, voidp element) {
     size_t size = ht_size(ht);
     size_t index;
+    size_t hash = (*ht->hash)(element, ht);
     for (size_t i = 0; i < size; i++) {
-        index = ((*ht->hash)(element, ht) + i) % size; // modulu size to "wrap around"
+        index = (hash + i) % size; // modulu size to "wrap around"
         cvoidp e = ht->entries[index];
         if (e == UNUSED || (*ht->compare)(e, element) == 0) {
             ht->entries[index] = element; // update existing element or put element in an unoccupied slot
@@ -146,7 +187,7 @@ static size_t linear_probe(hashtable* ht, voidp element) {
     // hashtable overflow
     s_array a = sda_createEmpty();
     if (sda_init(&a, ht_size(ht)) != ht_size(ht)) {
-        errcset(EHASHTABLE_OVERFLOW_BUFFERERR);
+        errcset(EHASHTABLE_OVERFLOW_BUFFER);
         return -1;
     }
 
@@ -159,12 +200,17 @@ static size_t linear_probe(hashtable* ht, voidp element) {
     }
 
     // reallocate hashtable memory (double size)
-    ht->size *= 2;
+    if (ht_size(ht) != 0)
+        ht->size *= 2;
+    else
+        ht->size = 1;
+    
     voidp* temp = (voidp*)realloc(ht->entries, ht->size * sizeof(voidp));
     if (temp == NULL) {
         errcset(EHASHTABLE_OVERFLOW_MEMALLOC);
         return -1; // fatal error
     }
+    ht->entries = temp;
 
     // initialize to UNUSED
     for (size_t i = 0; i < ht_size(ht); i++) {
@@ -179,5 +225,5 @@ static size_t linear_probe(hashtable* ht, voidp element) {
     }
 
     // insert the element that we wanted to add from the beginning
-    ht_insert(ht, element);
+    return ht_insert(ht, element);
 }

@@ -61,8 +61,12 @@ const char* error(ErrorCode e) {
             return "hashtable was null";
         case EHASHTABLE_OVERFLOW_MEMALLOC:
             return "fatal error, realloc failed during hashtable overflow";
-        case EHASHTABLE_OVERFLOW_BUFFERERR:
+        case EHASHTABLE_OVERFLOW_BUFFER:
             return "couldn't create buffer for elements to reallocate hashtable memory";
+        case EHASH_TRIM_BUFFER:
+            return "couldn't create buffer for elements to trim hashtable memory";
+        case EHASH_TRIM_MEMALLOC:
+            return "fatal error, realloc failed during hashtable memory trim";
         default:
             printf("Error: %d", e);
             return " unknown error";

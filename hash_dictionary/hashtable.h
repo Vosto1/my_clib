@@ -23,6 +23,7 @@ struct htabl {
 hashtable ht_createEmpty();
 size_t ht_init(hashtable* ht, size_t size, size_t (*hash)(cvoidp,const hashtable*), int (*compare)(cvoidp,cvoidp));
 void ht_free(hashtable* ht);
+size_t ht_trim(hashtable* ht);
 
 size_t ht_insert(hashtable* ht, voidp element);
 voidp ht_delete(hashtable* ht, cvoidp element);
