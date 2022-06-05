@@ -7,6 +7,7 @@
 #include "../utils/timer.h"
 #include "bitvector.h"
 
+void auto_tests(int tests, int lengthRange);
 void test_sequence();
 
 #endif

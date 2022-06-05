@@ -48,9 +48,9 @@ typedef struct {
     voidp* array;
     size_t size;
     size_t used;
-}dynamicArray;
+}s_dynamicArray;
 
-typedef dynamicArray array;
+typedef s_dynamicArray s_array;
 
 /**
  * @brief get amount of elements of an array
@@ -58,18 +58,18 @@ typedef dynamicArray array;
  * @param a array to check
  * @return element count
  */
-size_t sda_count(array* a);
+size_t sda_count(s_array* a);
 /**
  * @brief get size of an array
  * 
  * @param a array to check
  * @return array size
  */
-size_t sda_size(array* a);
+size_t sda_size(s_array* a);
 /**
  * create an empty dynamic array
  */
-dynamicArray sda_createEmpty();
+s_dynamicArray sda_createEmpty();
 /**
  * initialize a dynamic array
  * 
@@ -78,13 +78,13 @@ dynamicArray sda_createEmpty();
  * @param compare comparison function to compare Data
  * @return the initial size of the array or -1 if error
  */
-size_t sda_init(dynamicArray* a, size_t initSize);
+size_t sda_init(s_dynamicArray* a, size_t initSize);
 /**
  * remove (free) all items in array and then free allocated memory for the dynamic array
  * 
  * @param a array to free
  */
-void sda_free(dynamicArray* a);
+void sda_free(s_dynamicArray* a);
 /**
  * insert into the dynamic array
  * 
@@ -92,14 +92,14 @@ void sda_free(dynamicArray* a);
  * @param item item to insert
  * @return the amount of used indecies in the array or -1 if error
  */
-size_t sda_insert(dynamicArray* a, voidp item);
+size_t sda_insert(s_dynamicArray* a, voidp item);
 /**
  * remove the last element of the dynamic array
  * 
  * @param a array to remove from
  * @return a pointer to the removed item
  */
-voidp sda_removeLast(dynamicArray* a);
+voidp sda_removeLast(s_dynamicArray* a);
 /**
  * remove a specific item from the dynamic array
  * 
@@ -107,7 +107,7 @@ voidp sda_removeLast(dynamicArray* a);
  * @param item item to remove
  * @return a pointer to the removed item or null if error
  */
-voidp sda_removeAt(dynamicArray* a, int index);
+voidp sda_removeAt(s_dynamicArray* a, int index);
 /**
  * convert a Data[] array to a dynamic array
  * 
@@ -117,7 +117,7 @@ voidp sda_removeAt(dynamicArray* a, int index);
  * @param compare compare function to compare Data needed for initialization of a dynamic array
  * @return the size of the result array or -1 if error
  */
-size_t sda_convert(dynamicArray* a, voidp b[], size_t bsize);
+size_t sda_convert(s_dynamicArray* a, voidp b[], size_t bsize);
 /**
  * merge two dynamic arrays, b will be put on the end of a and b will be freed
  * 
@@ -125,28 +125,28 @@ size_t sda_convert(dynamicArray* a, voidp b[], size_t bsize);
  * @param b array to merge with (will be freed)
  * @return the new size of the array (a) or -1 if error
  */
-size_t sda_union(dynamicArray* a, dynamicArray* b); // add array b on the end of array a O(n)
+size_t sda_union(s_dynamicArray* a, s_dynamicArray* b); // add array b on the end of array a O(n)
 /**
  * remove (free) all items in the array
  * 
  * @param a array to remove from
  * @return the amount of items that was removed or -1 if error
  */
-size_t sda_clear(array* a);
+size_t sda_clear(s_array* a);
 /**
  * check if the dynamic array is uninitialized
  * 
  * @param a array to try
  * @return true if a.array == NULL
  */
-bool sda_is_null(array* a);
+bool sda_is_null(s_array* a);
 /**
  * check if the dynamic array is empty
  * 
  * @param a array to try
  * @return true if a.used == 0
  */
-bool sda_is_empty(array* a);
+bool sda_is_empty(s_array* a);
 /**
  * @brief find an item in the array
  * 
@@ -154,5 +154,5 @@ bool sda_is_empty(array* a);
  * @param item item to look for
  * @return the index of the item or -1 if it doesnt exist
  */
-static MEM sda_memoryDecrease(dynamicArray* a);
+static MEM sda_memoryDecrease(s_dynamicArray* a);
 #endif

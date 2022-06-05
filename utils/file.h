@@ -8,8 +8,11 @@ skriva läsa till fil
 #include <stdlib.h>
 #include "error.h"
 
+#define BYTE sizeof(unsigned char)
+#define ELEMENT_SIZE 1
+
 /**
- * read contents of a file
+ * read contents of a file (binary)
  * 
  * @param filepath path to the file
  * @param contents a pointer to the buffer where the contents of the file will be written to
@@ -18,7 +21,7 @@ skriva läsa till fil
 size_t readFile(const char* filepath, void** contents);
 
 /**
- * write data to file
+ * write data to file (binary)
  * 
  * @param filepath path to the file to write to
  * @param contents a pointer to the data that should be written to the file

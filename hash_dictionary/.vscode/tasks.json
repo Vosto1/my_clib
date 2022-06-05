@@ -4,16 +4,16 @@
 		{
 			"type": "cppbuild",
 			"label": "C/C++: gcc.exe build active file",
-			"command": "E:\\Program Files\\MinGW64\\bin\\gcc.exe",
+			"command": "C:\\Program Files\\MinGW64\\bin\\gcc.exe",
 			"args": [
 				"-fdiagnostics-color=always",
 				"-g",
 				"${file}",
+				"../s_dynamic_array/s_dynamic_array.c",
+				"../utils/error.c",
 				"hashtable.c",
-				"dynamic_array.c",
-				"data.c",
 				"-o",
-				"${fileDirname}\\out.exe"
+				"${fileDirname}\\${fileBasenameNoExtension}.exe"
 			],
 			"options": {
 				"cwd": "${fileDirname}"
@@ -22,7 +22,7 @@
 				"$gcc"
 			],
 			"group": "build",
-			"detail": "compiler: \"E:\\Program Files\\MinGW64\\bin\\gcc.exe\""
+			"detail": "compiler: \"C:\\Program Files\\MinGW64\\bin\\gcc.exe\""
 		}
 	]
 }

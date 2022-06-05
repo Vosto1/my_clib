@@ -1,11 +1,9 @@
 #include "file.h"
 
-#define BYTE 1
-
-// return size of file (bytes)
+// return read bytes
 size_t readFile(const char* filepath, void** out) {
 	// make filepointer and open file
-	FILE* rfp = fopen(filepath, "r");
+	FILE* rfp = fopen(filepath, "rb"); // rb == read binary
 	if (!rfp) {
 		errcset(EFILE_OPENWRITE);
 		return 0;
@@ -16,15 +14,16 @@ size_t readFile(const char* filepath, void** out) {
 	size_t length = ftell(rfp);
 	fseek(rfp, 0, SEEK_SET);
 
-	// create 
-	void* file = (void*)malloc(length);
+	// create buffer
+	size_t sizeBytes = length * BYTE;
+	void* file = (void*)malloc(sizeBytes);
 	if (!file) {
 		errcset(EMEM_ALLOC);
 		return 0;
 	}
 
 	// read file contents
-	size_t readBytes = fread(file, BYTE, length, rfp);
+	size_t readBytes = fread(file, ELEMENT_SIZE, sizeBytes, rfp);
 	// close file
 	fclose(rfp);
 
@@ -35,7 +34,7 @@ size_t readFile(const char* filepath, void** out) {
 // return written bytes
 size_t writeFile(const char* filepath, void* contents, size_t size) {
 	// make filepointer and open file
-	FILE* wfp = fopen(filepath, "w");
+	FILE* wfp = fopen(filepath, "wb"); // wb == write binary
 	if (!wfp) {
 		errcset(EFILE_OPENREAD);
 		return 0;
@@ -46,10 +45,13 @@ size_t writeFile(const char* filepath, void* contents, size_t size) {
 		return 0;
     }
 
-	size_t writtenBytes =  fwrite(contents, BYTE, size, wfp);
+	size_t sizeBytes = size * BYTE;
+	size_t writtenBytes =  fwrite(contents, ELEMENT_SIZE, sizeBytes, wfp);
 	// close file
 	fclose(wfp);
 	return writtenBytes;
 }
 
-//size_t appendFile();
+// future functions
+//size_t appendFile(); // append to the end of the file
+//size_t readBytesFile(int amountBytes, int offset); // read a specified amount of bytes from file (from offset to amountBytes)

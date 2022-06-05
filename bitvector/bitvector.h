@@ -30,6 +30,7 @@ size_t bvadd(bitvector* bv, bool value);
 size_t bvunion(bitvector* bv, bitvector* unionWith);
 bool bvremoveLast(bitvector* bv);
 size_t bvclear(bitvector* bv);
+bool* bvat(bitvector *bv, int index);
 unsigned int bools2bits(bitvector* bv, binary* out);
 size_t bits2bools(binary* b, bitvector* out);
 size_t writeBinaryToFile(binary* b, char* file);

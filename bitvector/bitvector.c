@@ -38,6 +38,14 @@ bool bvremoveLast(bitvector* bv) {
     }
 }
 
+// at == get value at index
+bool* bvat(bitvector *bv, int index) {
+    if (index >= bv->used) {
+        errcset(EARR_INDEX_OCCUPIED);
+        return NULL;
+    } else return (bool*)bv->array[index];
+}
+
 size_t bvclear(bitvector* bv) {
     return sda_clear(bv);
 }
@@ -58,9 +66,6 @@ unsigned int bools2bits(bitvector* bv, binary* out) {
         errcset(EMEM_ALLOC);
         return -1;
     }
-    //
-    /* binary bbin; */
-    //
     for (unsigned int i = 0; i < amountOfBytes; i++) { // for every byte
         byte b;
         for (unsigned int k = 0; k < sizeBits(sizeof(byte)); k++) { // initialize byte
@@ -77,18 +82,7 @@ unsigned int bools2bits(bitvector* bv, binary* out) {
             }
         }
         bin[i] = b;
-        /* bbin.amountOfBytes = 1;
-        bbin.residualBits = 0;
-        bbin.bytes = (byte*)malloc(sizeof(byte));
-        bbin.bytes[0] = b;
-        printbinary(&bbin); */
     }
-    //
-    /* bbin.bytes = bin;
-    bbin.amountOfBytes = amountOfBytes;
-    bbin.residualBits = residualBitsInLastByte;
-    printbinary(&bbin); */
-    //
     out->residualBits = residualBitsInLastByte;
     out->amountOfBytes = amountOfBytes;
     out->bytes = bin;
@@ -136,6 +130,7 @@ size_t writeBinaryToFile(binary* b, char* file) {
         return -1;
     }
     byte tmp;
+    // start at the back for the uint
     int i = 0;
     int j = 0;
     while (i < byteSizeResidual) { // write residual bits to buffer
@@ -151,7 +146,6 @@ size_t writeBinaryToFile(binary* b, char* file) {
     }
     size_t fileSize = byteSizeResidual + byteSizeData;
     
-    //dbug(buffer, fileSize);
     if(writeFile(file, (void*)buffer, fileSize) == fileSize)
         return fileSize;
     else {

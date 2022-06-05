@@ -55,6 +55,14 @@ const char* error(ErrorCode e) {
             return "priority queue is empty";
         case EWRITE_BINARY:
             return "couldn't write bitvector to file";
+        case EHASHDATA_DOESNT_EXIST:
+            return "data wasn't present in the hashtable";
+        case EHASH_NULL:
+            return "hashtable was null";
+        case EHASHTABLE_OVERFLOW_MEMALLOC:
+            return "fatal error, realloc failed during hashtable overflow";
+        case EHASHTABLE_OVERFLOW_BUFFERERR:
+            return "couldn't create buffer for elements to reallocate hashtable memory";
         default:
             printf("Error: %d", e);
             return " unknown error";

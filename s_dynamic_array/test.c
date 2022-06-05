@@ -35,7 +35,7 @@ static Item* createItem(int value) {
     return item;
 }
 
-static void printData(array* a) {
+static void printData(s_array* a) {
     Item* item;
     for (int i = 0; i < a->used; i++) {
         item = (Item*)a->array[i];
@@ -44,7 +44,7 @@ static void printData(array* a) {
     printf("used: %d\nsize: %d\n\n", a->used, a->size);
 }
 
-static void insert_n(array * a, int n) {
+static void insert_n(s_array * a, int n) {
     size_t e;
     Item* item;
     for (int j = 0; j < n; j++) {
@@ -56,13 +56,13 @@ static void insert_n(array * a, int n) {
     assert(a->used == n);
 }
 
-static void remove_all(array* a) {
+static void remove_all(s_array* a) {
     sda_clear(a);
     assert(a->used == 0);
 }
 
 void auto_tests(int n, int mod) {
-    array a = sda_createEmpty();
+    s_array a = sda_createEmpty();
     assert(a.array == NULL);
     assert(a.size == 0);
     assert(a.used == 0);
@@ -134,7 +134,7 @@ void auto_tests(int n, int mod) {
                     }
                     for (int k = 0; k < size; k++)
                         b[k] = createItem(rand() % 1000);
-                    dynamicArray c = sda_createEmpty();
+                    s_dynamicArray c = sda_createEmpty();
                     assert(sda_init(&c, size) == size);
                     errorHandler();
                     assert(sda_convert(&c, (void*)b, size) == size);
@@ -164,7 +164,7 @@ void test_sequence() {
     Item item;
     Item* itemptr;
 
-    array a = sda_createEmpty();
+    s_array a = sda_createEmpty();
     assert(a.array == NULL);
     assert(a.size == 0);
     assert(a.used == 0);

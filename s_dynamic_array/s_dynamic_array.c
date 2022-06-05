@@ -1,22 +1,22 @@
 #include "s_dynamic_array.h"
 
-size_t sda_count(array* a) {
+size_t sda_count(s_array* a) {
     return a->used;
 }
 
-size_t sda_size(array* a) {
+size_t sda_size(s_array* a) {
     return a->size;
 }
 
-dynamicArray sda_createEmpty() {
-    dynamicArray a;
+s_dynamicArray sda_createEmpty() {
+    s_dynamicArray a;
     a.array = NULL;
     a.size = 0;
     a.used = 0;
     return a;
 }
 
-size_t sda_init(dynamicArray* a, size_t initSize) {
+size_t sda_init(s_dynamicArray* a, size_t initSize) {
     a->size = 0;
     a->used = 0;
     voidp* temp;
@@ -32,7 +32,7 @@ size_t sda_init(dynamicArray* a, size_t initSize) {
     }
 }
 
-void sda_free(dynamicArray* a) {
+void sda_free(s_dynamicArray* a) {
     if (!sda_is_null(a)) {
         if (!sda_is_empty(a))
             sda_clear(a);
@@ -43,7 +43,7 @@ void sda_free(dynamicArray* a) {
     }
 }
 
-size_t sda_insert(dynamicArray* a, voidp item) {
+size_t sda_insert(s_dynamicArray* a, voidp item) {
     if (a == NULL || a->array == NULL) {
         errcset(ENULL_ARG);
         return -1;
@@ -66,7 +66,7 @@ size_t sda_insert(dynamicArray* a, voidp item) {
     return a->used;
 }
 
-voidp sda_removeLast(dynamicArray* a) {
+voidp sda_removeLast(s_dynamicArray* a) {
     if (sda_is_empty(a)) {
         errcset(EARR_EMPTY);
         return NULL;
@@ -82,7 +82,7 @@ voidp sda_removeLast(dynamicArray* a) {
     }
 }
 
-voidp sda_removeAt(dynamicArray* a, int index) {
+voidp sda_removeAt(s_dynamicArray* a, int index) {
     if (index > a->used) {
         errcset(EINDEX_OUT_OF_BOUNDS);
         return NULL;
@@ -102,7 +102,7 @@ voidp sda_removeAt(dynamicArray* a, int index) {
     }
 }
 
-size_t sda_convert(dynamicArray* a, voidp b[], size_t bsize) {
+size_t sda_convert(s_dynamicArray* a, voidp b[], size_t bsize) {
     *a = sda_createEmpty();
     if(sda_init(a, bsize) != bsize) {
         return -1;
@@ -113,7 +113,7 @@ size_t sda_convert(dynamicArray* a, voidp b[], size_t bsize) {
     return bsize;
 }
 
-size_t sda_union(dynamicArray* a, dynamicArray* b) {
+size_t sda_union(s_dynamicArray* a, s_dynamicArray* b) {
     if (a == NULL || b == NULL) {
         errcset(ENULL_ARG);
         return -1;
@@ -129,7 +129,7 @@ size_t sda_union(dynamicArray* a, dynamicArray* b) {
     return a->size;
 }
 
-size_t sda_clear(array* a) {
+size_t sda_clear(s_array* a) {
     if(sda_is_empty(a)) {
         errcset(EARR_EMPTY);
         return -1;
@@ -146,16 +146,16 @@ size_t sda_clear(array* a) {
     return amount;
 }
 
-bool sda_is_null(array* a) {
+bool sda_is_null(s_array* a) {
     return a->array == NULL;
 }
 
-bool sda_is_empty(array* a) {
+bool sda_is_empty(s_array* a) {
     return a->used == 0;
 }
 
 // memory check and increase is done in arrayInsert function
-static MEM sda_memoryDecrease(dynamicArray* a) {
+static MEM sda_memoryDecrease(s_dynamicArray* a) {
     double ratio = (double)a->used / (double)a->size;
     // if 1/4 of the allocated space is used, halve it
     if(ratio <= QUARTER && sda_size(a) != 1) {
