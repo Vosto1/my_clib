@@ -33,6 +33,7 @@ typedef enum ErrorCodes {
     EHASHTABLE_OVERFLOW_BUFFER = 22,
     EHASH_TRIM_BUFFER = 23,
     EHASH_TRIM_MEMALLOC = 24,
+    EHASHDICT = 25,
 }ErrorCode;
 
 /**

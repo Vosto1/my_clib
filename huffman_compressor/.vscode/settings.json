@@ -4,6 +4,7 @@
         "heap.h": "c",
         "error.h": "c",
         "bitvector.h": "c",
-        "test_bitvector.h": "c"
+        "test_bitvector.h": "c",
+        "hashtable.h": "c"
     }
 }

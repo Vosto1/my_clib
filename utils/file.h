@@ -30,4 +30,13 @@ size_t readFile(const char* filepath, void** contents);
  */
 size_t writeFile(const char* filepath, void* contents, size_t size);
 
+/**
+ * @brief read a textfile
+ * 
+ * @param filepath path to file
+ * @param out a pointer to the buffer where the contents of the text file will be written to
+ * @return bytes read
+ */
+size_t readTextFile(char* filepath, char** out);
+
 #endif

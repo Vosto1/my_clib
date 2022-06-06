@@ -52,6 +52,14 @@ size_t writeFile(const char* filepath, void* contents, size_t size) {
 	return writtenBytes;
 }
 
+// read file and return contents as a string (by ref)
+size_t readTextFile(char* filepath, char** out) {
+    void* buffer;
+    size_t readBytes = readFile(filepath, buffer);
+    *out = (char*)buffer;
+    return readBytes;
+}
+
 // future functions
 //size_t appendFile(); // append to the end of the file
 //size_t readBytesFile(int amountBytes, int offset); // read a specified amount of bytes from file (from offset to amountBytes)

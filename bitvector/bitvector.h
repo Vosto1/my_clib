@@ -15,7 +15,7 @@ union // lägg ihop två bit vector (appenda den ena i slutet av den andra)
 
 typedef unsigned char byte;
 typedef unsigned long long size_t;
-typedef dynamicArray bitvector;
+typedef s_dynamicArray bitvector;
 
 typedef struct {
     unsigned int residualBits;

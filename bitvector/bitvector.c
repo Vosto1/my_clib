@@ -41,7 +41,7 @@ bool bvremoveLast(bitvector* bv) {
 // at == get value at index
 bool* bvat(bitvector *bv, int index) {
     if (index >= bv->used) {
-        errcset(EARR_INDEX_OCCUPIED);
+        errcset(EINDEX_OUT_OF_BOUNDS);
         return NULL;
     } else return (bool*)bv->array[index];
 }

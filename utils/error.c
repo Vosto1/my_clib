@@ -67,6 +67,8 @@ const char* error(ErrorCode e) {
             return "couldn't create buffer for elements to trim hashtable memory";
         case EHASH_TRIM_MEMALLOC:
             return "fatal error, realloc failed during hashtable memory trim";
+        case EHASHDICT:
+            return "hashdictionary couln't be initialized for letter occurances";
         default:
             printf("Error: %d", e);
             return " unknown error";
