@@ -3,8 +3,7 @@
 #pragma warning(disable: 4996) // �terigen _CRT_SECURE_NO_WARNINGS fungerar inte
 #include <stdio.h>
 
-struct treeNode
-{
+struct treeNode {
 	int data;
 	struct treeNode* left;
 	struct treeNode* right;

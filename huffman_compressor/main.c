@@ -12,14 +12,20 @@ void print(hashtable* ht) {
 }
 
 int main(void) {
-    char* a = (char*)malloc(sizeof(char) * 10);
+    char* d;
+    size_t str = readTextFile("textAnalysis.txt", &d);
+    for (int i = 0; i < str; i++) {
+        printf("%c", d[i]);
+    }
+    printf("\n");
+    /* char* a = (char*)malloc(sizeof(char) * 10);
     int b = 32;
     char c;
     for (int i = 0; i < 10; i++) {
         c = (char)(i + b);
         a[i] = c;
-    }
-    hashtable ht = letterOccurances(a, 10);
+    } */
+    hashtable ht = letterOccurances(d, str);
     print(&ht);
     return 0;
 }

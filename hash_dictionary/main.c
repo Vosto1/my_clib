@@ -1,5 +1,7 @@
 #include "test.h"
 
+// I need to count collisions!
+
 int main(void) {
     //test_sequence();
     unsigned long long operations = 0;

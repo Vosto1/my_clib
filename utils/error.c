@@ -68,7 +68,17 @@ const char* error(ErrorCode e) {
         case EHASH_TRIM_MEMALLOC:
             return "fatal error, realloc failed during hashtable memory trim";
         case EHASHDICT:
-            return "hashdictionary couln't be initialized for letter occurances";
+            return "hashdictionary couldn't be initialized for letter occurances";
+        case EBTREE_NODE_MEMALLOC:
+            return "couldn't create node";
+        case EBTREE_FREENULLPTR:
+            return "free memory was null pointer";
+        case EBTREE_WRITEARR_MEMALLOC:
+            return "write tree to array, memory allocation for the array failed";
+        case EBTREE_WRITEARR_EMPTY:
+            return "write tree to array, tree was empty";
+        case EBTREE_BALANCE:
+            return "balance tree failed";
         default:
             printf("Error: %d", e);
             return " unknown error";
