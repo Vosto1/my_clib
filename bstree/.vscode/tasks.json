@@ -10,7 +10,8 @@
                 "${file}",
                 "../utils/timer.c",
                 "../utils/error.c",
-                "s_dynamic_array.c",
+                "../s_dynamic_array/s_dynamic_array.c",
+                "btree.c",
                 "test.c",
                 "-o",
                 "${fileDirname}\\out.exe"

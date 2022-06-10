@@ -140,7 +140,7 @@ void auto_tests(int n, int mod) {
                     assert(sda_convert(&c, (void*)b, size) == size);
                     free(b);
                     errorHandler();
-                    assert(sda_union(&a, &c) != -1);
+                    assert(sda_merge(&a, &c) != -1);
                     errorHandler();
                     operations += size + size;
                 }

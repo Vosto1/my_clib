@@ -113,7 +113,7 @@ size_t sda_convert(s_dynamicArray* a, voidp b[], size_t bsize) {
     return bsize;
 }
 
-size_t sda_union(s_dynamicArray* a, s_dynamicArray* b) {
+size_t sda_merge(s_dynamicArray* a, s_dynamicArray* b) {
     if (a == NULL || b == NULL) {
         errcset(ENULL_ARG);
         return -1;

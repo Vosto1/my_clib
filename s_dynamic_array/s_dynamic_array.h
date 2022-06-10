@@ -125,7 +125,7 @@ size_t sda_convert(s_dynamicArray* a, voidp b[], size_t bsize);
  * @param b array to merge with (will be freed)
  * @return the new size of the array (a) or -1 if error
  */
-size_t sda_union(s_dynamicArray* a, s_dynamicArray* b); // add array b on the end of array a O(n)
+size_t sda_merge(s_dynamicArray* a, s_dynamicArray* b); // add array b on the end of array a O(n)
 /**
  * remove (free) all items in the array
  * 

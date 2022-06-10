@@ -27,7 +27,7 @@ size_t bitCount(bitvector* bv);
 bitvector bvcreateEmpty();
 size_t bvinit(bitvector* bv);
 size_t bvadd(bitvector* bv, bool value);
-size_t bvunion(bitvector* bv, bitvector* unionWith);
+size_t bvmerge(bitvector* bv, bitvector* unionWith);
 bool bvremoveLast(bitvector* bv);
 size_t bvclear(bitvector* bv);
 bool* bvat(bitvector *bv, int index);

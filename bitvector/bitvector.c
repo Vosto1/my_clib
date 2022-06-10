@@ -25,8 +25,15 @@ size_t bvadd(bitvector* bv, bool value) {
     }
 }
 
-size_t bvunion(bitvector* bv, bitvector* unionWith) {
-    return sda_union(bv, unionWith);
+size_t bvmerge(bitvector* bv, bitvector* mergeWith) {
+    if (bv == NULL || mergeWith == NULL) {
+        errcset(ENULL_ARG);
+        return -1;
+    }
+    bool b;
+    for (int i = 0; i < bitCount(mergeWith); i++)
+        bvadd(bv, mergeWith->array[i]);
+    return bitCount(bv);
 }
 
 bool bvremoveLast(bitvector* bv) {
@@ -62,7 +69,7 @@ unsigned int bools2bits(bitvector* bv, binary* out) {
     unsigned int amountOfBytes = bits / sizeBits(sizeof(byte));
     // init array of bytes
     byte* bin = (byte*)malloc(amountOfBytes * sizeof(byte));
-    if (bin == NULL) { 
+    if (bin == NULL) {
         errcset(EMEM_ALLOC);
         return -1;
     }
