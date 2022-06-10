@@ -8,7 +8,8 @@ static void print(voidp e) {
 static btree new_node(cvoidp element) {
     btree n = (btree)malloc(sizeof(struct treenode));
     if (n != NULL) {
-        n->element = element;
+        n->value.element = element;
+        n->value.next = NULL;
         n->left = NULL;
         n->right = NULL;
         n->parent = NULL;
@@ -19,9 +20,9 @@ static btree new_node(cvoidp element) {
     }
 }
 
-static bool is_bigger_or_equal(cvoidp element1, cvoidp element2, int (*compare)(cvoidp,cvoidp)) {
+/* static bool is_bigger_or_equal(cvoidp element1, cvoidp element2, int (*compare)(cvoidp,cvoidp)) {
     return (*compare)(element1, element2) >= 0;
-}
+} */
 
 static bool is_smaller(cvoidp element1, cvoidp element2, int (*compare)(cvoidp,cvoidp)) {
     return (*compare)(element1, element2) < 0;
@@ -51,8 +52,18 @@ static void insert(btree* current, btree* prev, voidp element, int (*compare)(cv
     if (*current == NULL) {
         *current = new_node(element);
         (*current)->parent = *prev;
-    } 
-    else if (is_bigger_or_equal((*current)->element, element, compare)) // if tree->e is bigger or equal to e
+    }
+    else if (is_equal((*current)->value.element, element, compare)) {
+        value* tmp = (*current)->value.next;
+        while (tmp->next != NULL) {
+            tmp = tmp->next;
+        }
+        value* new_value = (value*)malloc(sizeof(value));
+        new_value->element = element;
+        new_value->next = NULL;
+        tmp->next = new_value;
+    }
+    else if (is_bigger((*current)->value.element, element, compare)) // if tree->e is bigger or equal to e
         insert(&(*current)->right, current, element, compare);
     else // if tree->e is smaller than e
         insert(&(*current)->left, current, element, compare);
@@ -62,7 +73,7 @@ void bt_insert(btree* tree, voidp element, int (*compare)(cvoidp,cvoidp)) {
     if (*tree == NULL) {
         *tree = new_node(element);
     }
-    else if (is_bigger_or_equal((*tree)->element, element, compare)) // if tree->e is bigger or equal to e
+    else if (is_bigger((*tree)->value.element, element, compare)) // if tree->e is bigger or equal to e
         insert(&(*tree)->right, tree, element, compare);
     else // if tree->e is smaller than e
         insert(&(*tree)->left, tree, element, compare);
@@ -93,16 +104,30 @@ static btree* findLargestNodeLeft(btree* bt, int (*compare)(cvoidp,cvoidp)) {
 
 static voidp rmWithNoChildren(btree* bt) {
     btree rm = *bt;
-    if (rm->parent != NULL)
-        if (rm->parent->right == rm)
-            rm->parent->right = NULL;
-        else
-            rm->parent->left = NULL;
-    //*bt = NULL; // set pointer in the tree to NULL
-    voidp e = (voidp)rm->element;
-    free(rm);
-    rm = NULL;
-    return e;
+
+    if (rm->value.next == NULL) { // if the last of its value
+        if (rm->parent != NULL)
+            if (rm->parent->right == rm)
+                rm->parent->right = NULL;
+            else
+                rm->parent->left = NULL;
+        *bt = NULL;  // for good measure
+        voidp e = (voidp)rm->value.element;
+        free(rm);
+        rm = NULL;
+        return e;
+    } else { // handle values that already exist in the tree
+        value* tmp = rm->value.next;
+        while (tmp->next->next != NULL) {
+            tmp = tmp->next;
+        }
+        value* new_rm = tmp->next;
+        tmp->next = NULL; // remove pointer to last object of type
+
+        voidp element = (voidp)new_rm->element;
+        free(new_rm);
+        return element;
+    }
 }
 
 static voidp rmWithRightChild(btree* bt) {
@@ -110,16 +135,30 @@ static voidp rmWithRightChild(btree* bt) {
     btree child = rm->right;
     btree parent = rm->parent;
 
-    if (rm->parent != NULL)
-        if (parent->right == rm)
-            parent->right = child;
-        else
-            parent->left = child;
+    if (rm->value.next == NULL) { // if the last of its value
+        if (rm->parent != NULL)
+            if (parent->right == rm)
+                parent->right = child;
+            else
+                parent->left = child;
 
-    child->parent = parent;
-    voidp e = (voidp)rm->element;
-    free(rm);
-    return e;
+        child->parent = parent;
+        (*bt) = child; // for good measure
+        voidp e = (voidp)rm->value.element;
+        free(rm);
+        return e;
+    } else { // handle values that already exist in the tree
+        value* tmp = rm->value.next;
+        while (tmp->next->next != NULL) {
+            tmp = tmp->next;
+        }
+        value* new_rm = tmp->next;
+        tmp->next = NULL; // remove pointer to last object of type
+
+        voidp element = (voidp)new_rm->element;
+        free(new_rm);
+        return element;
+    }
 }
 
 static voidp rmWithLeftChild(btree* bt) {
@@ -127,21 +166,36 @@ static voidp rmWithLeftChild(btree* bt) {
     btree child = rm->left;
     btree parent = rm->parent;
 
-    if (rm->parent != NULL)
-        if (parent->right == rm)
-            parent->right = child;
-        else
-            parent->left = child;
-    
-    child->parent = parent;
-    voidp e = (voidp)rm->element;
-    free(rm);
-    return e;
+    if (rm->value.next == NULL) { // if the last of its value
+        if (rm->parent != NULL)
+            if (parent->right == rm)
+                parent->right = child;
+            else
+                parent->left = child;
+        
+        child->parent = parent;
+        (*bt) = child; // for good measure
+        voidp e = (voidp)rm->value.element;
+        free(rm);
+        return e;
+    } else { // handle values that already exist in the tree
+        value* tmp = rm->value.next;
+        while (tmp->next->next != NULL) {
+            tmp = tmp->next;
+        }
+        value* new_rm = tmp->next;
+        tmp->next = NULL; // remove pointer to last object of type
+
+        voidp element = (voidp)new_rm->element;
+        free(new_rm);
+        return element;
+    }
 }
 
 static voidp rmWithTwoChildren(btree* bt, int (*compare)(cvoidp,cvoidp)) {
     btree rm = *bt;
     btree* repl;
+    // get replacement node
     int random = rand() % 2;
     if (random == 1) {
         repl = findSmallestNodeRight(bt, compare);
@@ -149,38 +203,52 @@ static voidp rmWithTwoChildren(btree* bt, int (*compare)(cvoidp,cvoidp)) {
         repl = findLargestNodeLeft(bt, compare);
     }
 
-    voidp element = bt_remove(bt, (voidp)(*repl)->element, compare);
-    btree parent = rm->parent;
+    // remove node to replace with and replace with node to remove
+    if (rm->value.next == NULL) { // if the last of its value
+        voidp element = bt_remove(bt, (voidp)(*repl)->value.element, compare);
+        btree parent = rm->parent;
 
-    btree lchild = rm->left;
-    btree rchild = rm->right;
-    
-    btree node = new_node(element);
-    if (lchild != NULL)
-        lchild->parent = node;
-    if (rchild != NULL)
-        rchild->parent = node;
+        btree lchild = rm->left;
+        btree rchild = rm->right;
+        
+        btree node = new_node(element);
+        if (lchild != NULL)
+            lchild->parent = node;
+        if (rchild != NULL)
+            rchild->parent = node;
 
-    if (parent != NULL)
-        if (parent->right == rm)
-            parent->right = node;
-        else
-            parent->left = node;
+        if (parent != NULL)
+            if (parent->right == rm)
+                parent->right = node;
+            else
+                parent->left = node;
 
 
-    node->left = lchild;
-    node->right = rchild;
-    node->parent = rm->parent;
-    
-    (*bt) = node;
-    voidp e = (voidp)rm->element;
-    free(rm);
-    return e;
+        node->left = lchild;
+        node->right = rchild;
+        node->parent = rm->parent;
+        
+        (*bt) = node;
+        voidp e = (voidp)rm->value.element;
+        free(rm);
+        return e;
+    } else { // handle values that already exist in the tree
+        value* tmp = rm->value.next;
+        while (tmp->next->next != NULL) {
+            tmp = tmp->next;
+        }
+        value* new_rm = tmp->next;
+        tmp->next = NULL; // remove pointer to last object of type
+
+        voidp element = (voidp)new_rm->element;
+        free(new_rm);
+        return element;
+    }
 }
 
 voidp bt_remove(btree* tree, voidp element, int (*compare)(cvoidp,cvoidp)) {
     if (*tree != NULL) {
-        if (is_equal((*tree)->element, element, compare)) {
+        if (is_equal((*tree)->value.element, element, compare)) {
             if (left_isnull(*tree) && right_isnull(*tree)) { // if the node doesnt have children
                 return rmWithNoChildren(tree);
             } else if (left_isnull(*tree)) { // if the node has a right child
@@ -191,7 +259,7 @@ voidp bt_remove(btree* tree, voidp element, int (*compare)(cvoidp,cvoidp)) {
                 return rmWithTwoChildren(tree, compare);
             }
         } else { // tree->element was not equal to element
-            if (is_bigger_or_equal((*tree)->element, element, compare)) {
+            if (is_bigger((*tree)->value.element, element, compare)) {
                 return bt_remove(&(*tree)->right, element, compare);
             } else {
                 return bt_remove(&(*tree)->left, element, compare);
@@ -221,11 +289,22 @@ static void insertFromSortedArray(btree* tree, voidp* a, int start, int end, int
     insertFromSortedArray(tree, a, mid + 1, end, compare);
 }
 
+static void free_value_structs(value* v) {
+    if (v != NULL) {
+        free_value_structs(v->next);
+        free(v);
+    }
+}
+
 // free only nodes (not elements in the tree)
 static void free_tree(btree* tree) {
     if ((*tree) != NULL) {
         free_tree(&(*tree)->right);
         free_tree(&(*tree)->left);
+        // free all value structs in which the elements were stored
+        value* tmp = (*tree)->value.next;
+        free_value_structs(tmp);
+        // free node
         free((*tree));
         (*tree) = NULL;
     } else {
@@ -247,8 +326,12 @@ void bt_merge(btree* bt1, btree* bt2, int (*compare)(cvoidp,cvoidp)) {
 
 static void preorder(const btree tree, cvoidp* a, int* index) {
     if (tree != NULL) {
-        a[*index] = tree->element;
-        *index += 1;
+        value* tmp = &tree->value;
+        while(tmp != NULL) {
+            a[*index] = tmp->element;
+            *index += 1;
+            tmp = tmp->next;
+        }
         if (tree->left != NULL)
             preorder(tree->left, a, index);
         if (tree->right != NULL)
@@ -260,8 +343,12 @@ static void inorder(const btree tree, cvoidp* a, int* index) {
     if (tree != NULL) {
         if (tree->left != NULL)
             inorder(tree->left, a, index);
-        a[*index] = tree->element;
-        *index += 1;
+        value* tmp = &tree->value;
+        while(tmp != NULL) {
+            a[*index] = tmp->element;
+            *index += 1;
+            tmp = tmp->next;
+        }
         if (tree->right != NULL)
             inorder(tree->right, a, index);
     }
@@ -273,8 +360,12 @@ static void postorder(const btree tree, cvoidp* a, int* index) {
             postorder(tree->left, a, index);
         if (tree->right != NULL)
             postorder(tree->right, a, index);
-        a[*index] = tree->element;
-        *index += 1;
+        value* tmp = &tree->value;
+        while(tmp != NULL) {
+            a[*index] = tmp->element;
+            *index += 1;
+            tmp = tmp->next;
+        }
     }
 }
 
@@ -317,9 +408,9 @@ size_t bt_toarray_postorder(const btree tree, voidp** array) {
 
 cvoidp bt_find(const btree tree, voidp element, int (*compare)(cvoidp,cvoidp)) {
     if (tree != NULL) {
-        if (is_equal(tree->element, element, compare)) {
-            return tree->element;
-        } else if (is_bigger(tree->element, element, compare)) {
+        if (is_equal(tree->value.element, element, compare)) {
+            return tree->value.element;
+        } else if (is_bigger(tree->value.element, element, compare)) {
             return bt_find(tree->right, element, compare);
         } else {
             return bt_find(tree->left, element, compare);
@@ -329,26 +420,38 @@ cvoidp bt_find(const btree tree, voidp element, int (*compare)(cvoidp,cvoidp)) {
     }
 }
 
-cvoidp bt_max(const btree* tree, int (*compare)(cvoidp,cvoidp)) {
+cvoidp bt_rightmost(const btree* tree, int (*compare)(cvoidp,cvoidp)) {
     btree* tmp = (btree*)tree;
     while ((*tmp)->right != NULL) {
         tmp = &(*tmp)->right;
     }
-    return (*tmp)->element;
+    return (*tmp)->value.element;
 }
 
-cvoidp bt_min(const btree* tree, int (*compare)(cvoidp,cvoidp)) {
+cvoidp bt_leftmost(const btree* tree, int (*compare)(cvoidp,cvoidp)) {
     btree* tmp = (btree*)tree;
         while ((*tmp)->left != NULL) {
             tmp = &(*tmp)->left;
         }
-        return (*tmp)->element;
+        return (*tmp)->value.element;
 }
 
 int bt_count(const btree tree) {
     if (tree == NULL)
         return 0;
-    return 1 + bt_count(tree->right) + bt_count(tree->left);
+    int x = 0;
+    value* tmp = &tree->value;
+    do {
+        x++;
+        tmp = tmp->next;
+    } while (tmp != NULL);
+    return x + bt_count(tree->right) + bt_count(tree->left);
+}
+
+int bt_node_count(const btree tree) {
+    if (tree == NULL)
+        return 0;
+    return 1 + bt_node_count(tree->right) + bt_node_count(tree->left);
 }
 
 int bt_depth(const btree tree) {
@@ -365,18 +468,17 @@ int bt_depth(const btree tree) {
 
 int bt_mindepth(const btree tree) {
     if (tree != NULL)
-        return (int)ceil(log((double)bt_count(tree) + 1.0f) / log(2.0f));
+        return (int)ceil(log((double)bt_node_count(tree) + 1.0f) / log(2.0f));
     return 0;
 }
 
 void bt_balance(btree* tree, int (*compare)(cvoidp,cvoidp)) {
     if ((*tree) != NULL) {
         voidp* array;
-        size_t size = writeSortedToArray((*tree), &array);
+        size_t arraysize = writeSortedToArray((*tree), &array);
         if (array != NULL) {
-            int treesize = bt_count(*tree);
             btree new = bt_create_empty();
-            insertFromSortedArray(&new, array, 0, treesize - 1, compare);
+            insertFromSortedArray(&new, array, 0, arraysize - 1, compare);
             if (bt_count(new) == bt_count(*tree) && bt_depth(new) == bt_mindepth(new)) {
                 free(array);
                 // free only the nodes 
@@ -395,12 +497,23 @@ void bt_balance(btree* tree, int (*compare)(cvoidp,cvoidp)) {
     }
 }
 
+static void free_all_elements(value* v) {
+    if (v->next != NULL)
+        free_all_elements(v->next);
+    free((voidp)v->element);
+}
+
 static void btfree(btree* tree) {
     if ((*tree) != NULL) {
         btfree(&(*tree)->right);
         btfree(&(*tree)->left);
-        voidp e = (voidp)(*tree)->element;
-        free(e);
+        // free all elements in the node
+        value* tmp = &(*tree)->value;
+        free_all_elements(tmp);
+        // free all value structs in which the elements were stored
+        value* tmp2 = (*tree)->value.next;
+        free_value_structs(tmp2);
+        // free the node
         free((*tree));
         (*tree) = NULL;
     }
@@ -413,4 +526,3 @@ void bt_free(btree* tree) {
         errcset(EBTREE_FREENULLPTR);
     }
 }
-

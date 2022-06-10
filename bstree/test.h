@@ -6,7 +6,7 @@
 #include "../utils/timer.h"
 #include "../utils/error.h"
 
-typedef char value;
+typedef char item;
 
 void auto_tests(int n, int mod);
 

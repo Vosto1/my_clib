@@ -12,10 +12,15 @@ typedef void* voidp;
 typedef const void* cvoidp;
 typedef struct treenode* btree;
 
+typedef struct _value value;
 
+struct _value { // handle mutiple occurances of the same value in the tree
+	cvoidp element;
+	value* next;
+};
 
 struct treenode {
-	cvoidp element;
+	value value;
 	btree parent;
 	btree left;
 	btree right;
@@ -34,10 +39,11 @@ size_t bt_toarray_inorder(const btree tree, voidp** array);
 size_t bt_toarray_postorder(const btree tree, voidp** array);
 
 cvoidp bt_find(const btree tree, voidp element, int (*compare)(cvoidp,cvoidp));
-cvoidp bt_max(const btree* tree, int (*compare)(cvoidp,cvoidp));
-cvoidp bt_min(const btree* tree, int (*compare)(cvoidp,cvoidp));
+cvoidp bt_rightmost(const btree* tree, int (*compare)(cvoidp,cvoidp));
+cvoidp bt_leftmost(const btree* tree, int (*compare)(cvoidp,cvoidp));
 
 int bt_count(const btree tree);
+int bt_node_count(const btree tree);
 
 int bt_depth(const btree tree);
 
