@@ -31,7 +31,7 @@
  * There is no way for the data structure to find an item in itself by itself.
  * It blindly inserts data and removes data on by the user specified indecies.
  * Hence the s_dynamic array doesnt need a comparison function (which is the advantage)
- * and only has the main functionality: insert, remove, convert and union.
+ * and only has the main functionality: insert, remove and merge.
  */
 
 typedef void* voidp;
@@ -114,16 +114,6 @@ voidp sda_removeLast(s_dynamicArray* a);
  * @return a pointer to the removed item or null if error
  */
 voidp sda_removeAt(s_dynamicArray* a, int index);
-/**
- * convert a Data[] array to a dynamic array
- * 
- * @param a out array
- * @param b Data array to convert to dynamic array
- * @param bsize size of the Data array b
- * @param compare compare function to compare Data needed for initialization of a dynamic array
- * @return the size of the result array or -1 if error
- */
-size_t sda_convert(s_dynamicArray* a, voidp b[], size_t bsize);
 /**
  * merge two dynamic arrays, b will be put on the end of a and b will be freed
  * 

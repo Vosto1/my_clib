@@ -115,7 +115,7 @@ size_t sda_convert(s_dynamicArray* a, voidp b[], size_t bsize) {
     *a = sda_createEmpty();
     if(sda_init(a, bsize) != bsize) {
         return -1;
-    } 
+    }
     for (int i = 0; i < bsize; i++) {
         sda_insert(a, b[i]);
     }
@@ -131,7 +131,7 @@ size_t sda_merge(s_dynamicArray* a, s_dynamicArray* b) {
         sda_insert(a, b->array[i]);
     }
     // free only array not the elements (sda_free frees all items in the array as well)
-    sda_destroy(&b);
+    sda_destroy(b);
     b->size = 0;
     b->used = 0;
     b->array = NULL;

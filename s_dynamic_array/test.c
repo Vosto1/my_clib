@@ -127,18 +127,13 @@ void auto_tests(int n, int mod) {
                 unsigned long long operations = 0;
                 for (int j = 0; j < next_tests; j++) {
                     int size = rand() % 100 + 1;
-                    Item** b = (Item**)malloc(sizeof(Item*)*size);
-                    if (!b) {
-                        printf("malloc error in test function.\n");
-                        exit(-100);
-                    }
-                    for (int k = 0; k < size; k++)
-                        b[k] = createItem(rand() % 1000);
                     s_dynamicArray c = sda_createEmpty();
                     assert(sda_init(&c, size) == size);
+                    for (int k = 0; k < size; k++)
+                        sda_insert(&c, createItem(rand() % 1000));
                     errorHandler();
-                    assert(sda_convert(&c, (void*)b, size) == size);
-                    free(b);
+                    for (int k = 0; k < size; k++)
+                        sda_insert(&a, createItem(rand() % 1000));
                     errorHandler();
                     assert(sda_merge(&a, &c) != -1);
                     errorHandler();
