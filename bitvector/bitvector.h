@@ -1,9 +1,13 @@
-/*
-en lista av tex. bools som representerar bitarna som ska skrivas till fil (kan använda dynamiska array eller linked list för listan)
-
-add // lägg till ny bool(== representation för en bit)
-union // lägg ihop två bit vector (appenda den ena i slutet av den andra)
-*/
+/**
+ * @file bitvector.h
+ * @author Isac Hutchings (isac.hutchings@outlook.com)
+ * @brief 
+ * @version 0.1
+ * @date 2022-06-01
+ * 
+ * @copyright Copyright (c) 2022
+ * 
+ */
 #ifndef BITVECTOR_H
 #define BITVECTOR_H
 

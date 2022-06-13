@@ -16,7 +16,7 @@ static item* createRandomElement() {
     return vcreate(rascii());
 }
 
-static item* step(const btree tree, int steps) {
+static item* step(const bstree tree, int steps) {
     if (steps == 0)
         return (item*)tree->cont.element;
     int pick = rand() % 2;
@@ -32,16 +32,16 @@ static item* step(const btree tree, int steps) {
             return step(tree->left, steps - 1);
 }
 
-static item* randomElement(const btree tree) {
+static item* randomElement(const bstree tree) {
     if (tree == NULL)
         return NULL;
-    int steps = (rand() % bt_count(tree)) / 2;
+    int steps = (rand() % bst_count(tree)) / 2;
     return step(tree, steps);
 }
 
 //// print functions
 // inorder tree print
-static void pio(const btree bt) {
+static void pio(const bstree bt) {
         if (bt == NULL)
             return;
         pio(bt->left);
@@ -54,7 +54,7 @@ static void pio(const btree bt) {
         pio(bt->right);
 }
 
-static void print_inorder(const char* description, const btree bt) {
+static void print_inorder(const char* description, const bstree bt) {
     if (bt != NULL) {
         if (description != NULL)
             printf("%s ", description);
@@ -88,7 +88,7 @@ static int compare(cvoidp v1, cvoidp v2) {
 
 // checks if the entire tree is traversable until null
 // if the tree is not valid this function will continue forever or crash the program
-static bool nullcheck(const btree bt) {
+static bool nullcheck(const bstree bt) {
     if (bt != NULL)
         return nullcheck(bt->left) && nullcheck(bt->right);
     else
@@ -96,7 +96,7 @@ static bool nullcheck(const btree bt) {
 }
 
 // checks that all nodes has the correct parent
-static bool pch(const btree curr, const btree prev) {
+static bool pch(const bstree curr, const bstree prev) {
     if (curr != NULL) {
         return curr->parent == prev && pch(curr->left, curr) && pch(curr->right, curr);
     }
@@ -104,12 +104,12 @@ static bool pch(const btree curr, const btree prev) {
         return true;
 }
 
-static bool parentcheck(const btree bt) {
+static bool parentcheck(const bstree bt) {
     return pch(bt, NULL);
 }
 
 // parent is above the child in the hierarchy of the tree
-static bool integrity_compar(const btree parent, const btree child, bool (*comp)(int,int)) {
+static bool integrity_compar(const bstree parent, const bstree child, bool (*comp)(int,int)) {
     item *p, *c;
     int pi, ci;
     bool sum = true;
@@ -138,7 +138,7 @@ static bool left(int p, int c) {
 }
 
 // only works on a normal bstree (left subtree smaller values, right subtree larger values)
-static bool bstree_integrity_check(const btree tree) {
+static bool bstree_integrity_check(const bstree tree) {
     if (tree != NULL) {
         if (tree->parent->right == tree) { // right side (parent should be larger)
             if (integrity_compar(tree->parent, tree, &right)) {
@@ -159,7 +159,7 @@ static bool bstree_integrity_check(const btree tree) {
 }
 
 
-static bool integrity_check(const btree tree) {
+static bool integrity_check(const bstree tree) {
     if (tree == NULL)
         return true;
     else
@@ -167,7 +167,7 @@ static bool integrity_check(const btree tree) {
 }
 
 // normal bstree test suit
-static bool bstree_test_suit(const btree tree) {
+static bool bstree_test_suit(const bstree tree) {
     bool a = integrity_check(tree);
     bool b = nullcheck(tree);
     bool c = parentcheck(tree);
@@ -183,16 +183,16 @@ static bool bstree_test_suit(const btree tree) {
 // auto tests
 // change comparison functions to right side large side to the opposite and test functionality (no mixing!)
 
-#define TYPES 5
+#define TYPES_MOD 6
 #define MOD_MERGE 100
 
 void auto_tests(int n, int mod) {
     srand(time(NULL));
     errcinit();
-    btree tree = bt_create_empty();
+    bstree tree = bst_create_empty();
     voidp element, rm;
     int nexttests, type, r1, count;
-    bool (*integrity)(const btree tree);
+    bool (*integrity)(const bstree tree);
     int (*comp)(cvoidp,cvoidp);
     comp = &compare;
 
@@ -207,19 +207,20 @@ void auto_tests(int n, int mod) {
         // test sequence start
         start = now();
         for (int j = 0; j < nexttests; j++) {
-            type = rand() % TYPES + 1;
+            type = rand() % TYPES_MOD;
 
             switch (type) {
                 case 0: // insert
                     element = createRandomElement();
-                    bt_insert(&tree, element, comp);
-                    assert(bt_find(tree, element, compare) != NULL);
+                    bst_insert(&tree, element, comp);
+                    assert(bst_find(tree, element, compare) != NULL);
                     insertion++;
                     break;
                 case 1: // remove
+                break;
                     if (tree != NULL) {
                         element = randomElement(tree);
-                        rm = bt_remove(&tree, element, comp);
+                        rm = bst_remove(&tree, element, comp);
                         assert(rm != NULL);
                         assert(compare(element, rm) == 0);
                         free(rm);
@@ -230,25 +231,25 @@ void auto_tests(int n, int mod) {
                     break;
                 case 2: // merge
                     r1 = rand() % MOD_MERGE;
-                    btree temp = bt_create_empty();
+                    bstree temp = bst_create_empty();
                     for (int x = 0; x < r1; x++) {
                         element = createRandomElement();
-                        bt_insert(&temp, element, comp);
+                        bst_insert(&temp, element, comp);
                         insertion++;
                     }
-                    int count1 = bt_count(temp);
-                    int count2 = bt_count(tree);
-                    bt_merge(&tree, &temp, comp);
-                    assert((count1 + count2) == bt_count(tree));
+                    int count1 = bst_count(temp);
+                    int count2 = bst_count(tree);
+                    bst_merge(&tree, &temp, comp);
+                    assert((count1 + count2) == bst_count(tree));
                     temp = NULL;
                     merge++;
                     break;
-                case 3: // to array
+                case 3: // to array (working)
                     if (tree != NULL) {   
-                        count = bt_count(tree);
+                        count = bst_count(tree);
                         item** arr;
                         item *v1, *v2;
-                        int size = bt_toarray_inorder(tree, (voidp**)&arr);
+                        int size = bst_toarray_inorder(tree, (voidp**)&arr);
                         assert(count == size);
                         for (int x = 0; x < size - 1; x++) {
                             v1 = arr[x];
@@ -259,16 +260,16 @@ void auto_tests(int n, int mod) {
                         to_array++;
                     }
                     break;
-                case 4: // find
+                case 4: // find (working)
                     if (tree != NULL) {
                         element = randomElement(tree);
-                        assert(bt_find(tree, element, comp) != NULL);
+                        assert(bst_find(tree, element, comp) != NULL);
                     }
                     find++;
                     break;
-                case 5: // balance
-                    bt_balance(&tree, comp);
-                    assert(bt_depth(tree) == bt_mindepth(tree));
+                case 5: // balance (working)
+                    bst_balance(&tree, comp);
+                    assert(bst_depth(tree) == bst_mindepth(tree));
                     balance++;
                     break;
             }
@@ -307,8 +308,8 @@ void auto_tests(int n, int mod) {
         end = now();
         errorHandler();
         if (tree != NULL)
-            bt_free(&tree);
-        tree = bt_create_empty();
+            bst_free(&tree);
+        tree = bst_create_empty();
         // test sequence end
         s = diff(start, end);
         printf("Computed %d operations", nexttests);
@@ -321,6 +322,7 @@ void auto_tests(int n, int mod) {
         find = 0;
         balance = 0;
     }
+    printf("Test passed\n");
 }
 
 // test sequence (explicitly test specific edge cases etc.)
@@ -329,28 +331,28 @@ void auto_tests(int n, int mod) {
 #define SIZE3 5
 #define SIZE4 3
 
-static void initt(btree* t, size_t size, const char arr[]) {
+static void initt(bstree* t, size_t size, const char arr[]) {
     for (int x = 0; x < size; x++)
-        bt_insert(t, vcreate(arr[x]), &compare);
+        bst_insert(t, vcreate(arr[x]), &compare);
 }
 
-static void initializeTree(btree* tree) {
+static void initializeTree(bstree* tree) {
     static const char ar[SIZE2] = {'w','r','k','d','X','P','L','J','A','2'};
     initt(tree, SIZE2, ar);
 }
 
-static void initializeTree1(btree* tree) {
+static void initializeTree1(bstree* tree) {
     static const char ar[SIZE3] = {'w','r','k','d','X'};
     initt(tree, SIZE3, ar);
 }
 
-static void initializeTree2(btree* tree) {
+static void initializeTree2(bstree* tree) {
     static const char ar[] = {'J','2','P','L','A'};
     initt(tree, SIZE3, ar);
 }
 
 // multiple elements with the same value inserted into the tree
-static void initializeTree3(btree* tree) {
+static void initializeTree3(bstree* tree) {
     static const char ar[] = {'J','2','P'};
     initt(tree, SIZE4, ar);
     initt(tree, SIZE4, ar);
@@ -359,14 +361,15 @@ static void initializeTree3(btree* tree) {
 
 
 void test_sequence() {
+    errcinit();
     voidp rm;
     item* c = vcreate(99);
-    btree bt = bt_create_empty();
-    assert(bt_is_empty(bt));
-    assert(bt_find(bt, (voidp)c, &compare) == NULL);
-    bt_remove(&bt, (voidp)c, &compare);
-    assert(bt_depth(bt) == 0 && bt_mindepth(bt) == 0);
-    bt_balance(&bt, &compare);
+    bstree bt = bst_create_empty();
+    assert(bst_is_empty(bt));
+    assert(bst_find(bt, (voidp)c, &compare) == NULL);
+    bst_remove(&bt, (voidp)c, &compare);
+    assert(bst_depth(bt) == 0 && bst_mindepth(bt) == 0);
+    bst_balance(&bt, &compare);
 
     item* a[SIZE];
     int arr[SIZE] = {5,10,1,3,7,19,16};
@@ -374,80 +377,80 @@ void test_sequence() {
         a[i] = vcreate(arr[i]);
     
     for (int i = 0; i < SIZE; i++)
-        bt_insert(&bt, (voidp)a[i], &compare);
+        bst_insert(&bt, (voidp)a[i], &compare);
     
-    assert(bt_count(bt) == SIZE);
+    assert(bst_count(bt) == SIZE);
 
     assert(bstree_test_suit(bt));
 
     for (int i = 0; i < SIZE; i++)
-        assert(bt_find(bt, (voidp)a[i], &compare) != NULL);
+        assert(bst_find(bt, (voidp)a[i], &compare) != NULL);
 
-    assert(bt_depth(bt) == 4);
-    assert(bt_mindepth(bt) == 3);
+    assert(bst_depth(bt) == 4);
+    assert(bst_mindepth(bt) == 3);
 
-    rm = bt_remove(&bt, (voidp)&arr[4], &compare);
+    rm = bst_remove(&bt, (voidp)&arr[4], &compare);
     assert(rm != NULL);
     assert((int)*(item*)rm == arr[4]);
     free(rm);
 
-    assert(bt_count(bt) == 6);
+    assert(bst_count(bt) == 6);
     assert(bstree_test_suit(bt));
 
-    rm = bt_remove(&bt, (voidp)&arr[5], &compare);
+    rm = bst_remove(&bt, (voidp)&arr[5], &compare);
     assert(rm != NULL);
     assert((int)*(item*)rm == arr[5]);
     free(rm);
 
-    assert(bt_count(bt) == 5);
+    assert(bst_count(bt) == 5);
     assert(bstree_test_suit(bt));
 
-    rm = bt_remove(&bt, (voidp)&arr[0], &compare);
+    rm = bst_remove(&bt, (voidp)&arr[0], &compare);
     assert(rm != NULL);
     assert((int)*(item*)rm == arr[0]);
     free(rm);
 
-    assert(bt_count(bt) == 4);
+    assert(bst_count(bt) == 4);
     assert(bstree_test_suit(bt));
     
     // make sure the elements are removed
-    assert(bt_find(bt, (voidp)&arr[4], &compare) == NULL);
-    assert(bt_find(bt, (voidp)&arr[5], &compare) == NULL);
-    assert(bt_find(bt, (voidp)&arr[0], &compare) == NULL);
+    assert(bst_find(bt, (voidp)&arr[4], &compare) == NULL);
+    assert(bst_find(bt, (voidp)&arr[5], &compare) == NULL);
+    assert(bst_find(bt, (voidp)&arr[0], &compare) == NULL);
 
     // remove the rest of the elements
-    rm = bt_remove(&bt, (voidp)&arr[1], &compare);
+    rm = bst_remove(&bt, (voidp)&arr[1], &compare);
     assert(rm != NULL);
     assert((int)*(item*)rm == arr[1]);
     free(rm);
 
     assert(bstree_test_suit(bt));
     
-    rm = bt_remove(&bt, (voidp)&arr[2], &compare);
+    rm = bst_remove(&bt, (voidp)&arr[2], &compare);
     assert(rm != NULL);
     assert((int)*(item*)rm == arr[2]);
     free(rm);
 
     assert(bstree_test_suit(bt));
     
-    rm = bt_remove(&bt, (voidp)&arr[3], &compare);
+    rm = bst_remove(&bt, (voidp)&arr[3], &compare);
     assert(rm != NULL);
     assert((int)*(item*)rm == arr[3]);
     free(rm);
 
     assert(bstree_test_suit(bt));
     
-    rm = bt_remove(&bt, (voidp)&arr[6], &compare);
+    rm = bst_remove(&bt, (voidp)&arr[6], &compare);
     assert(rm != NULL);
     assert((int)*(item*)rm == arr[6]);
     free(rm);
 
     assert(bstree_test_suit(bt));
 
-    assert(bt_is_empty(bt));
+    assert(bst_is_empty(bt));
 
     for (int i = 0; i < SIZE; i++)
-        assert(bt_find(bt, (voidp)&arr[i], &compare) == NULL);
+        assert(bst_find(bt, (voidp)&arr[i], &compare) == NULL);
 
     
     item* a2[SIZE2];
@@ -455,25 +458,25 @@ void test_sequence() {
     for (int i = 0; i < SIZE2; i++)
         a2[i] = vcreate(arr2[i]);
     
-    bt_insert(&bt, (voidp)a2[0], &compare);
-    assert(bt_find(bt, (voidp)a2[0], &compare) != NULL);
+    bst_insert(&bt, (voidp)a2[0], &compare);
+    assert(bst_find(bt, (voidp)a2[0], &compare) != NULL);
 
     assert(bstree_test_suit(bt));
 
     for (int i = 1; i < SIZE2; i++)
-        bt_insert(&bt, (voidp)a2[i], &compare);
+        bst_insert(&bt, (voidp)a2[i], &compare);
 
-    assert(bt_count(bt) == SIZE2);
-    assert(bt_depth(bt) != bt_mindepth(bt));
+    assert(bst_count(bt) == SIZE2);
+    assert(bst_depth(bt) != bst_mindepth(bt));
 
     assert(bstree_test_suit(bt));
     
     print_inorder("depth test", bt);
 
-    bt_free(&bt);
-    assert(bt_is_empty(bt));
-    assert(bt_count(bt) == 0);
-    assert(bt_depth(bt) == 0);
+    bst_free(&bt);
+    assert(bst_is_empty(bt));
+    assert(bst_count(bt) == 0);
+    assert(bst_depth(bt) == 0);
 
     assert(bstree_test_suit(bt));
 
@@ -489,20 +492,20 @@ void test_sequence() {
     item* v8 = vcreate(45);
     item* v9 = vcreate(61);
 
-    bt_insert(&bt, v1, &compare);
-    bt_insert(&bt, v2, &compare);
-    bt_insert(&bt, v3, &compare);
-    bt_insert(&bt, v4, &compare);
-    bt_insert(&bt, v5, &compare);
-    bt_insert(&bt, v6, &compare);
-    bt_insert(&bt, v7, &compare);
-    bt_insert(&bt, v8, &compare);
-    bt_insert(&bt, v9, &compare);
+    bst_insert(&bt, v1, &compare);
+    bst_insert(&bt, v2, &compare);
+    bst_insert(&bt, v3, &compare);
+    bst_insert(&bt, v4, &compare);
+    bst_insert(&bt, v5, &compare);
+    bst_insert(&bt, v6, &compare);
+    bst_insert(&bt, v7, &compare);
+    bst_insert(&bt, v8, &compare);
+    bst_insert(&bt, v9, &compare);
 
     assert(bstree_test_suit(bt));
     print_inorder("test the case when a node is not root, p1", bt);
 
-    rm = bt_remove(&bt, v4, &compare); // rm 39
+    rm = bst_remove(&bt, v4, &compare); // rm 39
     assert(rm != NULL);
     assert(rm == v4);
     free(rm);
@@ -510,7 +513,7 @@ void test_sequence() {
     assert(bstree_test_suit(bt));
     print_inorder("1 remove p2",bt);
 
-    rm = bt_remove(&bt, v2, &compare);  // rm 43
+    rm = bst_remove(&bt, v2, &compare);  // rm 43
     assert(rm != NULL);
     assert(rm == v2);
     free(rm);
@@ -518,7 +521,7 @@ void test_sequence() {
     assert(bstree_test_suit(bt));
     print_inorder("2 remove p3", bt);
 
-    bt_free(&bt);
+    bst_free(&bt);
     assert(bstree_test_suit(bt));
 
     v1 = NULL;
@@ -536,72 +539,72 @@ void test_sequence() {
     //// merge
 
     // merge non-empty with empty
-    btree t = bt_create_empty();
+    bstree t = bst_create_empty();
     initializeTree(&bt);
-    bt_merge(&bt, &t, &compare);
+    bst_merge(&bt, &t, &compare);
     print_inorder("merge non-empty with empty",bt);
     assert(bstree_test_suit(bt));
-    bt_free(&bt);
-    bt_free(&t);
+    bst_free(&bt);
+    bst_free(&t);
 
     // merge empty with non-empty
-    bt = bt_create_empty();
-    t = bt_create_empty();
+    bt = bst_create_empty();
+    t = bst_create_empty();
     initializeTree(&t);
-    bt_merge(&bt,&t, &compare);
+    bst_merge(&bt,&t, &compare);
 
     print_inorder("merge empty with non-empty",bt);
     assert(bstree_test_suit(bt));
-    bt_free(&bt);
-    bt_free(&t);
+    bst_free(&bt);
+    bst_free(&t);
 
     // merge non-empty with non-empty
-    bt = bt_create_empty();
-    t = bt_create_empty();
+    bt = bst_create_empty();
+    t = bst_create_empty();
     initializeTree1(&t);
     initializeTree2(&bt);
-    bt_merge(&t,&bt, &compare);
+    bst_merge(&t,&bt, &compare);
 
     print_inorder("merge non-empty with non-empty",t);
     assert(bstree_test_suit(bt));
-    bt_free(&bt);
-    bt_free(&t);
+    bst_free(&bt);
+    bst_free(&t);
 
     //// balance
 
     // b1
-    bt = bt_create_empty();
+    bt = bst_create_empty();
     initializeTree(&bt);
-    bt_balance(&bt, &compare);
+    bst_balance(&bt, &compare);
 
     print_inorder("balance b1",bt);
     assert(bstree_test_suit(bt));
-    assert(bt_depth(bt) == bt_mindepth(bt));
-    bt_free(&bt);
+    assert(bst_depth(bt) == bst_mindepth(bt));
+    bst_free(&bt);
 
     // b2
-    bt = bt_create_empty();
+    bt = bst_create_empty();
     initializeTree1(&bt);
-    bt_balance(&bt, &compare);
+    bst_balance(&bt, &compare);
 
     print_inorder("balance b2",bt);
     assert(bstree_test_suit(bt));
-    assert(bt_depth(bt) == bt_mindepth(bt));
-    bt_free(&bt);
+    assert(bst_depth(bt) == bst_mindepth(bt));
+    bst_free(&bt);
 
     // b3
-    bt = bt_create_empty();
+    bt = bst_create_empty();
     initializeTree2(&bt);
-    bt_balance(&bt, &compare);
+    bst_balance(&bt, &compare);
 
     print_inorder("balance b3",bt);
     assert(bstree_test_suit(bt));
-    assert(bt_depth(bt) == bt_mindepth(bt));
-    bt_free(&bt);
+    assert(bst_depth(bt) == bst_mindepth(bt));
+    bst_free(&bt);
 
     //// to array
 
-    btree toarr = bt_create_empty();
+    bstree toarr = bst_create_empty();
     size_t size;
     item** arr3;
     item* comp;
@@ -614,7 +617,7 @@ void test_sequence() {
     print_inorder("to array tree", toarr);
     assert(bstree_test_suit(bt));
 
-    size = bt_toarray_inorder(toarr, (voidp)&arr3);
+    size = bst_toarray_inorder(toarr, (voidp)&arr3);
     assert(size == SIZE3);
     print_array(arr3, size);
 
@@ -624,7 +627,7 @@ void test_sequence() {
     }
 
 
-    size = bt_toarray_postorder(toarr, (voidp)&arr3);
+    size = bst_toarray_postorder(toarr, (voidp)&arr3);
     assert(size == SIZE3);
     print_array(arr3, size);
 
@@ -634,7 +637,7 @@ void test_sequence() {
     }
 
 
-    size = bt_toarray_preorder(toarr, (voidp)&arr3);
+    size = bst_toarray_preorder(toarr, (voidp)&arr3);
     assert(size == SIZE3);
     print_array(arr3, size);
 
@@ -644,7 +647,7 @@ void test_sequence() {
     }
 
     // test adding multiple items with the same value
-    bt = bt_create_empty();
+    bt = bst_create_empty();
 
     v1 = vcreate(32);
     v2 = vcreate(32);
@@ -656,47 +659,47 @@ void test_sequence() {
     v8 = vcreate(41);
     v9 = vcreate(41);
 
-    bt_insert(&bt, v1, &compare);
-    bt_insert(&bt, v2, &compare);
-    bt_insert(&bt, v3, &compare);
-    bt_insert(&bt, v4, &compare);
-    bt_insert(&bt, v5, &compare);
-    bt_insert(&bt, v6, &compare);
-    bt_insert(&bt, v7, &compare);
-    bt_insert(&bt, v8, &compare);
-    bt_insert(&bt, v9, &compare);
+    bst_insert(&bt, v1, &compare);
+    bst_insert(&bt, v2, &compare);
+    bst_insert(&bt, v3, &compare);
+    bst_insert(&bt, v4, &compare);
+    bst_insert(&bt, v5, &compare);
+    bst_insert(&bt, v6, &compare);
+    bst_insert(&bt, v7, &compare);
+    bst_insert(&bt, v8, &compare);
+    bst_insert(&bt, v9, &compare);
 
-    assert(bt_count(bt) == 9);
+    assert(bst_count(bt) == 9);
     assert(bstree_test_suit(bt));
 
-    bt_balance(&bt, compare);
-    int d = bt_depth(bt);
-    int md = bt_mindepth(bt);
-    int nc = bt_node_count(bt);
+    bst_balance(&bt, compare);
+    int d = bst_depth(bt);
+    int md = bst_mindepth(bt);
+    int nc = bst_node_count(bt);
     assert(d == md);
-    assert(bt_find(bt, v1, compare));
-    assert(bt_find(bt, v5, compare));
-    assert(bt_find(bt, v7, compare));
+    assert(bst_find(bt, v1, compare));
+    assert(bst_find(bt, v5, compare));
+    assert(bst_find(bt, v7, compare));
 
     item c1 = *v1;
     item c5 = *v5;
     item c7 = *v7;
     for (int i = 0; i < 3; i++) {
-        rm = bt_remove(&bt, (voidp)&c1, compare);
+        rm = bst_remove(&bt, (voidp)&c1, compare);
         assert(rm != NULL);
         assert(compare(rm, (voidp)&c1) == 0);
         free(rm);
     }
     
     for (int i = 0; i < 3; i++) {
-        rm = bt_remove(&bt, (voidp)&c5, compare);
+        rm = bst_remove(&bt, (voidp)&c5, compare);
         assert(rm != NULL);
         assert(compare(rm, (voidp)&c5) == 0);
         free(rm);
     }
 
     for (int i = 0; i < 3; i++) {
-        rm = bt_remove(&bt, (voidp)&c7, compare);
+        rm = bst_remove(&bt, (voidp)&c7, compare);
         assert(rm != NULL);
         assert(compare(rm, (voidp)&c7) == 0);
         free(rm);
@@ -712,7 +715,7 @@ void test_sequence() {
     v8 = NULL;
     v9 = NULL;
 
-    bt_free(&bt);
+    bst_free(&bt);
 
     printf("Tests passed.\n");
 }

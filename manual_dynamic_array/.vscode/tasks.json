@@ -9,10 +9,10 @@
 				"-fdiagnostics-color=always",
 				"-g",
 				"${file}",
-				"manual_dynamic_array.c",
 				"data.c",
 				"../utils/error.c",
 				"../utils/timer.c",
+				"m_dynamic_array.c",
 				"-o",
 				"${fileDirname}\\out.exe"
 			],

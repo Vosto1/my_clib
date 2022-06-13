@@ -2,7 +2,7 @@
 #define TEST_H
 
 #include <assert.h>
-#include "btree.h"
+#include "bstree.h"
 #include "../utils/timer.h"
 #include "../utils/error.h"
 #include "../utils/file.h"

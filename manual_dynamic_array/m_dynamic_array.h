@@ -1,5 +1,5 @@
-#ifndef DYNAMIC_ARRAY_H
-#define DYNAMIC_ARRAY_H
+#ifndef M_DYNAMIC_ARRAY_H
+#define M_DYNAMIC_ARRAY_H
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -26,16 +26,16 @@ typedef struct {
     Data* array;
     size_t size;
     size_t used;
-}mdynamicArray;
+}m_dynamicArray;
 
-typedef mdynamicArray marray;
+typedef m_dynamicArray m_array;
 
 /**
  * create an empty manual dynamic array
  * 
- * @return mdynamicArray
+ * @return m_dynamicArray
  */
-mdynamicArray mcreateEmptyDynamicArray();
+m_dynamicArray m_createEmptyDynamicArray();
 
 /**
  * initialize a manual dynamic array
@@ -44,21 +44,21 @@ mdynamicArray mcreateEmptyDynamicArray();
  * @param initSize desired initial size of the array
  * @return size of the manual dynamic array that was created
  */
-size_t minitDynamicArray(mdynamicArray* a, size_t initSize);
+size_t m_initDynamicArray(m_dynamicArray* a, size_t initSize);
 
 /**
  * free a manual dynamic array
  * 
  * @param a array to free
  */
-void mfreeArray(mdynamicArray* a);
+void m_freeArray(m_dynamicArray* a);
 
 /**
  * initializes a manual dynamic array with placeholder items
  * 
  * @param a array to initialize
  */
-void marrayInitialize(marray *a);
+void m_arrayInitialize(m_array *a);
 
 /**
  * insert into manual dynamic array
@@ -68,7 +68,7 @@ void marrayInitialize(marray *a);
  * @param index index to insert the item into
  * @return index the item was inserted
  */
-int marrayInsert(mdynamicArray* a, Data item, int index);
+int m_arrayInsert(m_dynamicArray* a, Data item, int index);
 
 /**
  * removes an item from the manual dynamic array by inserting a placeholder at the given index
@@ -77,7 +77,7 @@ int marrayInsert(mdynamicArray* a, Data item, int index);
  * @param index index to where to remove an item
  * @return index where the item was removed
  */
-int marrayRemoveAt(mdynamicArray* a, int index);
+int m_arrayRemoveAt(m_dynamicArray* a, int index);
 
 /**
  * makes a copy of a manual dynamic array
@@ -86,7 +86,7 @@ int marrayRemoveAt(mdynamicArray* a, int index);
  * @param out array to copy to
  * @return size of the out array
  */
-int marrayCopy(mdynamicArray* copy, mdynamicArray* out);
+int m_arrayCopy(m_dynamicArray* copy, m_dynamicArray* out);
 
 /**
  * check if it is appropriate to increase allocated memory
@@ -94,7 +94,7 @@ int marrayCopy(mdynamicArray* copy, mdynamicArray* out);
  * @param a array to check
  * @return bool
  */
-bool mcheckMemoryIncrease(mdynamicArray* a);
+bool m_checkMemoryIncrease(m_dynamicArray* a);
 
 /**
  * check if it is appropriate to decrease allocated memory
@@ -102,7 +102,7 @@ bool mcheckMemoryIncrease(mdynamicArray* a);
  * @param a array to check
  * @return bool
  */
-bool mcheckMemoryDecrease(mdynamicArray* a);
+bool m_checkMemoryDecrease(m_dynamicArray* a);
 
 /**
  * doubles the size of an array
@@ -110,7 +110,7 @@ bool mcheckMemoryDecrease(mdynamicArray* a);
  * @param a array to double
  * @return MEM result of allocation
  */
-MEM mmemoryIncrease(mdynamicArray* a);
+MEM m_memoryIncrease(m_dynamicArray* a);
 
 /**
  * halves the size of an array
@@ -118,7 +118,7 @@ MEM mmemoryIncrease(mdynamicArray* a);
  * @param a array to halve
  * @return MEM result of allocation
  */
-MEM mmemoryDecrease(mdynamicArray* a);
+MEM m_memoryDecrease(m_dynamicArray* a);
 
 
 #endif

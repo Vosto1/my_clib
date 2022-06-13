@@ -8,11 +8,8 @@
                 "-fdiagnostics-color=always",
                 "-g3",
                 "${file}",
-                "../utils/timer.c",
                 "../utils/error.c",
-                "../s_dynamic_array/s_dynamic_array.c",
-                "bstree.c",
-                "test.c",
+                "btree.c",
                 "-o",
                 "${fileDirname}\\out.exe"
             ],

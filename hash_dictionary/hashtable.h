@@ -1,3 +1,13 @@
+/**
+ * @file hashtable.h
+ * @author Isac Hutchings (isac.hutchings@outlook.com)
+ * @brief 
+ * @version 0.1
+ * @date 2022-06-07
+ * 
+ * @copyright Copyright (c) 2022
+ * 
+ */
 #ifndef HASHTABLE_H
 #define HASHTABLE_H
 
