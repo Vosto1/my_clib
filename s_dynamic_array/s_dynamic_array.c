@@ -32,10 +32,30 @@ size_t sda_init(s_dynamicArray* a, size_t initSize) {
     }
 }
 
+size_t sda_clear(s_array* a) {
+    if(sda_is_empty(a)) {
+        errcset(EARR_EMPTY);
+        return -1;
+    } else if (sda_is_null(a)) {
+        errcset(ENULL_ARG);
+        return -1;
+    }
+    int amount = a->used;
+    voidp d;
+    for (int i = 0; i < amount; i++) {
+        d = sda_removeLast(a);
+        free(d);
+    }
+    return amount;
+}
+
 void sda_destroy(s_dynamicArray* a) {
     if (!sda_is_null(a)) {
         free(a->array);
         *a = sda_createEmpty();
+        a->size = 0;
+        a->used = 0;
+        a->array = NULL;
     } else {
         errcset(EFREE_NULLPTR);
     }
@@ -43,10 +63,10 @@ void sda_destroy(s_dynamicArray* a) {
 
 void sda_free(s_dynamicArray* a) {
     if (!sda_is_null(a)) {
-        if (!sda_is_empty(a))
+        if (!sda_is_empty(a)) {
             sda_clear(a);
-        free(a->array);
-        *a = sda_createEmpty();
+            sda_destroy(a);
+        }
     } else {
         errcset(EFREE_NULLPTR);
     }
@@ -132,27 +152,7 @@ size_t sda_merge(s_dynamicArray* a, s_dynamicArray* b) {
     }
     // free only array not the elements (sda_free frees all items in the array as well)
     sda_destroy(b);
-    b->size = 0;
-    b->used = 0;
-    b->array = NULL;
     return a->size;
-}
-
-size_t sda_clear(s_array* a) {
-    if(sda_is_empty(a)) {
-        errcset(EARR_EMPTY);
-        return -1;
-    } else if (sda_is_null(a)) {
-        errcset(ENULL_ARG);
-        return -1;
-    }
-    int amount = a->used;
-    voidp d;
-    for (int i = 0; i < amount; i++) {
-        d = sda_removeLast(a);
-        free(d);
-    }
-    return amount;
 }
 
 bool sda_is_null(s_array* a) {

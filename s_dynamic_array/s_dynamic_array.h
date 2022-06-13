@@ -80,6 +80,13 @@ s_dynamicArray sda_createEmpty();
  */
 size_t sda_init(s_dynamicArray* a, size_t initSize);
 /**
+ * remove (free) all items in the array
+ * 
+ * @param a array to remove from
+ * @return the amount of items that was removed or -1 if error
+ */
+size_t sda_clear(s_array* a);
+/**
  * @brief free array (items not freed)
  * 
  * @param a array to free 
@@ -121,14 +128,7 @@ voidp sda_removeAt(s_dynamicArray* a, int index);
  * @param b array to merge with (will be freed)
  * @return the new size of the array (a) or -1 if error
  */
-size_t sda_merge(s_dynamicArray* a, s_dynamicArray* b); // add array b on the end of array a O(n)
-/**
- * remove (free) all items in the array
- * 
- * @param a array to remove from
- * @return the amount of items that was removed or -1 if error
- */
-size_t sda_clear(s_array* a);
+size_t sda_merge(s_dynamicArray* a, s_dynamicArray* b);
 /**
  * check if the dynamic array is uninitialized
  * 

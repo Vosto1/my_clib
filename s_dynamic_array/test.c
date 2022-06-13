@@ -122,7 +122,7 @@ void auto_tests(int n, int mod) {
                 }
                 end = now();
             break;
-            case 3:
+            case 3: // merge + some extra tests
                 start = now();
                 unsigned long long operations = 0;
                 for (int j = 0; j < next_tests; j++) {
@@ -140,8 +140,20 @@ void auto_tests(int n, int mod) {
                     operations += size + size;
                 }
                 end = now();
-                remove_all(&a);
-                sprintf(operation, "convert + union (%lld insertions)", operations);
+                sda_clear(&a);
+                sprintf(operation, "merge (%lld insertions)", operations);
+
+                // extra tests
+                s_dynamicArray b = sda_createEmpty();
+                assert(sda_init(&b, 10) == 10);
+                for (int i = 0; i < rand() % 20; i++)
+                    sda_insert(&b, createItem(rand() % 100));
+                errorHandler();
+                sda_clear(&b);
+                errorHandler();
+                sda_destroy(&b);
+                errorHandler();
+                // clear followed by destroy is the same as free
             break;
         }
         end = now();
