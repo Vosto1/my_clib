@@ -6,21 +6,22 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include "../s_dynamic_array/s_dynamic_array.h"
 #include "../utils/error.h"
 
 typedef void* voidp;
 typedef const void* cvoidp;
 typedef struct treenode* btree;
 
-typedef struct _value value;
+typedef struct datacont datacontainer;
 
-struct _value { // handle mutiple occurances of the same value in the tree
+struct datacont { // handle mutiple occurances of the same value in the tree
 	cvoidp element;
-	value* next;
+	datacontainer* next;
 };
 
 struct treenode {
-	value value;
+	datacontainer cont;
 	btree parent;
 	btree left;
 	btree right;
@@ -52,5 +53,6 @@ int bt_mindepth(const btree tree);
 void bt_balance(btree* tree, int (*compare)(cvoidp,cvoidp));
 
 void bt_free(btree* tree);
+void bt_destroy(btree* tree);
 
 #endif

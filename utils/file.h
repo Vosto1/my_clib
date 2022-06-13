@@ -39,4 +39,14 @@ size_t writeFile(const char* filepath, void* contents, size_t size);
  */
 size_t readTextFile(char* filepath, char** out);
 
+/**
+ * @brief write text to text file
+ * 
+ * @param filepath path to file
+ * @param string string to write
+ * @param size size of string
+ * @return bytes written
+ */
+size_t writeTextFile(char* filepath, char** string, size_t size);
+
 #endif

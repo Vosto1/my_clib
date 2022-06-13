@@ -60,6 +60,10 @@ size_t readTextFile(char* filepath, char** out) {
     return readBytes;
 }
 
+size_t writeTextFile(char* filepath, char** string, size_t size) {
+	return writeFile(filepath, (void*)string, size);
+}
+
 // future functions
-//size_t appendFile(); // append to the end of the file
+//size_t appendTextFile(); // append to the end of the file
 //size_t readBytesFile(int amountBytes, int offset); // read a specified amount of bytes from file (from offset to amountBytes)

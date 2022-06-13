@@ -32,6 +32,15 @@ size_t sda_init(s_dynamicArray* a, size_t initSize) {
     }
 }
 
+void sda_destroy(s_dynamicArray* a) {
+    if (!sda_is_null(a)) {
+        free(a->array);
+        *a = sda_createEmpty();
+    } else {
+        errcset(EFREE_NULLPTR);
+    }
+}
+
 void sda_free(s_dynamicArray* a) {
     if (!sda_is_null(a)) {
         if (!sda_is_empty(a))
@@ -121,8 +130,8 @@ size_t sda_merge(s_dynamicArray* a, s_dynamicArray* b) {
     for (int i = 0; i < b->used; i++) {
         sda_insert(a, b->array[i]);
     }
-    // free only array not the elements (freeArray frees all items in the array as well)
-    free(b->array);
+    // free only array not the elements (sda_free frees all items in the array as well)
+    sda_destroy(&b);
     b->size = 0;
     b->used = 0;
     b->array = NULL;

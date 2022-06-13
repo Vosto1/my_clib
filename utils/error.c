@@ -88,7 +88,7 @@ const char* error(ErrorCode e) {
 
 void errorHandler() {
     if (errc != SUCCESS) {
-        fprintf(stderr, error(errc));
+        fprintf(stderr, "%s. E%d", error(errc), errc);
         exit(errc);
     } else return;
 }

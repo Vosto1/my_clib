@@ -80,6 +80,12 @@ s_dynamicArray sda_createEmpty();
  */
 size_t sda_init(s_dynamicArray* a, size_t initSize);
 /**
+ * @brief free array (items not freed)
+ * 
+ * @param a array to free 
+ */
+void sda_destroy(s_dynamicArray* a);
+/**
  * remove (free) all items in array and then free allocated memory for the dynamic array
  * 
  * @param a array to free
