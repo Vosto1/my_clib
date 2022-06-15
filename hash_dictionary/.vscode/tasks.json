@@ -14,6 +14,7 @@
 				"../utils/timer.c",
 				"hashtable.c",
 				"test.c",
+				"hash.c",
 				"-o",
 				"${fileDirname}\\${fileBasenameNoExtension}.exe"
 			],

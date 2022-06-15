@@ -6,7 +6,7 @@ int compare(cvoidp e1, cvoidp e2) {
     return (int)en1->k - (int)en2->k;
 }
 
-size_t hash(cvoidp e, const hashtable* ht) {
+size_t hashfn(cvoidp e, const hashtable* ht) {
     entry* f = (entry*)e;
     
     size_t index = f->k * 37;
@@ -64,8 +64,8 @@ void pvalue(entry* e) {
 unsigned int auto_tests(int tests, int mod) {
     srand(time(NULL));
 
-    hashtable ht = ht_createEmpty();
-    ht_init(&ht, 10, &hash, &compare);
+    hashtable ht = ht_create_empty();
+    ht_init(&ht, 10, &hashfn, &compare);
     ticks start, end, prgStart, prgEnd;
     unsigned int count;
     unsigned int operations = 0, deletions = 0, insertions = 0, lookups = 0;
@@ -135,7 +135,7 @@ unsigned int auto_tests(int tests, int mod) {
         lookups = 0;
     }
     // test trim
-    s_array a = sda_createEmpty();
+    s_array a = sda_create_empty();
     sda_init(&a, 1);
     for (size_t i = 0; i < ht_size(&ht); i++)
         if (ht.entries[i] != UNUSED)
@@ -150,8 +150,8 @@ unsigned int auto_tests(int tests, int mod) {
     size_t h;
     entry* en;
     for (size_t i = 0; i < acount; i++) {
-        en = sda_removeLast(&a);
-        h = hash(en, &ht);
+        en = sda_remove_last(&a);
+        h = hashfn(en, &ht);
         assert(ht.entries[h] != UNUSED);
     }
 
@@ -165,8 +165,8 @@ unsigned int auto_tests(int tests, int mod) {
 
 void test_sequence() {
     entry* del;
-    hashtable ht = ht_createEmpty();
-    ht_init(&ht, 3, &hash, &compare);
+    hashtable ht = ht_create_empty();
+    ht_init(&ht, 3, &hashfn, &compare);
     entry* e1 = createEntry('c', 1);
     entry* e2 = createEntry('/', 3);
     entry* e3 = createEntry('#', 7);

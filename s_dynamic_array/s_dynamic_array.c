@@ -8,7 +8,7 @@ size_t sda_size(s_array* a) {
     return a->size;
 }
 
-s_dynamicArray sda_createEmpty() {
+s_dynamicArray sda_create_empty() {
     s_dynamicArray a;
     a.array = NULL;
     a.size = 0;
@@ -26,7 +26,7 @@ size_t sda_init(s_dynamicArray* a, size_t initSize) {
         a->size = initSize;
         return initSize;
     } else {
-        *a = sda_createEmpty();
+        *a = sda_create_empty();
         errcset(EMEM_ALLOC);
         return -1;
     }
@@ -43,7 +43,7 @@ size_t sda_clear(s_array* a) {
     int amount = a->used;
     voidp d;
     for (int i = 0; i < amount; i++) {
-        d = sda_removeLast(a);
+        d = sda_remove_last(a);
         free(d);
     }
     return amount;
@@ -52,7 +52,7 @@ size_t sda_clear(s_array* a) {
 void sda_destroy(s_dynamicArray* a) {
     if (!sda_is_null(a)) {
         free(a->array);
-        *a = sda_createEmpty();
+        *a = sda_create_empty();
         a->size = 0;
         a->used = 0;
         a->array = NULL;
@@ -95,13 +95,13 @@ size_t sda_insert(s_dynamicArray* a, voidp item) {
     return a->used;
 }
 
-voidp sda_removeLast(s_dynamicArray* a) {
+voidp sda_remove_last(s_dynamicArray* a) {
     if (sda_is_empty(a)) {
         errcset(EARR_EMPTY);
         return NULL;
     }
     a->used -= 1;
-    MEM m = sda_memoryDecrease(a);
+    MEM m = sda_memory_decrease(a);
     if (m != NMEM_DECREASE) {
         voidp data = a->array[a->used];
         return data;
@@ -111,7 +111,7 @@ voidp sda_removeLast(s_dynamicArray* a) {
     }
 }
 
-voidp sda_removeAt(s_dynamicArray* a, int index) {
+voidp sda_remove_at(s_dynamicArray* a, int index) {
     if (index > a->used) {
         errcset(EINDEX_OUT_OF_BOUNDS);
         return NULL;
@@ -121,7 +121,7 @@ voidp sda_removeAt(s_dynamicArray* a, int index) {
         a->array[i] = a->array[i + 1];
     }
     a->used -= 1;
-    MEM m = sda_memoryDecrease(a);
+    MEM m = sda_memory_decrease(a);
     if (m != NMEM_DECREASE) {
         return data;
     } else {
@@ -132,7 +132,7 @@ voidp sda_removeAt(s_dynamicArray* a, int index) {
 }
 
 size_t sda_convert(s_dynamicArray* a, voidp b[], size_t bsize) {
-    *a = sda_createEmpty();
+    *a = sda_create_empty();
     if(sda_init(a, bsize) != bsize) {
         return -1;
     }
@@ -164,7 +164,7 @@ bool sda_is_empty(s_array* a) {
 }
 
 // memory check and increase is done in arrayInsert function
-static MEM sda_memoryDecrease(s_dynamicArray* a) {
+static MEM sda_memory_decrease(s_dynamicArray* a) {
     double ratio = (double)a->used / (double)a->size;
     // if 1/4 of the allocated space is used, halve it
     if(ratio <= QUARTER && sda_size(a) != 1) {

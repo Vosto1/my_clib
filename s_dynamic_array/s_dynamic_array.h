@@ -69,7 +69,7 @@ size_t sda_size(s_array* a);
 /**
  * create an empty dynamic array
  */
-s_dynamicArray sda_createEmpty();
+s_dynamicArray sda_create_empty();
 /**
  * initialize a dynamic array
  * 
@@ -112,7 +112,7 @@ size_t sda_insert(s_dynamicArray* a, voidp item);
  * @param a array to remove from
  * @return a pointer to the removed item
  */
-voidp sda_removeLast(s_dynamicArray* a);
+voidp sda_remove_last(s_dynamicArray* a);
 /**
  * remove a specific item from the dynamic array
  * 
@@ -120,7 +120,7 @@ voidp sda_removeLast(s_dynamicArray* a);
  * @param item item to remove
  * @return a pointer to the removed item or null if error
  */
-voidp sda_removeAt(s_dynamicArray* a, int index);
+voidp sda_remove_at(s_dynamicArray* a, int index);
 /**
  * merge two dynamic arrays, b will be put on the end of a and b will be freed
  * 
@@ -150,5 +150,5 @@ bool sda_is_empty(s_array* a);
  * @param item item to look for
  * @return the index of the item or -1 if it doesnt exist
  */
-static MEM sda_memoryDecrease(s_dynamicArray* a);
+static MEM sda_memory_decrease(s_dynamicArray* a);
 #endif

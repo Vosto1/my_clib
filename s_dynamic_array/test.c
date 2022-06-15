@@ -62,7 +62,7 @@ static void remove_all(s_array* a) {
 }
 
 void auto_tests(int n, int mod) {
-    s_array a = sda_createEmpty();
+    s_array a = sda_create_empty();
     assert(a.array == NULL);
     assert(a.size == 0);
     assert(a.used == 0);
@@ -103,7 +103,7 @@ void auto_tests(int n, int mod) {
                 insert_n(&a, next_tests);
                 start = now();
                 for (int j = 0; j < next_tests; j++) {
-                    d = (Item*)sda_removeAt(&a, rand() % a.used);
+                    d = (Item*)sda_remove_at(&a, rand() % a.used);
                     assert(d != NULL);
                     free(d);
                     errorHandler();
@@ -115,7 +115,7 @@ void auto_tests(int n, int mod) {
                 insert_n(&a, next_tests);
                 start = now();
                 for (int j = 0; j < next_tests; j++) {
-                    d = (Item*)sda_removeLast(&a);
+                    d = (Item*)sda_remove_last(&a);
                     assert(d != NULL);
                     free(d);
                     errorHandler();
@@ -127,7 +127,7 @@ void auto_tests(int n, int mod) {
                 unsigned long long operations = 0;
                 for (int j = 0; j < next_tests; j++) {
                     int size = rand() % 100 + 1;
-                    s_dynamicArray c = sda_createEmpty();
+                    s_dynamicArray c = sda_create_empty();
                     assert(sda_init(&c, size) == size);
                     for (int k = 0; k < size; k++)
                         sda_insert(&c, createItem(rand() % 1000));
@@ -144,7 +144,7 @@ void auto_tests(int n, int mod) {
                 sprintf(operation, "merge (%lld insertions)", operations);
 
                 // extra tests
-                s_dynamicArray b = sda_createEmpty();
+                s_dynamicArray b = sda_create_empty();
                 assert(sda_init(&b, 10) == 10);
                 for (int i = 0; i < rand() % 20; i++)
                     sda_insert(&b, createItem(rand() % 100));
@@ -171,7 +171,7 @@ void test_sequence() {
     Item item;
     Item* itemptr;
 
-    s_array a = sda_createEmpty();
+    s_array a = sda_create_empty();
     assert(a.array == NULL);
     assert(a.size == 0);
     assert(a.used == 0);
@@ -223,7 +223,7 @@ void test_sequence() {
     itemptr = createItem(5);
     assert(sda_insert(&a, (void*)itemptr) != -1);
     for (int i = a.used; i > 5; i--) {
-        itemptr = (Item*)sda_removeLast(&a);
+        itemptr = (Item*)sda_remove_last(&a);
         assert(itemptr != NULL);
         free(itemptr);
         assert(a.used == (i - 1));
@@ -232,18 +232,18 @@ void test_sequence() {
 
     printData(&a);
 
-    itemptr = (Item*)sda_removeAt(&a, 4);
+    itemptr = (Item*)sda_remove_at(&a, 4);
     assert(itemptr != NULL);
     assert(itemptr->value == 4);
     free(itemptr);
 
-    itemptr = (Item*)sda_removeAt(&a, 2);
+    itemptr = (Item*)sda_remove_at(&a, 2);
     assert(itemptr != NULL);
     assert(itemptr->value == 2);
     free(itemptr);
     assert(a.used == 3);
     
-    itemptr = (Item*)sda_removeAt(&a, 0);
+    itemptr = (Item*)sda_remove_at(&a, 0);
     assert(itemptr != NULL);
     assert(itemptr->value == 0);
     free(itemptr);

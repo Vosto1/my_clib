@@ -1,6 +1,6 @@
 #include "hashtable.h"
 
-hashtable ht_createEmpty() {
+hashtable ht_create_empty() {
     hashtable ht;
     ht.entries = NULL;
     ht.hash = NULL;
@@ -43,7 +43,7 @@ void ht_free(hashtable* ht) {
 
 size_t ht_trim(hashtable* ht) {
     size_t size = ht_size(ht);
-    s_array a = sda_createEmpty();
+    s_array a = sda_create_empty();
     if (sda_init(&a, 1) != 1) {
         errcset(EHASH_TRIM_BUFFER);
         return -1;
@@ -71,7 +71,7 @@ size_t ht_trim(hashtable* ht) {
     // re-insert elements
     voidp e;
     for (size_t i = 0; i < elementCount; i++) {
-        e = sda_removeLast(&a);
+        e = sda_remove_last(&a);
         ht_insert(ht, e);
     }
 
@@ -185,7 +185,7 @@ static size_t linear_probe(hashtable* ht, voidp element) {
     }
 
     // hashtable overflow
-    s_array a = sda_createEmpty();
+    s_array a = sda_create_empty();
     if (sda_init(&a, ht_size(ht)) != ht_size(ht)) {
         errcset(EHASHTABLE_OVERFLOW_BUFFER);
         return -1;
@@ -220,7 +220,7 @@ static size_t linear_probe(hashtable* ht, voidp element) {
     // re-insert all elements in the array into the new ht
     size_t elements = sda_count(&a);
     for (size_t i = 0; i < elements; i++) {
-        voidp e = sda_removeLast(&a);
+        voidp e = sda_remove_last(&a);
         ht_insert(ht, e);
     }
 
