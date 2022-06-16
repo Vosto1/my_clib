@@ -1,12 +1,14 @@
 #include "test.h"
 
-int compare(cvoidp e1, cvoidp e2) {
+int compare(cvoidp e1, cvoidp e2)
+{
     entry* en1 = (entry*)e1;
     entry* en2 = (entry*)e2;
     return (int)en1->k - (int)en2->k;
 }
 
-size_t hashfn(cvoidp e, const hashtable* ht) {
+size_t hashfn(cvoidp e, const hashtable* ht)
+{
     entry* f = (entry*)e;
     
     size_t index = f->k * 37;
@@ -14,17 +16,20 @@ size_t hashfn(cvoidp e, const hashtable* ht) {
     return index;
 }
 
-entry* createEntry(key k, value v) {
+entry* createEntry(key k, value v)
+{
     entry* e = (entry*)malloc(sizeof(entry));
     e->k = k;
     e->v = v;
     return e;
 }
 
-entry* randomElement(hashtable* ht) {
+entry* randomElement(hashtable* ht)
+{
     size_t size = ht_size(ht);
     size_t i = 0;
-    for (; i < size; i++) {
+    for (; i < size; i++)
+    {
         if (ht->entries[i] != UNUSED)
             return (entry*)ht->entries[i];
     }
@@ -46,22 +51,29 @@ entry* randomElement(hashtable* ht) {
 } */
 
 // debug
-void print(hashtable* ht) {
-    for (int i = 0; i < ht_size(ht); i++) {
-        if (ht->entries[i] != UNUSED) {
+void print(hashtable* ht)
+{
+    for (int i = 0; i < ht_size(ht); i++)
+    {
+        if (ht->entries[i] != UNUSED)
+        {
             entry* e = (entry*)ht->entries[i];
             printf("index %d: [%c,%d]\n", i, e->k, e->v);
-        } else printf("index %d: UNUSED\n", i);
+        }
+        else
+            printf("index %d: UNUSED\n", i);
     }
     printf("\n");
 }
 
-void pvalue(entry* e) {
+void pvalue(entry* e)
+{
     printf("key: %c value: %d\n", e->k, e->v);
 }
 
 
-unsigned int auto_tests(int tests, int mod) {
+unsigned int auto_tests(int tests, int mod)
+{
     srand(time(NULL));
 
     hashtable ht = ht_create_empty();
@@ -76,13 +88,16 @@ unsigned int auto_tests(int tests, int mod) {
     bool existsht = false;
 
     prgStart = now();
-    for (unsigned int i = 0; i < tests; i++) {
+    for (unsigned int i = 0; i < tests; i++)
+    {
         nexttests = rand() % mod;
         start = now();
-        for (unsigned int j = 0; j < nexttests; j++) {
+        for (unsigned int j = 0; j < nexttests; j++)
+        {
             val = rand() % 94 + 32; // ascii character value span
             random = rand() % 100;
-            if (random < 80) { // insert
+            if (random < 80)
+            { // insert
                 //printf("insertion, element count: %d\n", ht_count(&ht));
                 element = createEntry((char)val, val);
                 existsht = ht_lookup(&ht, element) != NULL; // check if element already exists in ht
@@ -97,8 +112,10 @@ unsigned int auto_tests(int tests, int mod) {
                 assert(ht_lookup(&ht, element) != NULL); // check if the element was inserted
                 insertions++;
             }
-            else if (random > 80 && random < 90) { // delete
-                if (ht_count(&ht) > 0) {
+            else if (random > 80 && random < 90)
+            { // delete
+                if (ht_count(&ht) > 0)
+                {
                     //printf("deletion, element count: %d\n", ht_count(&ht));
                     e = randomElement(&ht);
                     // debug
@@ -113,8 +130,10 @@ unsigned int auto_tests(int tests, int mod) {
                     deletions++;
                 }
             }
-            else { // look up
-                if (ht_count(&ht) > 0) {
+            else
+            { // look up
+                if (ht_count(&ht) > 0)
+                {
                     //printf("lookup, element count: %d\n", ht_count(&ht));
                     element = randomElement(&ht);
                     // debug
@@ -149,7 +168,8 @@ unsigned int auto_tests(int tests, int mod) {
     size_t acount = sda_count(&a);
     size_t h;
     entry* en;
-    for (size_t i = 0; i < acount; i++) {
+    for (size_t i = 0; i < acount; i++)
+    {
         en = sda_remove_last(&a);
         h = hashfn(en, &ht);
         assert(ht.entries[h] != UNUSED);
@@ -163,7 +183,8 @@ unsigned int auto_tests(int tests, int mod) {
     return operations;
 }
 
-void test_sequence() {
+void test_sequence()
+{
     entry* del;
     hashtable ht = ht_create_empty();
     ht_init(&ht, 3, &hashfn, &compare);

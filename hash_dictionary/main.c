@@ -2,12 +2,14 @@
 
 // I need to count collisions!
 
-int main(void) {
+int main(void)
+{
     //test_sequence();
     unsigned long long operations = 0;
     int tests = 100;
     ticks start = now();
-    for (int i = 0; i < tests; i++) {
+    for (int i = 0; i < tests; i++)
+    {
         operations += auto_tests(1000, 100);
     }
     ticks end = now();

@@ -2,21 +2,27 @@
 
 ErrorCode errcode;
 
-ErrorCode errcget() {
+ErrorCode errcget()
+{
     return errcode;
 }
-void errcset(ErrorCode e) {
+void errcset(ErrorCode e)
+{
      errcode = e;
 }
-void errcreset() {
+void errcreset()
+{
     errcode = SUCCESS;
 }
-void errcinit() {
+void errcinit()
+{
     errcode = SUCCESS;
 }
 
-const char* error(ErrorCode e) {
-    switch (e) {
+const char* error(ErrorCode e)
+{
+    switch (e)
+    {
         case SUCCESS:
             return "no error";
         case EMEM_ALLOC:
@@ -86,7 +92,8 @@ const char* error(ErrorCode e) {
 }
 
 
-void errorHandler() {
+void errorHandler()
+{
     if (errc != SUCCESS) {
         fprintf(stderr, "%s. E%d", error(errc), errc);
         exit(errc);

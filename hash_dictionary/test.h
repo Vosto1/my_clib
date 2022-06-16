@@ -8,10 +8,11 @@
 
 typedef int value;
 typedef char key;
-typedef struct {
+typedef struct
+{
     value v;
     key k;
-}entry;
+} entry;
 
 unsigned int auto_tests(int tests, int mod);
 void test_sequence();
