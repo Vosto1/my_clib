@@ -1,4 +1,5 @@
 #include "matrix.h"
+#include "menu.h"
 
 #define MAX_STRING 1024
 
@@ -39,7 +40,7 @@ void _menu() {
 				if (binaryChoice != 'y') {
 					break;
 				}
-				errorHandler(freeMatrix(&workingMatrix));
+				errorHandler1(freeMatrix(&workingMatrix));
 			}
 			List list = createEmptyList();
 			printf("\ncolumns: ");
@@ -47,7 +48,7 @@ void _menu() {
 			printf("rows: ");
 			fflush(stdin);
 			scanf("%d", &rows);
-			errorHandler(makeMatrix(rows, columns, &workingMatrix));
+			errorHandler1(makeMatrix(rows, columns, &workingMatrix));
 			fflush(stdin);
 			for (int i = 0; i < columns * rows; i++) {
 				printf("\nEnter element on index [%d, %d]: ", (i / columns), i % 3);
@@ -56,7 +57,7 @@ void _menu() {
 				addLast(&list, element);
 			}
 
-			errorHandler(initializeMatrixFromList(workingMatrix, list));
+			errorHandler1(initializeMatrixFromList(workingMatrix, list));
 			clearList(&list);
 			list = createEmptyList();
 			printf("Entered matrix:\n");
@@ -65,7 +66,7 @@ void _menu() {
 			break;
 		case 'd':
 			det = 0;
-			errorHandler(getDeterminant(&workingMatrix, &det));
+			errorHandler1(getDeterminant(&workingMatrix, &det));
 			fflush(stdin);
 			printMatrix(workingMatrix);
 			printf("determinant: %lf\n", det);

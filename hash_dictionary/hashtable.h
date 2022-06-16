@@ -32,6 +32,7 @@ struct htabl {
 
 hashtable ht_create_empty();
 size_t ht_init(hashtable* ht, size_t size, size_t (*hash)(cvoidp,const hashtable*), int (*compare)(cvoidp,cvoidp));
+void ht_destroy(hashtable* ht);
 void ht_free(hashtable* ht);
 size_t ht_trim(hashtable* ht);
 

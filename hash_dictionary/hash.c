@@ -1,5 +1,5 @@
 #include "hash.h"
-// generic hash function
+// generic hash function, it needs a wrapper to work with this hashtable
 // https://www.codeproject.com/Questions/5315752/How-do-I-write-a-hash-function-in-Cplusplus-that-a
 HASH hash( void * data, int byteSize )
 {

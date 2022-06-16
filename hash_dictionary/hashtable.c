@@ -41,6 +41,19 @@ void ht_free(hashtable* ht) {
     }
 }
 
+// only free the hashtable not the entries
+void ht_destroy(hashtable* ht) {
+    if (ht == NULL) {
+        errcset(EHASH_NULL);
+    } else {
+        free(ht->entries);
+        ht->entries = NULL;
+        ht->compare = NULL;
+        ht->hash = NULL;
+        ht->size = 0;
+    }
+}
+
 size_t ht_trim(hashtable* ht) {
     size_t size = ht_size(ht);
     s_array a = sda_create_empty();

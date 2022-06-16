@@ -1,4 +1,5 @@
 #include "matrix.h"
+#include "test.h"
 
 //testing macros
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -11,7 +12,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////
 
 
-void testMtrx(Matrix mtrx, Matrix mtrxCmp,  List list) {
+static void testMtrx(Matrix mtrx, Matrix mtrxCmp,  List list) {
 	if (list && !mtrxCmp) {
 		List templist = list;
 		for (int row = 0; row < mtrx->rows; row++) {
@@ -29,12 +30,12 @@ void testMtrx(Matrix mtrx, Matrix mtrxCmp,  List list) {
 		}
 	}
 	else {
-		errorHandler(ERR_TEST_FUNC_INVALID_ARGUMENT);
+		errorHandler1(ERR_TEST_FUNC_INVALID_ARGUMENT);
 	}
 }
 
 
-void print(char* string) {
+static void print(const char* string) {
 	printf("%*s", -40, string);
 }
 
@@ -46,11 +47,11 @@ void matrixTestFunction() {
 	printf("-------------------------------------------\n");
 	print("Matrix memory alloc: ");
 	Matrix gmTestInit;
-	errorHandler(makeMatrix(ROW, COL, &gmTestInit));
+	errorHandler1(makeMatrix(ROW, COL, &gmTestInit));
 	printf("OK\n");
 
 	print("Matrix elements initialization: ");
-	errorHandler(matrixTestInitialization(gmTestInit));
+	errorHandler1(matrixTestInitialization(gmTestInit));
 	printf("OK\n");
 	print("Free matrix allocated mem: ");
 	freeMatrix(&gmTestInit);
@@ -73,9 +74,9 @@ void matrixTestFunction() {
 	addLast(&list, 7);
 
 	Matrix gmListInit;
-	errorHandler(makeMatrix(ROW, COL, &gmListInit));
+	errorHandler1(makeMatrix(ROW, COL, &gmListInit));
 
-	errorHandler(initializeMatrixFromList(gmListInit, list));
+	errorHandler1(initializeMatrixFromList(gmListInit, list));
 
 	//test results
 	testMtrx(gmListInit, NULL, list);
@@ -90,11 +91,11 @@ void matrixTestFunction() {
 	//set up
 	Matrix gmCloneFrom;
 	Matrix gmCloneTo;
-	errorHandler(makeMatrix(ROW, COL, &gmCloneFrom));
-	errorHandler(makeMatrix(ROW, COL, &gmCloneTo));
-	errorHandler(initializeMatrixFromList(gmCloneFrom, list));
+	errorHandler1(makeMatrix(ROW, COL, &gmCloneFrom));
+	errorHandler1(makeMatrix(ROW, COL, &gmCloneTo));
+	errorHandler1(initializeMatrixFromList(gmCloneFrom, list));
 	clearList(&list);
-	errorHandler(copyto(gmCloneFrom, gmCloneTo));
+	errorHandler1(copyto(gmCloneFrom, gmCloneTo));
 	//test results
 	testMtrx(gmCloneFrom, gmCloneTo, NULL);
 	//clean up
@@ -108,8 +109,8 @@ void matrixTestFunction() {
 	print("Initialize random numbers: ");
 	//set up
 	Matrix gmRandom;
-	errorHandler(makeMatrix(nsqm_ROW, nsqm_COL, &gmRandom));
-	errorHandler(initializeMatrixRandomNumbers(gmRandom, 10, 0));
+	errorHandler1(makeMatrix(nsqm_ROW, nsqm_COL, &gmRandom));
+	errorHandler1(initializeMatrixRandomNumbers(gmRandom, 10, 0));
 	//clean up
 	freeMatrix(&gmRandom);
 	printf("OK\n");
@@ -119,10 +120,10 @@ void matrixTestFunction() {
 	print("Calc determinant: ");
 	//set up
 	Matrix gmDetTest;
-	errorHandler(makeMatrix(ROW, COL, &gmDetTest));
-	errorHandler(copyto(gmListInit, gmDetTest));
+	errorHandler1(makeMatrix(ROW, COL, &gmDetTest));
+	errorHandler1(copyto(gmListInit, gmDetTest));
 	Data determinant = 0;
-	errorHandler(getDeterminant(&gmDetTest, &determinant));
+	errorHandler1(getDeterminant(&gmDetTest, &determinant));
 	//test results
 	//determinant of list init is -165
 	assert(determinant == -165);
@@ -146,7 +147,7 @@ void matrixTestFunction() {
 	addLast(&list6, 3);
 	addLast(&list6, 4);
 	Matrix inverseMatrixTest;
-	errorHandler(makeMatrix(3, 3, &inverseMatrixTest));
+	errorHandler1(makeMatrix(3, 3, &inverseMatrixTest));
 	initializeMatrixFromList(inverseMatrixTest, list6);
 	getInverseMatrix(&inverseMatrixTest);
 	//test results
@@ -181,7 +182,7 @@ void matrixTestFunction() {
 	addLast(&list5, 2);
 	addLast(&list5, 1);
 	Matrix scalarMultiplicationTest;
-	errorHandler(makeMatrix(3, 3, &scalarMultiplicationTest));
+	errorHandler1(makeMatrix(3, 3, &scalarMultiplicationTest));
 	initializeMatrixFromList(scalarMultiplicationTest, list5);
 	multiplyMatrixWithScalarValue(&scalarMultiplicationTest, -1);
 	//test results
@@ -218,8 +219,8 @@ void matrixTestFunction() {
 	addLast(&list4, 0);
 	Matrix adjugateMatrixTest;
 	Matrix adjugateMatrixClone;
-	errorHandler(makeMatrix(3, 3, &adjugateMatrixTest));
-	errorHandler(makeMatrix(3, 3, &adjugateMatrixClone));
+	errorHandler1(makeMatrix(3, 3, &adjugateMatrixTest));
+	errorHandler1(makeMatrix(3, 3, &adjugateMatrixClone));
 	initializeMatrixFromList(adjugateMatrixTest, list4);
 	copyto(adjugateMatrixTest, adjugateMatrixClone);
 	getAdjugateMatrix(&adjugateMatrixTest);
@@ -259,7 +260,7 @@ void matrixTestFunction() {
 	addLast(&list3, -2);
 	addLast(&list3, 0);
 	Matrix transposeMatrixTest;
-	errorHandler(makeMatrix(3, 3, &transposeMatrixTest));
+	errorHandler1(makeMatrix(3, 3, &transposeMatrixTest));
 	initializeMatrixFromList(transposeMatrixTest, list3);
 	transposeMatrix(&transposeMatrixTest);
 	//test results
@@ -311,11 +312,11 @@ void matrixTestFunction() {
 
 	//Matrix gmAdjTest;
 	//Matrix gmAdjResult;
-	//errorHandler(makeMatrix(5, 5, &gmAdjTest));
-	//errorHandler(makeMatrix(5, 5, &gmAdjResult));
-	//errorHandler(initializeMatrixFromList(gmAdjTest, list2));
+	//errorHandler1(makeMatrix(5, 5, &gmAdjTest));
+	//errorHandler1(makeMatrix(5, 5, &gmAdjResult));
+	//errorHandler1(initializeMatrixFromList(gmAdjTest, list2));
 	////printMatrix(gmAdjTest);
-	//errorHandler(getCofactorMatrix(&gmAdjTest, &gmAdjResult));
+	//errorHandler1(getCofactorMatrix(&gmAdjTest, &gmAdjResult));
 	////printMatrix(gmAdjResult);
 	//freeMatrix(&gmAdjResult);
 	//freeMatrix(&gmAdjTest);

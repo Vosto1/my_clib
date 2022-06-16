@@ -4,6 +4,8 @@
 #include "../../s_dynamic_array/s_dynamic_array.h"
 #include "../../hash_dictionary/hashtable.h"
 #include "../../hash_dictionary/hash.h"
+#include "../../hash_dictionary/hash.h"
+#include "../../utils/counter.h"
 #include "list.h"
 #include "data.h"
 #include <math.h>
@@ -17,7 +19,7 @@
 
 
 enum errorCodes {
-	SUCCESS = 0,
+	SUCCESS1 = 0,
 	ERR_MAKE_MATRIX = 1,
 	ERR_NON_SQUARE_MATRIX = 2,
 	ERR_MATRIX_IS_NULL = 3,
@@ -31,7 +33,7 @@ enum errorCodes {
 	ERR_INV_MTRX_DETERMINANT_DIV0 = 11,
 };
 
-typedef int ErrorCode;
+typedef int ErrorCode1;
 
 
 typedef struct {
@@ -44,33 +46,34 @@ typedef matrix_data_type* Matrix;
 
 
 //Calls exit() with errorcode number if an error occurs
-void errorHandler(int err);
+void errorHandler1(int err);
 //Prints matrix
 void printMatrix(Matrix mtrx);
 //Frees the allocated memory for the matrix. The pointer will point at NULL afterwards.
-ErrorCode freeMatrix(Matrix* mtrx);
+ErrorCode1 freeMatrix(Matrix* mtrx);
 //Initializes the matrix with column number * 10 + row number.
-ErrorCode matrixTestInitialization(Matrix mtrx);
+ErrorCode1 matrixTestInitialization(Matrix mtrx);
 //Initializes the matrix with data from the list. The list must have rows * columns amount of data.
-ErrorCode initializeMatrixFromList(Matrix mtrx, List list);
+ErrorCode1 initializeMatrixFromList(Matrix mtrx, List list);
 //Initializes the matrix with random numbers between min and max.
-ErrorCode initializeMatrixRandomNumbers(Matrix mtrx, int max, int min);
+ErrorCode1 initializeMatrixRandomNumbers(Matrix mtrx, int max, int min);
 //send allocated matrices, input needs to be initialized. Output is the clone.
-ErrorCode copyto(Matrix input, Matrix output);
+ErrorCode1 copyto(Matrix input, Matrix output);
 //declare size and send in a gm pointer and. Pointer is assigned uninitialized matrix with inputed size.
-ErrorCode makeMatrix(int rows, int columns, Matrix* mtrx);
+ErrorCode1 makeMatrix(int rows, int columns, Matrix* mtrx);
 //Gets the determinant of the inputed matrix. Matrix must be a square matrix. Determinant is assigned to what pdet points at.
-ErrorCode getDeterminant(Matrix* mtrx, Data* pdet);
+ErrorCode1 getDeterminant(Matrix* mtrx, Data* pdet);
+ErrorCode getDeterminantSlow(Matrix* mtrx, Data* pdet);
 //Get cofactor matrix of input matrix.
-ErrorCode getCofactorMatrix(Matrix* mtrx, Matrix* resultMatrix);
+ErrorCode1 getCofactorMatrix(Matrix* mtrx, Matrix* resultMatrix);
 //transpose input matrix
-ErrorCode transposeMatrix(Matrix* mtrx);
+ErrorCode1 transposeMatrix(Matrix* mtrx);
 //get adjugate of input matrix
-ErrorCode getAdjugateMatrix(Matrix* mtrx);
+ErrorCode1 getAdjugateMatrix(Matrix* mtrx);
 //multiply all elements in the input matrix with the scalar
-ErrorCode multiplyMatrixWithScalarValue(Matrix* mtrx, Data scalar);
+ErrorCode1 multiplyMatrixWithScalarValue(Matrix* mtrx, Data scalar);
 //get inverse matrix from the input matrix
-ErrorCode getInverseMatrix(Matrix* mtrx);
+ErrorCode1 getInverseMatrix(Matrix* mtrx);
 
 
 
