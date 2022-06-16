@@ -3,8 +3,10 @@
 
 #define MAX_STRING 1024
 
-void _menu() {
-	if (!strcmp(FORMAT_STRING, INT)) {
+void _menu()
+{
+	if (!strcmp(FORMAT_STRING, INT))
+	{
 		exit(ERR_MUST_BE_DOUBLE);
 	}
 	Data element;
@@ -16,8 +18,9 @@ void _menu() {
 	int rows = 0;
 	char binaryChoice = 'n';
 	bool run = true;
-	while (run) {
-		//system("cls");
+	while (run)
+	{
+		// system("cls");
 		printf("------------------------------------------\n");
 		printf("c - create matrix\n");
 		printf("d - calc determinant\n");
@@ -30,14 +33,16 @@ void _menu() {
 		switch (switch_on)
 		{
 		case 'c':
-			if (workingMatrix != NULL) {
+			if (workingMatrix != NULL)
+			{
 				printf("delete old matrix? (y/n)\n");
 				fflush(stdin);
 
 				fgets(buffer, MAX_STRING, stdin);
 				binaryChoice = buffer[0];
-				
-				if (binaryChoice != 'y') {
+
+				if (binaryChoice != 'y')
+				{
 					break;
 				}
 				errorHandler1(freeMatrix(&workingMatrix));
@@ -50,7 +55,8 @@ void _menu() {
 			scanf("%d", &rows);
 			errorHandler1(makeMatrix(rows, columns, &workingMatrix));
 			fflush(stdin);
-			for (int i = 0; i < columns * rows; i++) {
+			for (int i = 0; i < columns * rows; i++)
+			{
 				printf("\nEnter element on index [%d, %d]: ", (i / columns), i % 3);
 				fflush(stdin);
 				scanf("%lf", &element);
@@ -83,7 +89,7 @@ void _menu() {
 			run = false;
 			break;
 		default:
-			//do nothing
+			// do nothing
 			break;
 		}
 		fflush(stdin);

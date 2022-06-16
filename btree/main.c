@@ -4,18 +4,21 @@
 #include <time.h>
 #include "btree.h"
 
-typedef char* value;
+typedef char *value;
 
-static value createValue(int v) {
+static value createValue(int v)
+{
     value a = (value)malloc(sizeof(char));
     return a;
 }
 
-static int rascii() {
+static int rascii()
+{
     return rand() % 94 + 32; // ascii character value span
 }
 
-int main(void) {
+int main(void)
+{
     srand(time(NULL));
     btree bt = bt_create_empty();
 
@@ -27,7 +30,7 @@ int main(void) {
     assert(!bt_left_is_null(bt));
     assert(!bt_right_is_null(bt));
     assert(!bt_is_empty(bt));
-    
+
     value arr[3];
     arr[0] = bt->value;
     arr[1] = bt->left->value;

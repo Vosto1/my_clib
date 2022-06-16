@@ -2,14 +2,13 @@
 #include <stdlib.h>
 #include <assert.h>
 
-
 /*Hjalpfunktion till add
   Allokerar minne for en ny nod
   om allokeringen lyckades initieras data samt pekare (pekare initieras till NULL).
   Den nya noden (eller NULL) returneras.*/
-static struct node* createListNode(const voidp data)
+static struct node *createListNode(const voidp data)
 {
-    //ll �r en node ptr
+    // ll �r en node ptr
     ll tempNodeptr = (ll)malloc(sizeof(struct node));
     if (tempNodeptr != NULL)
     {
@@ -28,7 +27,6 @@ ll ll_create_empty(void)
     return NULL;
 }
 
-
 /*Ar listan tom?
   Returnerar true om den �r tom, annars false*/
 bool ll_is_empty(const ll list)
@@ -39,9 +37,9 @@ bool ll_is_empty(const ll list)
 }
 
 /*Lagg till nod forst i listan*/
-void ll_add_first(ll* list, const voidp data)
+void ll_add_first(ll *list, const voidp data)
 {
-    //skapa ny nod
+    // skapa ny nod
     ll temp = createListNode(data);
     if (temp != NULL)
     {
@@ -54,7 +52,6 @@ void ll_add_first(ll* list, const voidp data)
             (*list)->next = tempPtr;
             tempPtr->previous = *list;
         }
-
     }
     else
         return;
@@ -62,7 +59,7 @@ void ll_add_first(ll* list, const voidp data)
 }
 
 /*Lagg till nod sist i listan*/
-void ll_add_last(ll* list, const voidp data)
+void ll_add_last(ll *list, const voidp data)
 {
     if ((*list) == NULL)
         ll_add_first(list, data);
@@ -80,21 +77,21 @@ void ll_add_last(ll* list, const voidp data)
 }
 
 /*Ta bort forsta noden i listan*/
-void ll_remove_first(ll* list)
+void ll_remove_first(ll *list)
 {
-    assert(!ll_is_empty(*list)); //kommentera f�r att menyn ska fungera
+    assert(!ll_is_empty(*list)); // kommentera f�r att menyn ska fungera
     if (*list != NULL)
     {
         ll temp = (*list);
         (*list) = (*list)->next;
-        if((*list) != NULL)
+        if ((*list) != NULL)
             (*list)->previous = NULL;
         free(temp);
     }
 }
 
 /*Ta bort sista noden i listan*/
-void ll_remove_last(ll* list)
+void ll_remove_last(ll *list)
 {
     assert(!ll_is_empty(*list));
     if ((*list)->next == NULL)
@@ -113,7 +110,7 @@ void ll_remove_last(ll* list)
 
 /*Ta bort data ur listan (forsta forekomsten)
   Returnera true om datat finns, annars false*/
-bool ll_remove_element(ll* list, const voidp data, int (*compare)(cvoidp,cvoidp))
+bool ll_remove_element(ll *list, const voidp data, int (*compare)(cvoidp, cvoidp))
 {
     if ((*list) != NULL)
     {
@@ -121,7 +118,7 @@ bool ll_remove_element(ll* list, const voidp data, int (*compare)(cvoidp,cvoidp)
         {
             ll temp = (*list);
             (*list) = (*list)->next;
-            if((*list) != NULL)
+            if ((*list) != NULL)
                 (*list)->previous = temp->previous;
             free(temp);
             return true;
@@ -135,7 +132,7 @@ bool ll_remove_element(ll* list, const voidp data, int (*compare)(cvoidp,cvoidp)
 
 /*ll_search for data in the list
 Om datat finns returneras true, annars false*/
-bool ll_search(const ll list, const voidp data, int (*compare)(cvoidp,cvoidp))
+bool ll_search(const ll list, const voidp data, int (*compare)(cvoidp, cvoidp))
 {
     if (list != NULL)
     {
@@ -159,9 +156,9 @@ int ll_node_count(const ll list)
 /*Ta bort alla noder ur listan
   Glom inte att frigora minnet
   Postcondition: Listan ar tom, *list �r NULL (testa med assert)*/
-void ll_clear(ll* list)
+void ll_clear(ll *list)
 {
-    if((*list)->next == NULL)
+    if ((*list)->next == NULL)
         return;
     else
         ll_clear(&(*list)->next);
@@ -181,11 +178,11 @@ voidp ll_get_first(const ll list)
   Precondition: listan ar inte tom (testa med assert)*/
 voidp ll_get_last(const ll list)
 {
-    assert(!ll_is_empty(list)); //kommentera f�r att menyn ska fungera
+    assert(!ll_is_empty(list)); // kommentera f�r att menyn ska fungera
     if (list != NULL)
     {
         if (list->next == NULL)
             return list->data;
-        return ll_get_last(list->next); //Ersatt med ratt returvarde
+        return ll_get_last(list->next); // Ersatt med ratt returvarde
     }
 }

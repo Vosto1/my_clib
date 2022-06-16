@@ -13,21 +13,22 @@
 typedef char Element;
 typedef double Key;
 
-typedef struct {
+typedef struct
+{
     Key key;
     Element element;
-}Item;
-
+} Item;
 
 typedef unsigned long long size_t;
 
-typedef enum Test {
+typedef enum Test
+{
     INSERTION = 1,
     DELETION = 2,
-}Test;
+} Test;
 // user defined functions needed for the s_heap
-static int compare(const void* x, const void* y);
-static void heapPrintTree(s_heap* h);
+static int compare(const void *x, const void *y);
+static void heapPrintTree(s_heap *h);
 // test functions
 void test_sequence();
 void compute_1_to_n_sequences_of_operations(long n, Test type);

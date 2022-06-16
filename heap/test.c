@@ -1,133 +1,157 @@
 #include "test.h"
 
-static int compare(const void* x, const void* y) {
-    Item* item0 = (Item*)x;
-    Item* item1 = (Item*)y;
-    if(item0->key > item1->key) return 1;
-    else if (item0->key < item1->key) return -1;
-    else return 0;
+static int compare(const void *x, const void *y)
+{
+    Item *item0 = (Item *)x;
+    Item *item1 = (Item *)y;
+    if (item0->key > item1->key)
+        return 1;
+    else if (item0->key < item1->key)
+        return -1;
+    else
+        return 0;
 }
 
-static void decrementKey(void* base, void** out) {
-    Item* b = (Item*)base;
-    void* o = *out;
-    Item* oi = (Item*)o;
-    b->key -= 1.0f; // decrement the smallest key in the heap
+static void decrementKey(void *base, void **out)
+{
+    Item *b = (Item *)base;
+    void *o = *out;
+    Item *oi = (Item *)o;
+    b->key -= 1.0f;   // decrement the smallest key in the heap
     oi->key = b->key; // set out key to new key
-    b->key += 1.0f; // rollback, because we are decrementing an actual item in the heap
+    b->key += 1.0f;   // rollback, because we are decrementing an actual item in the heap
 }
 
 // guarantees the smallest key unless the heap has been changed after
-static void minKey(void* base, void** out) {
-    Item* min = (Item*)base;
-    *out = (Item*)malloc(sizeof(Item));
+static void minKey(void *base, void **out)
+{
+    Item *min = (Item *)base;
+    *out = (Item *)malloc(sizeof(Item));
     decrementKey(min, out);
 }
 
-static void* setKey(void* item, void* key) {
-    Item* i = (Item*)item;
-    Item* k = (Item*)key;
+static void *setKey(void *item, void *key)
+{
+    Item *i = (Item *)item;
+    Item *k = (Item *)key;
     i->key = k->key;
     return i;
 }
 
-static void heapPrintTree(heap* h) {
+static void heapPrintTree(heap *h)
+{
     int y = 0;
     int x = 0;
-    for (int i = 0; i < heapSize(h); i++) {
-        for (int j = 0; j < pow(2, i) && j + pow(2, i) <= heapSize(h); j++) {
+    for (int i = 0; i < heapSize(h); i++)
+    {
+        for (int j = 0; j < pow(2, i) && j + pow(2, i) <= heapSize(h); j++)
+        {
             x = j + (int)pow(2, i) - 1;
             y = h->items.used;
-            if (y > x) {
-                Item* item = (Item*)h->items.array[x];
+            if (y > x)
+            {
+                Item *item = (Item *)h->items.array[x];
                 printf("[k%f|%c]", item->key, item->element);
             }
-            else printf("----");
+            else
+                printf("----");
         }
         printf("\n");
     }
 }
 
-static Item* createItem(int x) {
-    Item* item = (Item*)malloc(sizeof(Item));
+static Item *createItem(int x)
+{
+    Item *item = (Item *)malloc(sizeof(Item));
     item->element = (char)x;
     item->key = x;
     return item;
 }
 
-static Item* randomElement(heap* h) {
+static Item *randomElement(heap *h)
+{
     int index = rand() % h->items.used;
     return h->items.array[index];
 }
 
-static void insert_n(heap * h, int n) {
+static void insert_n(heap *h, int n)
+{
     size_t e;
-    Item* item;
-    for (int j = 0; j < n; j++) {
+    Item *item;
+    for (int j = 0; j < n; j++)
+    {
         item = createItem(rand() % 1000);
         e = heapSize(h) + 1;
-        assert(heapInsert(h, (void*)item) == e);
+        assert(heapInsert(h, (void *)item) == e);
         errorHandler();
     }
     assert(heapSize(h) == n);
 }
 
-static void remove_all(heap* h) {
+static void remove_all(heap *h)
+{
     assert(arrayClear(&h->items) != -1);
     assert(heapSize(h) == 0);
 }
 
-void compute_1_to_n_sequences_of_operations(long n, Test type) {
+void compute_1_to_n_sequences_of_operations(long n, Test type)
+{
     heap h = createEmptyHeap();
     assert(initHeap(&h, 1, &compare, &setKey, &minKey) == 1);
     errorHandler();
     long j = 1;
-    Item* item;
-    Item* toDelete;
+    Item *item;
+    Item *toDelete;
     ticks start;
     ticks end;
-    switch (type) {
-        case INSERTION:
-            while (j <= n) {
-                start = now();
-                for (int i = 0; i < j; i++) {
-                    int val = rand() % 1000;
-                    item = createItem(val);
-                    assert(heapInsert(&h, item) != -1);
-                }
-                end = now();
-                printf("Computed %d insertion operations during %f seconds.\n", j, diff(start, end));
-                j *= 2;
-                remove_all(&h);
+    switch (type)
+    {
+    case INSERTION:
+        while (j <= n)
+        {
+            start = now();
+            for (int i = 0; i < j; i++)
+            {
+                int val = rand() % 1000;
+                item = createItem(val);
+                assert(heapInsert(&h, item) != -1);
             }
+            end = now();
+            printf("Computed %d insertion operations during %f seconds.\n", j, diff(start, end));
+            j *= 2;
+            remove_all(&h);
+        }
         break;
-        case DELETION:
-            while (j <= n) {
-                insert_n(&h, j);
-                start = now();
-                for (int i = 0; i < j; i++) {
-                    toDelete = randomElement(&h);
-                    item = heapRemove(&h, toDelete);
-                    assert(item != NULL);
-                    free(item);
-                }
-                end = now();
-                printf("Computed %d deletion operations during %f seconds.\n", j, diff(start, end));
-                j *= 2;
+    case DELETION:
+        while (j <= n)
+        {
+            insert_n(&h, j);
+            start = now();
+            for (int i = 0; i < j; i++)
+            {
+                toDelete = randomElement(&h);
+                item = heapRemove(&h, toDelete);
+                assert(item != NULL);
+                free(item);
             }
+            end = now();
+            printf("Computed %d deletion operations during %f seconds.\n", j, diff(start, end));
+            j *= 2;
+        }
         break;
     }
     freeHeap(&h);
     errorHandler();
 }
 
-bool heap_integrity_test(int n) {
+bool heap_integrity_test(int n)
+{
     srand(time(NULL));
     heap h = createEmptyHeap();
     assert(initHeap(&h, 10, &compare, &setKey, &minKey) == 10);
     errorHandler();
-    Item* item;
-    Item* toDelete;
+    Item *item;
+    Item *toDelete;
     ticks start;
     ticks end;
     // counters
@@ -143,24 +167,26 @@ bool heap_integrity_test(int n) {
         {
             int val = rand() % 100;
             if (val < 81)
-            { //80%
+            { // 80%
                 item = createItem(val);
                 assert(heapInsert(&h, item) != -1);
                 // inc counter
                 inscount++;
             }
             else
-            { //20%
-                if (h.items.used != 0) {
+            { // 20%
+                if (h.items.used != 0)
+                {
                     toDelete = randomElement(&h);
                     item = heapRemove(&h, toDelete);
                     assert(item != NULL);
                     free(item);
                     // inc counter
                     delcount++;
-                } 
+                }
             }
-            if(!testHeapIntegrity(&h)) {
+            if (!testHeapIntegrity(&h))
+            {
                 system("clear");
                 printf("Heap integrity broken\n");
                 heapPrintTree(&h);
@@ -186,7 +212,8 @@ bool heap_integrity_test(int n) {
     return true;
 }
 
-void test_sequence() {
+void test_sequence()
+{
     srand(time(NULL));
     heap h = createEmptyHeap();
     assert(initHeap(&h, 10, &compare, &setKey, &minKey) == 10);
@@ -194,18 +221,18 @@ void test_sequence() {
     ticks programStart = now();
     ticks start;
     ticks end;
-    Item* rm;
+    Item *rm;
 
-    Item* item0 = createItem(97);
-    Item* item1 = createItem(82);
-    Item* item2 = createItem(59);
-    Item* item3 = createItem(99);
-    Item* item4 = createItem(77);
-    Item* item5 = createItem(34);
-    Item* item6 = createItem(78);
-    Item* item7 = createItem(46);
-    Item* item8 = createItem(21);
-    Item* item9 = createItem(45);
+    Item *item0 = createItem(97);
+    Item *item1 = createItem(82);
+    Item *item2 = createItem(59);
+    Item *item3 = createItem(99);
+    Item *item4 = createItem(77);
+    Item *item5 = createItem(34);
+    Item *item6 = createItem(78);
+    Item *item7 = createItem(46);
+    Item *item8 = createItem(21);
+    Item *item9 = createItem(45);
 
     heapInsert(&h, item0);
     heapInsert(&h, item1);
@@ -226,13 +253,12 @@ void test_sequence() {
     errorHandler();
 
     // decrease key of item3 to 1 but still same element as item3
-    Item* tmp = createItem(1);
+    Item *tmp = createItem(1);
     tmp->key = 1;
     tmp->element = item3->element;
     rm = extractMin(&h);
     assert(compare(rm, tmp) == 0);
     free(rm);
-
 
     rm = heapRemove(&h, item2);
     assert(compare(rm, item2) == 0);
@@ -264,27 +290,27 @@ void test_sequence() {
     assert(rm != NULL);
     assert(compare(rm, item5) == 0);
     free(rm);
-    
+
     rm = extractMin(&h);
     assert(rm != NULL);
     assert(compare(rm, item9) == 0);
     free(rm);
-    
+
     rm = extractMin(&h);
     assert(rm != NULL);
     assert(compare(rm, item7) == 0);
     free(rm);
-    
+
     rm = extractMin(&h);
     assert(rm != NULL);
     assert(compare(rm, item4) == 0);
     free(rm);
-    
+
     rm = extractMin(&h);
     assert(rm != NULL);
     assert(compare(rm, item6) == 0);
     free(rm);
-    
+
     rm = extractMin(&h);
     assert(rm != NULL);
     assert(compare(rm, item1) == 0);
@@ -313,9 +339,9 @@ void test_sequence() {
     item8 = createItem(21);
     item9 = createItem(45);
 
-    Item* b[10] = {item0, item1, item2, item3, item4, item5, item6, item7, item8, item9};
+    Item *b[10] = {item0, item1, item2, item3, item4, item5, item6, item7, item8, item9};
 
-    h = buildMinHeap((void*)&b, 10, &compare, &setKey, &minKey);
+    h = buildMinHeap((void *)&b, 10, &compare, &setKey, &minKey);
 
     printf("build min heap\n");
     heapPrintTree(&h);
@@ -326,4 +352,3 @@ void test_sequence() {
     errorHandler();
     printf("Tests passed.\n");
 }
-

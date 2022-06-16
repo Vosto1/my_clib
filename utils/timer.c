@@ -8,7 +8,7 @@ ticks now()
 seconds diff(ticks start, ticks end)
 {
     clock_t diffcycles = end - start;
-    double clock_s = (double)diffcycles/(double)CLOCKS_PER_SEC;
+    double clock_s = (double)diffcycles / (double)CLOCKS_PER_SEC;
 
     return clock_s;
 }

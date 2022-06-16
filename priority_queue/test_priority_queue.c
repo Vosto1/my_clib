@@ -3,56 +3,68 @@
 typedef int priority;
 typedef char element;
 
-typedef struct {
+typedef struct
+{
     priority p;
     element e;
-}Item;
+} Item;
 
-int compare(cvoidp x, cvoidp y) {
-    Item* item1 = (Item*)x;
-    Item* item2 = (Item*)y;
+int compare(cvoidp x, cvoidp y)
+{
+    Item *item1 = (Item *)x;
+    Item *item2 = (Item *)y;
     return item1->p - item2->p;
 }
 
-void print(size_t used, voidp a[]) {
-    Item* itemArr = (Item*)a;
-     for (int i = 0; i < used; i++) {
+void print(size_t used, voidp a[])
+{
+    Item *itemArr = (Item *)a;
+    for (int i = 0; i < used; i++)
+    {
         printf("value at %d: [%d;%c]\n", i, itemArr[i].p, itemArr[i].e);
-    } printf("\n");
+    }
+    printf("\n");
 }
 
-Item* createItem(int priority) {
-    Item* item = (Item*)malloc(sizeof(Item));
+Item *createItem(int priority)
+{
+    Item *item = (Item *)malloc(sizeof(Item));
     item->p = priority;
     item->e = (char)priority;
     return item;
 }
 
-void heapPrintTree(s_heap* h) {
+void heapPrintTree(s_heap *h)
+{
     int y = 0;
     int x = 0;
-    for (int i = 0; i < s_heapSize(h); i++) {
-        for (int j = 0; j < pow(2, i) && j + pow(2, i) <= s_heapSize(h); j++) {
+    for (int i = 0; i < s_heapSize(h); i++)
+    {
+        for (int j = 0; j < pow(2, i) && j + pow(2, i) <= s_heapSize(h); j++)
+        {
             x = j + (int)pow(2, i) - 1;
             y = h->items.used;
-            if (y > x) {
-                Item* item = (Item*)h->items.array[x];
+            if (y > x)
+            {
+                Item *item = (Item *)h->items.array[x];
                 printf("[k%f|%c]", item->p, item->e);
             }
-            else printf("----");
+            else
+                printf("----");
         }
         printf("\n");
     }
 }
 
-bool integrity_check(int n) {
+bool integrity_check(int n)
+{
     srand(time(NULL));
     PriorityQueue pq = createEmptyPQ();
     assert(initPQ(&pq, 1, &compare) == 1);
     errorHandler();
-    Item* item;
-    Item* out;
-    Item* min;
+    Item *item;
+    Item *out;
+    Item *min;
     int result = 0; // must be initialized to 0
     bool operation;
     ticks start;
@@ -71,16 +83,17 @@ bool integrity_check(int n) {
         {
             int val = (rand() % 100) + 1; // 1-100
             if (val < 81)
-            { //80%
+            { // 80%
                 item = createItem(val);
-                assert(enqueuePQ(&pq, (void*)item) != -1);
+                assert(enqueuePQ(&pq, (void *)item) != -1);
                 errorHandler();
                 // inc enqs
                 enqcount++;
             }
-            else if(val > 80 && val < 88)
-            { //20%
-                if (count(&pq) != 0) {
+            else if (val > 80 && val < 88)
+            { // 20%
+                if (count(&pq) != 0)
+                {
                     min = s_peek(&pq.h);
                     item = dequeuePQ(&pq);
                     assert(item != NULL);
@@ -89,11 +102,13 @@ bool integrity_check(int n) {
                     free(item);
                     // inc dqs
                     dqcount++;
-                } 
+                }
             }
-            else if(val > 87 && val < 95) {
+            else if (val > 87 && val < 95)
+            {
                 min = s_peek(&pq.h);
-                if(trydequeuePQ(&pq, (void*)&out)) {
+                if (trydequeuePQ(&pq, (void *)&out))
+                {
                     assert(out != NULL);
                     result = compare(min, out);
                     free(out);
@@ -101,21 +116,26 @@ bool integrity_check(int n) {
                 // inc tdqs
                 tdqcount++;
             }
-            else { // if (val > 94)
+            else
+            { // if (val > 94)
                 min = s_peek(&pq.h);
-                if(peekPQ(&pq, (void*)&out)) {
+                if (peekPQ(&pq, (void *)&out))
+                {
                     result = compare(min, out);
                 }
                 // inc peeks
                 pcount++;
             }
-            if(!s_testHeapIntegrity(&pq.h)){
+            if (!s_testHeapIntegrity(&pq.h))
+            {
                 system("clear");
                 printf("PriorityQueue: heap integrity broken\n");
                 printf("Structure at error:\n");
                 heapPrintTree(&pq.h);
                 return false;
-            } else if (result != 0) {
+            }
+            else if (result != 0)
+            {
                 system("clear");
                 printf("PriorityQueue: dequeue wrong result.\n");
                 printf("Structure at error:\n");

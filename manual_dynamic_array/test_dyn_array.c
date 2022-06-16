@@ -6,7 +6,8 @@
 #include "../utils/error.h"
 #include "../utils/timer.h"
 
-void test_sequence() {
+void test_sequence()
+{
     errcinit();
     Item item;
     Item placeholder = createPlaceholderData();
@@ -25,7 +26,8 @@ void test_sequence() {
     printData(a.size, a.array);
     printf("used: %lld\n\n", a.used);
 
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 10; i++)
+    {
         item.value = i;
         assert(m_arrayInsert(&a, item, i) == i);
         errorHandler();
@@ -36,7 +38,8 @@ void test_sequence() {
     printData(a.size, a.array);
     printf("used: %lld\n\n", a.used);
 
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < 5; i++)
+    {
         item.value = (i + a.used);
         assert(m_arrayInsert(&a, item, i) == -1);
         assert(errc == EARR_INDEX_OCCUPIED);
@@ -56,7 +59,8 @@ void test_sequence() {
     printf("used: %lld\n\n", a.used);
 
     int j = a.used;
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 10; i++)
+    {
         assert(m_arrayInsert(&a, item, j) == j);
         errorHandler();
         j++;
@@ -67,7 +71,8 @@ void test_sequence() {
 
     assert(a.used == 20);
     assert(a.size == 20);
-    for (int i = a.used - 1; i > 4; i--) {
+    for (int i = a.used - 1; i > 4; i--)
+    {
         assert(m_arrayRemoveAt(&a, i) == i);
     }
     assert(m_checkMemoryDecrease(&a));
@@ -92,7 +97,8 @@ void test_sequence() {
 }
 
 // manual dyn array test
-int main(void) {
+int main(void)
+{
     test_sequence();
     return 0;
 }

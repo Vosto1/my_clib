@@ -1,5 +1,5 @@
 #ifndef _ERROR_H
-#define _ERROR_H 
+#define _ERROR_H
 
 #include "stdio.h"
 #include "stdlib.h"
@@ -7,7 +7,8 @@
 
 #define errc errcget()
 
-typedef enum ErrorCodes {
+typedef enum ErrorCodes
+{
     SUCCESS = 0,
     EMEM_ALLOC = 1,
     EMEM_IREALLOC = 2,
@@ -39,18 +40,18 @@ typedef enum ErrorCodes {
     EBTREE_WRITEARR_MEMALLOC = 28,
     EBTREE_WRITEARR_EMPTY = 29,
     EBTREE_BALANCE = 30,
-}ErrorCode;
+} ErrorCode;
 
 /**
  * get the current error code
- * 
+ *
  * @return ErrorCode
  */
 ErrorCode errcget();
 
 /**
  * when there has been an error, set errc variable to the error code
- * 
+ *
  * @param e ErrorCode to be set
  */
 void errcset(ErrorCode e);
@@ -68,11 +69,11 @@ void errcinit();
 
 /**
  * get error string from associated ErrorCode
- * 
+ *
  * @param e ErrorCode to which the wished error string is associated
  * @return const char* error string
  */
-const char* error(ErrorCode e);
+const char *error(ErrorCode e);
 
 /**
  * default error handler

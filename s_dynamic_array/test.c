@@ -1,25 +1,30 @@
 #include "test.h"
 
-static int compareItems(const void* i1, const void* i2) {
-    Item* item1 = (Item*)i1;
-    Item* item2 = (Item*)i2;
+static int compareItems(const void *i1, const void *i2)
+{
+    Item *item1 = (Item *)i1;
+    Item *item2 = (Item *)i2;
     return item1->value - item2->value;
 }
 
-static int _max(int x, int y) {
+static int _max(int x, int y)
+{
     return x > y ? x : y;
 }
 
-static double ratio(int used, int size) {
-    return (double)used/(double)size;
+static double ratio(int used, int size)
+{
+    return (double)used / (double)size;
 }
 
-static void print_results(test_result res) {
+static void print_results(test_result res)
+{
     printf("computed %d %s operations during %f seconds.\n", res.operation_amount, res.operation, res.s);
     // write stats to file (in some good format, for desmos or wolfram for example)
 }
 
-static void print_status(stats stat) {
+static void print_status(stats stat)
+{
     system("clear");
     printf("-------------------------\n");
     printf("-------array status------\n");
@@ -29,39 +34,46 @@ static void print_status(stats stat) {
     printf("-------------------------\n\n");
 }
 
-static Item* createItem(int value) {
-    Item* item = (Item*)malloc(sizeof(Item));
+static Item *createItem(int value)
+{
+    Item *item = (Item *)malloc(sizeof(Item));
     item->value = value;
     return item;
 }
 
-static void printData(s_array* a) {
-    Item* item;
-    for (int i = 0; i < a->used; i++) {
-        item = (Item*)a->array[i];
+static void printData(s_array *a)
+{
+    Item *item;
+    for (int i = 0; i < a->used; i++)
+    {
+        item = (Item *)a->array[i];
         printf("value at %d: %d\n", i, item->value);
     }
     printf("used: %d\nsize: %d\n\n", a->used, a->size);
 }
 
-static void insert_n(s_array * a, int n) {
+static void insert_n(s_array *a, int n)
+{
     size_t e;
-    Item* item;
-    for (int j = 0; j < n; j++) {
+    Item *item;
+    for (int j = 0; j < n; j++)
+    {
         item = createItem(rand() % 1000);
         e = a->used + 1;
-        assert(sda_insert(a, (void*)item) == e);
+        assert(sda_insert(a, (void *)item) == e);
         errorHandler();
     }
     assert(a->used == n);
 }
 
-static void remove_all(s_array* a) {
+static void remove_all(s_array *a)
+{
     sda_clear(a);
     assert(a->used == 0);
 }
 
-void auto_tests(int n, int mod) {
+void auto_tests(int n, int mod)
+{
     s_array a = sda_create_empty();
     assert(a.array == NULL);
     assert(a.size == 0);
@@ -74,7 +86,7 @@ void auto_tests(int n, int mod) {
     assert(a.used == 0);
 
     Item item;
-    Item* d;
+    Item *d;
     srand(time(0));
     stats stat;
     test_result test_r;
@@ -82,78 +94,84 @@ void auto_tests(int n, int mod) {
     ticks end;
     char operation[64];
 
-    for (int i = 0; i < n; i++) {
+    for (int i = 0; i < n; i++)
+    {
         int next_tests = rand() % mod + 1;
         int type = rand() % 4;
-        
-        switch (type) {
-            case 0:
-                sprintf(operation, "insert item");
-                start = now();
-                for (int j = 0; j < next_tests; j++) {
-                    d = createItem(rand() % 1000);
-                    assert(sda_insert(&a, (void*)d) != -1);
-                    errorHandler();
-                }
-                end = now();
-                remove_all(&a);
-            break;
-            case 1:
-                sprintf(operation, "remove at");
-                insert_n(&a, next_tests);
-                start = now();
-                for (int j = 0; j < next_tests; j++) {
-                    d = (Item*)sda_remove_at(&a, rand() % a.used);
-                    assert(d != NULL);
-                    free(d);
-                    errorHandler();
-                }
-                end = now();
-            break;
-            case 2:
-                sprintf(operation, "remove last");
-                insert_n(&a, next_tests);
-                start = now();
-                for (int j = 0; j < next_tests; j++) {
-                    d = (Item*)sda_remove_last(&a);
-                    assert(d != NULL);
-                    free(d);
-                    errorHandler();
-                }
-                end = now();
-            break;
-            case 3: // merge + some extra tests
-                start = now();
-                unsigned long long operations = 0;
-                for (int j = 0; j < next_tests; j++) {
-                    int size = rand() % 100 + 1;
-                    s_dynamicArray c = sda_create_empty();
-                    assert(sda_init(&c, size) == size);
-                    for (int k = 0; k < size; k++)
-                        sda_insert(&c, createItem(rand() % 1000));
-                    errorHandler();
-                    for (int k = 0; k < size; k++)
-                        sda_insert(&a, createItem(rand() % 1000));
-                    errorHandler();
-                    assert(sda_merge(&a, &c) != -1);
-                    errorHandler();
-                    operations += size + size;
-                }
-                end = now();
-                sda_clear(&a);
-                sprintf(operation, "merge (%lld insertions)", operations);
 
-                // extra tests
-                s_dynamicArray b = sda_create_empty();
-                assert(sda_init(&b, 10) == 10);
-                for (int i = 0; i < rand() % 20; i++)
-                    sda_insert(&b, createItem(rand() % 100));
+        switch (type)
+        {
+        case 0:
+            sprintf(operation, "insert item");
+            start = now();
+            for (int j = 0; j < next_tests; j++)
+            {
+                d = createItem(rand() % 1000);
+                assert(sda_insert(&a, (void *)d) != -1);
                 errorHandler();
-                sda_clear(&b);
+            }
+            end = now();
+            remove_all(&a);
+            break;
+        case 1:
+            sprintf(operation, "remove at");
+            insert_n(&a, next_tests);
+            start = now();
+            for (int j = 0; j < next_tests; j++)
+            {
+                d = (Item *)sda_remove_at(&a, rand() % a.used);
+                assert(d != NULL);
+                free(d);
                 errorHandler();
-                sda_destroy(&b);
+            }
+            end = now();
+            break;
+        case 2:
+            sprintf(operation, "remove last");
+            insert_n(&a, next_tests);
+            start = now();
+            for (int j = 0; j < next_tests; j++)
+            {
+                d = (Item *)sda_remove_last(&a);
+                assert(d != NULL);
+                free(d);
                 errorHandler();
-                // clear followed by destroy is the same as free
+            }
+            end = now();
+            break;
+        case 3: // merge + some extra tests
+            start = now();
+            unsigned long long operations = 0;
+            for (int j = 0; j < next_tests; j++)
+            {
+                int size = rand() % 100 + 1;
+                s_dynamicArray c = sda_create_empty();
+                assert(sda_init(&c, size) == size);
+                for (int k = 0; k < size; k++)
+                    sda_insert(&c, createItem(rand() % 1000));
+                errorHandler();
+                for (int k = 0; k < size; k++)
+                    sda_insert(&a, createItem(rand() % 1000));
+                errorHandler();
+                assert(sda_merge(&a, &c) != -1);
+                errorHandler();
+                operations += size + size;
+            }
+            end = now();
+            sda_clear(&a);
+            sprintf(operation, "merge (%lld insertions)", operations);
+
+            // extra tests
+            s_dynamicArray b = sda_create_empty();
+            assert(sda_init(&b, 10) == 10);
+            for (int i = 0; i < rand() % 20; i++)
+                sda_insert(&b, createItem(rand() % 100));
+            errorHandler();
+            sda_clear(&b);
+            errorHandler();
+            sda_destroy(&b);
+            errorHandler();
+            // clear followed by destroy is the same as free
             break;
         }
         end = now();
@@ -167,9 +185,10 @@ void auto_tests(int n, int mod) {
     printf("Test passed.\n");
 }
 
-void test_sequence() {
+void test_sequence()
+{
     Item item;
-    Item* itemptr;
+    Item *itemptr;
 
     s_array a = sda_create_empty();
     assert(a.array == NULL);
@@ -182,48 +201,51 @@ void test_sequence() {
     assert(a.size == 10);
     assert(a.used == 0);
 
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 10; i++)
+    {
         itemptr = createItem(i);
-        assert(sda_insert(&a, (void*)itemptr) != -1);
+        assert(sda_insert(&a, (void *)itemptr) != -1);
         errorHandler();
         assert(a.used == (i + 1));
-        itemptr = (Item*)a.array[i];
+        itemptr = (Item *)a.array[i];
         assert(itemptr->value == i);
     }
 
     printData(&a);
 
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < 5; i++)
+    {
         itemptr = createItem(i + a.used);
-        assert(sda_insert(&a, (void*)itemptr) != -1);
+        assert(sda_insert(&a, (void *)itemptr) != -1);
         errorHandler();
-        itemptr = (Item*)a.array[a.used - 1];
+        itemptr = (Item *)a.array[a.used - 1];
         assert(itemptr->value == i + (a.used - 1));
     }
     assert(a.size == 20);
     assert(a.used == 15);
 
     printData(&a);
-    
+
     itemptr = createItem(1);
-    assert(sda_insert(&a, (void*)itemptr) != -1);
+    assert(sda_insert(&a, (void *)itemptr) != -1);
 
     itemptr = createItem(2);
-    assert(sda_insert(&a, (void*)itemptr) != -1);
+    assert(sda_insert(&a, (void *)itemptr) != -1);
 
     itemptr = createItem(3);
-    assert(sda_insert(&a, (void*)itemptr) != -1);
+    assert(sda_insert(&a, (void *)itemptr) != -1);
 
     itemptr = createItem(4);
-    assert(sda_insert(&a, (void*)itemptr) != -1);
+    assert(sda_insert(&a, (void *)itemptr) != -1);
 
     printData(&a);
     printf("%d %d\n\n", a.used, a.size);
 
     itemptr = createItem(5);
-    assert(sda_insert(&a, (void*)itemptr) != -1);
-    for (int i = a.used; i > 5; i--) {
-        itemptr = (Item*)sda_remove_last(&a);
+    assert(sda_insert(&a, (void *)itemptr) != -1);
+    for (int i = a.used; i > 5; i--)
+    {
+        itemptr = (Item *)sda_remove_last(&a);
         assert(itemptr != NULL);
         free(itemptr);
         assert(a.used == (i - 1));
@@ -232,18 +254,18 @@ void test_sequence() {
 
     printData(&a);
 
-    itemptr = (Item*)sda_remove_at(&a, 4);
+    itemptr = (Item *)sda_remove_at(&a, 4);
     assert(itemptr != NULL);
     assert(itemptr->value == 4);
     free(itemptr);
 
-    itemptr = (Item*)sda_remove_at(&a, 2);
+    itemptr = (Item *)sda_remove_at(&a, 2);
     assert(itemptr != NULL);
     assert(itemptr->value == 2);
     free(itemptr);
     assert(a.used == 3);
-    
-    itemptr = (Item*)sda_remove_at(&a, 0);
+
+    itemptr = (Item *)sda_remove_at(&a, 0);
     assert(itemptr != NULL);
     assert(itemptr->value == 0);
     free(itemptr);

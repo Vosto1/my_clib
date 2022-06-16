@@ -6,11 +6,12 @@
 
 typedef int value;
 typedef char key;
-typedef struct {
+typedef struct
+{
     value v;
     key k;
-}entry;
+} entry;
 
-hashtable letterOccurances(char* string, int strsize);
+hashtable letterOccurances(char *string, int strsize);
 
 #endif

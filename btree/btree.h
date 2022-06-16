@@ -1,12 +1,12 @@
 /**
  * @file btree.h
  * @author Isac Hutchings (isac.hutchings@outlook.com)
- * @brief 
+ * @brief
  * @version 0.1
  * @date 2022-06-14
- * 
+ *
  * @copyright Copyright (c) 2022
- * 
+ *
  */
 #ifndef BTREE_H
 #define BTREE_H
@@ -19,11 +19,12 @@
 #include "../s_dynamic_array/s_dynamic_array.h"
 #include "../utils/error.h"
 
-typedef void* voidp;
-typedef const void* cvoidp;
-typedef struct treenode* btree;
+typedef void *voidp;
+typedef const void *cvoidp;
+typedef struct treenode *btree;
 
-struct treenode {
+struct treenode
+{
 	voidp value;
 	btree left;
 	btree right;
@@ -38,7 +39,7 @@ bool bt_is_empty(const btree tree);
 
 int bt_count(const btree tree);
 
-void bt_free(btree* tree);
-void bt_destroy(btree* tree);
+void bt_free(btree *tree);
+void bt_destroy(btree *tree);
 
 #endif

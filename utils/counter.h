@@ -5,17 +5,17 @@ typedef unsigned int uint;
 
 /**
  * @brief increment counter
- * 
+ *
  */
 void increment();
 /**
  * @brief reset counter
- * 
+ *
  */
 void reset();
 /**
  * @brief get counter value
- * 
+ *
  */
 uint count();
 

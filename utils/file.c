@@ -1,11 +1,12 @@
 #include "file.h"
 
 // return read bytes
-size_t readFile(const char* filepath, void** out)
+size_t readFile(const char *filepath, void **out)
 {
 	// make filepointer and open file
-	FILE* rfp = fopen(filepath, "rb"); // rb == read binary
-	if (!rfp) {
+	FILE *rfp = fopen(filepath, "rb"); // rb == read binary
+	if (!rfp)
+	{
 		errcset(EFILE_OPENWRITE);
 		return 0;
 	}
@@ -17,8 +18,9 @@ size_t readFile(const char* filepath, void** out)
 
 	// create buffer
 	size_t sizeBytes = length * BYTE;
-	void* file = (void*)malloc(sizeBytes);
-	if (!file) {
+	void *file = (void *)malloc(sizeBytes);
+	if (!file)
+	{
 		errcset(EMEM_ALLOC);
 		return 0;
 	}
@@ -33,41 +35,43 @@ size_t readFile(const char* filepath, void** out)
 }
 
 // return written bytes
-size_t writeFile(const char* filepath, void* contents, size_t size)
+size_t writeFile(const char *filepath, void *contents, size_t size)
 {
 	// make filepointer and open file
-	FILE* wfp = fopen(filepath, "wb"); // wb == write binary
-	if (!wfp) {
+	FILE *wfp = fopen(filepath, "wb"); // wb == write binary
+	if (!wfp)
+	{
 		errcset(EFILE_OPENREAD);
 		return 0;
 	}
 
-    if (contents == NULL) {
-        errcset(ENULL_ARG);
+	if (contents == NULL)
+	{
+		errcset(ENULL_ARG);
 		return 0;
-    }
+	}
 
 	size_t sizeBytes = size * BYTE;
-	size_t writtenBytes =  fwrite(contents, ELEMENT_SIZE, sizeBytes, wfp);
+	size_t writtenBytes = fwrite(contents, ELEMENT_SIZE, sizeBytes, wfp);
 	// close file
 	fclose(wfp);
 	return writtenBytes;
 }
 
 // read file and return contents as a string (by ref)
-size_t readTextFile(char* filepath, char** out)
+size_t readTextFile(char *filepath, char **out)
 {
-    void* buffer;
-    size_t readBytes = readFile(filepath, &buffer);
-    *out = (char*)buffer;
-    return readBytes;
+	void *buffer;
+	size_t readBytes = readFile(filepath, &buffer);
+	*out = (char *)buffer;
+	return readBytes;
 }
 
-size_t writeTextFile(char* filepath, char** string, size_t size)
+size_t writeTextFile(char *filepath, char **string, size_t size)
 {
-	return writeFile(filepath, (void*)string, size);
+	return writeFile(filepath, (void *)string, size);
 }
 
 // future functions
-//size_t appendTextFile(); // append to the end of the file
-//size_t readBytesFile(int amountBytes, int offset); // read a specified amount of bytes from file (from offset to amountBytes)
+// size_t appendTextFile(); // append to the end of the file
+// size_t readBytesFile(int amountBytes, int offset); // read a specified amount of bytes from file (from offset to amountBytes)

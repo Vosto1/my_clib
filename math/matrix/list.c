@@ -1,13 +1,12 @@
 ﻿#include "list.h"
 
-
 /*Hjalpfunktion till add
   Allokerar minne for en ny nod
   om allokeringen lyckades initieras data samt pekare (pekare initieras till NULL).
   Den nya noden (eller NULL) returneras.*/
-static struct node* createListNode(const Data data)
+static struct node *createListNode(const Data data)
 {
-    //List �r en node ptr
+    // List �r en node ptr
     List tempNodeptr = (List)malloc(sizeof(struct node));
     if (tempNodeptr != NULL)
     {
@@ -28,7 +27,6 @@ List createEmptyList(void)
     return NULL;
 }
 
-
 /*Ar listan tom?
   Returnerar 1 om den �r tom, annars 0*/
 int isEmpty(const List list)
@@ -39,9 +37,9 @@ int isEmpty(const List list)
 }
 
 /*Lagg till nod forst i listan*/
-void addFirst(List* list, const Data data)
+void addFirst(List *list, const Data data)
 {
-    //skapa ny nod
+    // skapa ny nod
     List temp = createListNode(data);
     if (temp != NULL)
     {
@@ -55,7 +53,6 @@ void addFirst(List* list, const Data data)
             *list = temp;
             (*list)->next = tempPtr;
         }
-
     }
     else
     {
@@ -65,7 +62,7 @@ void addFirst(List* list, const Data data)
 }
 
 /*Lagg till nod sist i listan*/
-void addLast(List* list, const Data data)
+void addLast(List *list, const Data data)
 {
     if ((*list) == NULL)
     {
@@ -86,9 +83,9 @@ void addLast(List* list, const Data data)
 }
 
 /*Ta bort forsta noden i listan*/
-void removeFirst(List* list)
+void removeFirst(List *list)
 {
-    assert(!isEmpty(*list)); //kommentera f�r att menyn ska fungera
+    assert(!isEmpty(*list)); // kommentera f�r att menyn ska fungera
     if (*list != NULL)
     {
         List temp = (*list);
@@ -102,7 +99,7 @@ void removeFirst(List* list)
 }
 
 /*Ta bort sista noden i listan*/
-void removeLast(List* list)
+void removeLast(List *list)
 {
     assert(!isEmpty(*list));
     if ((*list)->next == NULL)
@@ -116,10 +113,9 @@ void removeLast(List* list)
     }
 }
 
-    
 /*Ta bort data ur listan (forsta forekomsten)
   Returnera 1 om datat finns, annars 0*/
-int removeElement(List* list, const Data data)
+int removeElement(List *list, const Data data)
 {
     if ((*list) != NULL)
     {
@@ -170,14 +166,14 @@ int numberOfNodesInList(const List list)
     }
     else
     {
-        return 1 + numberOfNodesInList(list->next); //Ersatt med ratt returvarde
+        return 1 + numberOfNodesInList(list->next); // Ersatt med ratt returvarde
     }
 }
 
 /*Ta bort alla noder ur listan
   Glom inte att frigora minnet
   Postcondition: Listan ar tom, *list �r NULL (testa med assert)*/
-void clearList(List* list)
+void clearList(List *list)
 {
     if ((*list) == NULL)
     {
@@ -195,7 +191,7 @@ void clearList(List* list)
   Vid anropet kan man ange stdout som argument 2 for att skriva ut p� skarmen.
   Anvanda fprintf for att skriva ut.
   Den har typen av utskriftfunktion blir mer generell da man kan valja att skriva ut till skarmen eller till fil.*/
-void printList(const List list, FILE* textfile)
+void printList(const List list, FILE *textfile)
 {
     if (list != NULL)
     {
@@ -213,33 +209,34 @@ void printList(const List list, FILE* textfile)
   Precondition: listan ar inte tom (testa med assert)*/
 Data getFirstElement(const List list)
 {
-    assert(!isEmpty(list)); //kommentera f�r att menyn ska fungera
+    assert(!isEmpty(list)); // kommentera f�r att menyn ska fungera
     if (list != NULL)
-        return list->data; //Ersatt med ratt returvarde
+        return list->data; // Ersatt med ratt returvarde
 }
 
 /*Returnera sista datat i listan
   Precondition: listan ar inte tom (testa med assert)*/
 Data getLastElement(const List list)
 {
-    assert(!isEmpty(list)); //kommentera f�r att menyn ska fungera
+    assert(!isEmpty(list)); // kommentera f�r att menyn ska fungera
     if (list != NULL)
     {
         if (list->next == NULL)
         {
             return list->data;
         }
-        return getLastElement(list->next); //Ersatt med ratt returvarde
+        return getLastElement(list->next); // Ersatt med ratt returvarde
     }
 }
 
-Data getSumOfListData(List list) {
+Data getSumOfListData(List list)
+{
     if (list == NULL)
     {
         return 0;
     }
     else
     {
-        return list->data + getSumOfListData(list->next); //Ersatt med ratt returvarde
+        return list->data + getSumOfListData(list->next); // Ersatt med ratt returvarde
     }
 }

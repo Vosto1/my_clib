@@ -5,9 +5,10 @@
 #define PLACEHOLDER -1
 
 typedef unsigned long long size_t;
-typedef struct {
+typedef struct
+{
     int value;
-}Item;
+} Item;
 
 // these are needed for typing
 typedef int resultType;
@@ -19,9 +20,8 @@ void printData(size_t size, Data a[]);
 
 #endif
 
-
 // gör ett implementation som tar hand om typer (currently data.h)
-// så att det blir smidigare att definiera typer 
+// så att det blir smidigare att definiera typer
 /*
 exempel:
 typedef struct {

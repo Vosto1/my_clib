@@ -6,7 +6,6 @@
 
 #include <stdio.h>
 
-
 void red();
 void yellow();
 void green();
