@@ -1,30 +1,30 @@
 #include "s_dynamic_array.h"
 
-size_t sda_count(s_array *a)
+size_t sda_count(sdarray *a)
 {
     return a->used;
 }
 
-size_t sda_size(s_array *a)
+size_t sda_size(sdarray *a)
 {
     return a->size;
 }
 
-s_dynamicArray sda_create_empty()
+sdarray sda_create_empty()
 {
-    s_dynamicArray a;
+    sdarray a;
     a.array = NULL;
     a.size = 0;
     a.used = 0;
     return a;
 }
 
-size_t sda_init(s_dynamicArray *a, size_t initSize)
+size_t sda_init(sdarray *a, size_t initSize)
 {
     a->size = 0;
     a->used = 0;
-    voidp *temp;
-    temp = (voidp *)malloc(sizeof(voidp) * initSize);
+    voidp_t *temp;
+    temp = (voidp_t *)malloc(sizeof(voidp_t) * initSize);
     if (temp != NULL)
     {
         a->array = temp;
@@ -39,7 +39,7 @@ size_t sda_init(s_dynamicArray *a, size_t initSize)
     }
 }
 
-size_t sda_clear(s_array *a)
+size_t sda_clear(sdarray *a)
 {
     if (sda_is_empty(a))
     {
@@ -52,7 +52,7 @@ size_t sda_clear(s_array *a)
         return -1;
     }
     int amount = a->used;
-    voidp d;
+    voidp_t d;
     for (int i = 0; i < amount; i++)
     {
         d = sda_remove_last(a);
@@ -61,7 +61,7 @@ size_t sda_clear(s_array *a)
     return amount;
 }
 
-void sda_destroy(s_dynamicArray *a)
+void sda_destroy(sdarray *a)
 {
     if (!sda_is_null(a))
     {
@@ -77,7 +77,7 @@ void sda_destroy(s_dynamicArray *a)
     }
 }
 
-void sda_free(s_dynamicArray *a)
+void sda_free(sdarray *a)
 {
     if (!sda_is_null(a))
     {
@@ -93,7 +93,7 @@ void sda_free(s_dynamicArray *a)
     }
 }
 
-size_t sda_insert(s_dynamicArray *a, voidp item)
+size_t sda_insert(sdarray *a, voidp_t item)
 {
     if (a == NULL || a->array == NULL)
     {
@@ -105,8 +105,8 @@ size_t sda_insert(s_dynamicArray *a, voidp item)
     { // index < size, is a guard
         // when array is full on insert, double the size
         a->size *= 2;
-        voidp *temp;
-        temp = (voidp *)realloc(a->array, sizeof(voidp) * a->size);
+        voidp_t *temp;
+        temp = (voidp_t *)realloc(a->array, sizeof(voidp_t) * a->size);
         if (temp != NULL)
         {
             a->array = temp;
@@ -122,7 +122,7 @@ size_t sda_insert(s_dynamicArray *a, voidp item)
     return a->used;
 }
 
-voidp sda_remove_last(s_dynamicArray *a)
+voidp_t sda_remove_last(sdarray *a)
 {
     if (sda_is_empty(a))
     {
@@ -133,7 +133,7 @@ voidp sda_remove_last(s_dynamicArray *a)
     MEM m = sda_memory_decrease(a);
     if (m != NMEM_DECREASE)
     {
-        voidp data = a->array[a->used];
+        voidp_t data = a->array[a->used];
         return data;
     }
     else
@@ -143,14 +143,14 @@ voidp sda_remove_last(s_dynamicArray *a)
     }
 }
 
-voidp sda_remove_at(s_dynamicArray *a, int index)
+voidp_t sda_remove_at(sdarray *a, int index)
 {
     if (index > a->used)
     {
         errcset(EINDEX_OUT_OF_BOUNDS);
         return NULL;
     }
-    voidp *data = a->array[index];
+    voidp_t *data = a->array[index];
     for (int i = index; i < a->used; i++)
     {
         a->array[i] = a->array[i + 1];
@@ -169,7 +169,7 @@ voidp sda_remove_at(s_dynamicArray *a, int index)
     }
 }
 
-size_t sda_convert(s_dynamicArray *a, voidp b[], size_t bsize)
+size_t sda_convert(sdarray *a, voidp_t b[], size_t bsize)
 {
     *a = sda_create_empty();
     if (sda_init(a, bsize) != bsize)
@@ -183,7 +183,7 @@ size_t sda_convert(s_dynamicArray *a, voidp b[], size_t bsize)
     return bsize;
 }
 
-size_t sda_merge(s_dynamicArray *a, s_dynamicArray *b)
+size_t sda_merge(sdarray *a, sdarray *b)
 {
     if (a == NULL || b == NULL)
     {
@@ -199,26 +199,26 @@ size_t sda_merge(s_dynamicArray *a, s_dynamicArray *b)
     return a->size;
 }
 
-bool sda_is_null(s_array *a)
+bool sda_is_null(sdarray *a)
 {
     return a->array == NULL;
 }
 
-bool sda_is_empty(s_array *a)
+bool sda_is_empty(sdarray *a)
 {
     return a->used == 0;
 }
 
 // memory check and increase is done in arrayInsert function
-static MEM sda_memory_decrease(s_dynamicArray *a)
+static MEM sda_memory_decrease(sdarray *a)
 {
     double ratio = (double)a->used / (double)a->size;
     // if 1/4 of the allocated space is used, halve it
     if (ratio <= QUARTER && sda_size(a) != 1)
     {
         a->size /= 2;
-        voidp *temp;
-        temp = (voidp *)realloc(a->array, sizeof(voidp) * a->size);
+        voidp_t *temp;
+        temp = (voidp_t *)realloc(a->array, sizeof(voidp_t) * a->size);
         if (temp != NULL)
         {
             a->array = temp;

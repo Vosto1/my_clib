@@ -41,7 +41,7 @@ static Item *createItem(int value)
     return item;
 }
 
-static void printData(array *a)
+static void printData(darray *a)
 {
     Item *item;
     for (int i = 0; i < a->used; i++)
@@ -52,7 +52,7 @@ static void printData(array *a)
     printf("used: %d\nsize: %d\n\n", a->used, a->size);
 }
 
-static void insert_n(array *a, int n)
+static void insert_n(darray *a, int n)
 {
     size_t e;
     Item *item;
@@ -60,26 +60,26 @@ static void insert_n(array *a, int n)
     {
         item = createItem(rand() % 1000);
         e = a->used + 1;
-        assert(arrayInsert(a, (void *)item) == e);
+        assert(da_insert(a, (void *)item) == e);
         errorHandler();
     }
     assert(a->used == n);
 }
 
-static void remove_all(array *a)
+static void remove_all(darray *a)
 {
-    arrayClear(a);
+    da_clear(a);
     assert(a->used == 0);
 }
 
 void auto_tests(int n, int mod)
 {
-    array a = createEmptyDynamicArray();
+    darray a = da_create_empty();
     assert(a.array == NULL);
     assert(a.size == 0);
     assert(a.used == 0);
 
-    assert(initDynamicArray(&a, 10, &compareItems) == 10);
+    assert(da_init(&a, 10, &compareItems) == 10);
     errorHandler();
     assert(a.array != NULL);
     assert(a.size == 10);
@@ -107,7 +107,7 @@ void auto_tests(int n, int mod)
             for (int j = 0; j < next_tests; j++)
             {
                 d = createItem(rand() % 1000);
-                assert(arrayInsert(&a, (void *)d) != -1);
+                assert(da_insert(&a, (void *)d) != -1);
                 errorHandler();
             }
             end = now();
@@ -119,7 +119,7 @@ void auto_tests(int n, int mod)
             start = now();
             for (int j = 0; j < next_tests; j++)
             {
-                d = (Item *)arrayRemoveItem(&a, a.array[rand() % a.used]);
+                d = (Item *)da_remove_item(&a, a.array[rand() % a.used]);
                 assert(d != NULL);
                 free(d);
                 errorHandler();
@@ -132,7 +132,7 @@ void auto_tests(int n, int mod)
             start = now();
             for (int j = 0; j < next_tests; j++)
             {
-                d = (Item *)arrayRemoveAt(&a, rand() % a.used);
+                d = (Item *)da_remove_at(&a, rand() % a.used);
                 assert(d != NULL);
                 free(d);
                 errorHandler();
@@ -145,7 +145,7 @@ void auto_tests(int n, int mod)
             start = now();
             for (int j = 0; j < next_tests; j++)
             {
-                d = (Item *)arrayRemoveLast(&a);
+                d = (Item *)da_remove_last(&a);
                 assert(d != NULL);
                 free(d);
                 errorHandler();
@@ -166,13 +166,13 @@ void auto_tests(int n, int mod)
                 }
                 for (int k = 0; k < size; k++)
                     b[k] = createItem(rand() % 1000);
-                dynamicArray c = createEmptyDynamicArray();
-                assert(initDynamicArray(&c, size, &compareItems) == size);
+                darray c = da_create_empty();
+                assert(da_init(&c, size, &compareItems) == size);
                 errorHandler();
-                assert(convert(&c, (void *)b, size, &compareItems) == size);
+                assert(da_convert(&c, (void *)b, size, &compareItems) == size);
                 free(b);
                 errorHandler();
-                assert(arrayUnion(&a, &c) != -1);
+                assert(da_merge(&a, &c) != -1);
                 errorHandler();
                 operations += size + size;
             }
@@ -188,7 +188,7 @@ void auto_tests(int n, int mod)
         test_r.s = s;
         print_results(test_r);
     }
-    freeArray(&a);
+    da_free(&a);
     printf("Test passed.\n");
 }
 
@@ -197,12 +197,12 @@ void test_sequence()
     Item item;
     Item *itemptr;
 
-    array a = createEmptyDynamicArray();
+    darray a = da_create_empty();
     assert(a.array == NULL);
     assert(a.size == 0);
     assert(a.used == 0);
 
-    assert(initDynamicArray(&a, 10, &compareItems) != -1);
+    assert(da_init(&a, 10, &compareItems) != -1);
     errorHandler();
     assert(a.array != NULL);
     assert(a.size == 10);
@@ -211,7 +211,7 @@ void test_sequence()
     for (int i = 0; i < 10; i++)
     {
         itemptr = createItem(i);
-        assert(arrayInsert(&a, (void *)itemptr) != -1);
+        assert(da_insert(&a, (void *)itemptr) != -1);
         errorHandler();
         assert(a.used == (i + 1));
         itemptr = (Item *)a.array[i];
@@ -223,7 +223,7 @@ void test_sequence()
     for (int i = 0; i < 5; i++)
     {
         itemptr = createItem(i + a.used);
-        assert(arrayInsert(&a, (void *)itemptr) != -1);
+        assert(da_insert(&a, (void *)itemptr) != -1);
         errorHandler();
         itemptr = (Item *)a.array[a.used - 1];
         assert(itemptr->value == i + (a.used - 1));
@@ -234,25 +234,25 @@ void test_sequence()
     printData(&a);
 
     itemptr = createItem(1);
-    assert(arrayInsert(&a, (void *)itemptr) != -1);
+    assert(da_insert(&a, (void *)itemptr) != -1);
 
     itemptr = createItem(2);
-    assert(arrayInsert(&a, (void *)itemptr) != -1);
+    assert(da_insert(&a, (void *)itemptr) != -1);
 
     itemptr = createItem(3);
-    assert(arrayInsert(&a, (void *)itemptr) != -1);
+    assert(da_insert(&a, (void *)itemptr) != -1);
 
     itemptr = createItem(4);
-    assert(arrayInsert(&a, (void *)itemptr) != -1);
+    assert(da_insert(&a, (void *)itemptr) != -1);
 
     printData(&a);
     printf("%d %d\n\n", a.used, a.size);
 
     itemptr = createItem(5);
-    assert(arrayInsert(&a, (void *)itemptr) != -1);
+    assert(da_insert(&a, (void *)itemptr) != -1);
     for (int i = a.used; i > 5; i--)
     {
-        itemptr = (Item *)arrayRemoveLast(&a);
+        itemptr = (Item *)da_remove_last(&a);
         assert(itemptr != NULL);
         free(itemptr);
         assert(a.used == (i - 1));
@@ -262,13 +262,13 @@ void test_sequence()
     printData(&a);
 
     item.value = 4;
-    itemptr = (Item *)arrayRemoveItem(&a, (void *)&item);
+    itemptr = (Item *)da_remove_item(&a, (void *)&item);
     assert(itemptr != NULL);
     assert(itemptr->value == item.value);
     free(itemptr);
 
     item.value = 2;
-    itemptr = (Item *)arrayRemoveItem(&a, (void *)&item);
+    itemptr = (Item *)da_remove_item(&a, (void *)&item);
     assert(itemptr != NULL);
     assert(itemptr->value == item.value);
     free(itemptr);
@@ -276,7 +276,7 @@ void test_sequence()
 
     printData(&a);
 
-    itemptr = (Item *)arrayRemoveAt(&a, 0);
+    itemptr = (Item *)da_remove_at(&a, 0);
     assert(itemptr != NULL);
     assert(itemptr->value == 0);
     free(itemptr);
@@ -284,10 +284,10 @@ void test_sequence()
 
     printData(&a);
 
-    assert(arrayClear(&a) != -1);
+    assert(da_clear(&a) != -1);
     assert(a.used == 0);
 
-    freeArray(&a);
+    da_free(&a);
     assert(a.array == NULL);
     printf("Tests passed.\n");
 }

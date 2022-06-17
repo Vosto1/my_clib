@@ -41,7 +41,7 @@ static Item *createItem(int value)
     return item;
 }
 
-static void printData(s_array *a)
+static void printData(sdarray *a)
 {
     Item *item;
     for (int i = 0; i < a->used; i++)
@@ -52,7 +52,7 @@ static void printData(s_array *a)
     printf("used: %d\nsize: %d\n\n", a->used, a->size);
 }
 
-static void insert_n(s_array *a, int n)
+static void insert_n(sdarray *a, int n)
 {
     size_t e;
     Item *item;
@@ -66,7 +66,7 @@ static void insert_n(s_array *a, int n)
     assert(a->used == n);
 }
 
-static void remove_all(s_array *a)
+static void remove_all(sdarray *a)
 {
     sda_clear(a);
     assert(a->used == 0);
@@ -74,7 +74,7 @@ static void remove_all(s_array *a)
 
 void auto_tests(int n, int mod)
 {
-    s_array a = sda_create_empty();
+    sdarray a = sda_create_empty();
     assert(a.array == NULL);
     assert(a.size == 0);
     assert(a.used == 0);
@@ -190,7 +190,7 @@ void test_sequence()
     Item item;
     Item *itemptr;
 
-    s_array a = sda_create_empty();
+    sdarray a = sda_create_empty();
     assert(a.array == NULL);
     assert(a.size == 0);
     assert(a.used == 0);

@@ -14,8 +14,8 @@
 #include "../dynamic_array/dynamic_array.h"
 #include "../utils/error.h"
 
-typedef void *voidp;
-typedef const void *cvoidp;
+typedef void *voidp_t;
+typedef const void *cvoidp_t;
 typedef unsigned long long size_t;
 
 /**
@@ -51,10 +51,10 @@ typedef unsigned long long size_t;
 
 typedef struct
 {
-    array items;
-    int (*compare)(cvoidp x, cvoidp y);
-    voidp (*setKey)(voidp x, voidp key);
-    void (*minKey)(voidp base, voidp *out);
+    darray items;
+    int (*compare)(cvoidp_t x, cvoidp_t y);
+    voidp_t (*setKey)(voidp_t x, voidp_t key);
+    void (*minKey)(voidp_t base, voidp_t *out);
 } heap;
 
 /**
@@ -75,9 +75,9 @@ heap createEmptyHeap();
  */
 size_t initHeap(heap *h,
                 size_t size,
-                int (*compare)(cvoidp x, cvoidp y),
-                voidp (*setKey)(voidp x, voidp key),
-                void (*minKey)(voidp base, voidp *out));
+                int (*compare)(cvoidp_t x, cvoidp_t y),
+                voidp_t (*setKey)(voidp_t x, voidp_t key),
+                void (*minKey)(voidp_t base, voidp_t *out));
 /**
  * @brief remove (free) all items in the heap and free the heap
  *
@@ -98,7 +98,7 @@ size_t heapSize(heap *h);
  * @param h heap to peek
  * @return pointer to the item with the smallest key
  */
-voidp _min(heap *h);
+voidp_t _min(heap *h);
 /**
  * @brief check if a heap is null
  *
@@ -123,7 +123,7 @@ bool h_is_empty(heap *h);
  * @param item a pointer to the memory of the item
  * @return the item count in the heap or -1 if error
  */
-size_t heapInsert(heap *h, voidp item);
+size_t heapInsert(heap *h, voidp_t item);
 /**
  * @brief removes the specified item from the heap
  *
@@ -131,14 +131,14 @@ size_t heapInsert(heap *h, voidp item);
  * @param item a pointer to the item which should be removed
  * @return a pointer to the item removed from the heap or null if error
  */
-voidp heapRemove(heap *h, voidp item);
+voidp_t heapRemove(heap *h, voidp_t item);
 /**
  * @brief extracts the top item (with the smallest key) and removes it from the heap
  *
  * @param h heap to extract from
  * @return a pointer to the extracted item or null if error
  */
-voidp extractMin(heap *h);
+voidp_t extractMin(heap *h);
 /**
  * @brief decreases a key of the specified item to the specified key. If the item doesnt exist or th key is equal or larger than the current key an error is set.
  *
@@ -147,22 +147,22 @@ voidp extractMin(heap *h);
  * @param newKey the new key the item should have
  * @return the new index of the item or -1 if error
  */
-int decreaseKey(heap *h, voidp item, voidp newKey);
+int decreaseKey(heap *h, voidp_t item, voidp_t newKey);
 /**
- * @brief build a heap from an array of your data type (Data)
+ * @brief build a heap from an array
  *
- * @param unorderedList an array of Data
- * @param size the size of the array of Data
+ * @param unorderedList an array of pointers to elements
+ * @param size the size of the array
  * @param compare a function that can compare two items of your data type
  * @param setKey a function that can set a key of an item of your data type
  * @param minKey a function that based on a base element of your data type can create a smaller key
  * @return the heap that was created
  */
-heap buildMinHeap(voidp *unorderedList,
+heap buildMinHeap(voidp_t *unorderedList,
                   size_t size,
-                  int (*compare)(cvoidp x, cvoidp y),
-                  voidp (*setKey)(voidp x, voidp key),
-                  void (*minKey)(voidp base, voidp *out));
+                  int (*compare)(cvoidp_t x, cvoidp_t y),
+                  voidp_t (*setKey)(voidp_t x, voidp_t key),
+                  void (*minKey)(voidp_t base, voidp_t *out));
 
 #ifdef __TESTING__
 /**
@@ -202,7 +202,7 @@ static int right(int i);
  * @param i1 index of item 1
  * @param i2 index of item 2
  */
-static void swap(array *a, int i1, int i2);
+static void swap(darray *a, int i1, int i2);
 /**
  * @brief compare parent with children, if there is a heap violation then switch parent and child then recursively continue down the heap
  *

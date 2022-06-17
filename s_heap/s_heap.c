@@ -3,25 +3,69 @@
  * min-heap -> the smallest key is the root of each sub-tree
  */
 
-s_heap s_createEmptyHeap()
+/**
+ * @brief get the parent index of another index
+ *
+ * @param i index to get parent off of
+ * @return parent index
+ */
+static int parent(int i);
+/**
+ * @brief get the left index of another index
+ *
+ * @param i index to get left off of
+ * @return left index
+ */
+static int left(int i);
+/**
+ * @brief get the right index of another index
+ *
+ * @param i index to get right off of
+ * @return right index
+ */
+static int right(int i);
+/**
+ * @brief swap the item on index i1 with the item on index i2
+ *
+ * @param a the array to swap items in
+ * @param i1 index of item 1
+ * @param i2 index of item 2
+ */
+static void swap(darray *a, int i1, int i2);
+/**
+ * @brief compare parent with children, if there is a heap violation then switch parent and child then recursively continue down the sheap
+ *
+ * @param h sheap to heapify
+ * @param index index to start on
+ */
+static void minHeapifyDown(sheap *h, int index);
+/**
+ * @brief compare child with parent, if there is a heap violation then swap the child and the parent and then recursively continue up the sheap
+ *
+ * @param h sheap to heapify
+ * @param index index to start on
+ */
+static void minHeapifyUp(sheap *h, int index);
+
+sheap sh_create_empty()
 {
-    s_heap h;
+    sheap h;
     h.compare = NULL;
-    h.items = createEmptyDynamicArray();
+    h.items = da_create_empty();
     return h;
 }
 
-size_t s_initHeap(s_heap *h, size_t size, int (*compare)(cvoidp x, cvoidp y))
+size_t sh_init(sheap *h, size_t size, int (*compare)(cvoidp_t x, cvoidp_t y))
 {
     h->compare = compare;
-    return initDynamicArray(&(h->items), size, compare);
+    return da_init(&(h->items), size, compare);
 }
 
-void s_freeHeap(s_heap *h)
+void sh_free(sheap *h)
 {
     if (!sh_is_null(h))
     {
-        freeArray(&h->items);
+        da_free(&h->items);
     }
     else
     {
@@ -29,7 +73,7 @@ void s_freeHeap(s_heap *h)
     }
 }
 
-size_t s_heapSize(s_heap *h)
+size_t sh_size(sheap *h)
 {
     return h->items.used;
 }
@@ -38,32 +82,32 @@ size_t s_heapSize(s_heap *h)
  * return the item with the smallest key (the top of the heap).
  * The item remains in the heap.
  */
-voidp s_peek(s_heap *h)
+voidp_t sh_peek(sheap *h)
 {
     return h->items.array[0];
 }
 
-bool sh_is_null(s_heap *h)
+bool sh_is_null(sheap *h)
 {
-    return a_is_null(&h->items);
+    return da_is_null(&h->items);
 }
 
-bool sh_is_empty(s_heap *h)
+bool sh_is_empty(sheap *h)
 {
-    return a_is_empty(&h->items);
+    return da_is_empty(&h->items);
 }
 
 /*
  * Add to the heap.
  */
-size_t s_heapInsert(s_heap *h, voidp item)
+size_t sh_insert(sheap *h, voidp_t item)
 {
-    arrayInsert(&(h->items), item);
+    da_insert(&(h->items), item);
     if (errc != SUCCESS)
     {
         return -1;
     }
-    s_minHeapifyUp(h, s_heapSize(h) - 1);
+    s_minHeapifyUp(h, sh_size(h) - 1);
     return h->items.used;
 }
 
@@ -71,7 +115,7 @@ size_t s_heapInsert(s_heap *h, voidp item)
  * Return the item with the smallest key (== highest priority).
  * The item is also removed from the heap
  */
-voidp s_extractMin(s_heap *h)
+voidp_t sh_extract_min(sheap *h)
 {
     if (sh_is_null(h))
     {
@@ -83,10 +127,10 @@ voidp s_extractMin(s_heap *h)
         errcset(EHEAP_EMPTY);
         return NULL;
     }
-    voidp tempMin = h->items.array[0];
-    voidp tempLast = h->items.array[s_heapSize(h) - 1];
-    arrayRemoveAt(&(h->items), s_heapSize(h) - 1); // remove at last index
-    if (s_heapSize(h) != 0)
+    voidp_t tempMin = h->items.array[0];
+    voidp_t tempLast = h->items.array[sh_size(h) - 1];
+    da_remove_at(&(h->items), sh_size(h) - 1); // remove at last index
+    if (sh_size(h) != 0)
     { // if the heap is not empty after removal
         h->items.array[0] = tempLast;
         s_minHeapifyDown(h, 0);
@@ -99,36 +143,36 @@ voidp s_extractMin(s_heap *h)
  * go through the non-leafs "backwards" and heapify-down
  * builds heap from an unordered list (array)
  */
-s_heap s_buildMinHeap(voidp *unorderedList, size_t size, int (*compare)(cvoidp x, cvoidp y))
+sheap sh_build_min_heap(voidp_t *unorderedList, size_t size, int (*compare)(cvoidp_t x, cvoidp_t y))
 {
-    s_heap h;
-    s_initHeap(&h, size, compare);
+    sheap h;
+    sh_init(&h, size, compare);
     for (int i = 0; i < size; i++)
-        arrayInsert(&h.items, unorderedList[i]);
+        da_insert(&h.items, unorderedList[i]);
     for (int j = size / 2; j >= 0; j--)
         s_minHeapifyDown(&h, j);
     return h;
 }
 
 /*test if there are any heap violations*/
-bool s_testHeapIntegrity(s_heap *h)
+bool s_test_heap_integrity(sheap *h)
 {
-    for (int i = 0; i < s_heapSize(h); i++)
+    for (int i = 0; i < sh_size(h); i++)
     {
         int l = s_left(i);
         int r = s_right(i);
-        voidp i1 = h->items.array[i];
-        if (l < s_heapSize(h))
+        voidp_t i1 = h->items.array[i];
+        if (l < sh_size(h))
         {
-            voidp l1 = h->items.array[l];
+            voidp_t l1 = h->items.array[l];
             if ((*h->compare)(i1, l1) > 0)
             {
                 return false;
             }
         }
-        if (r < s_heapSize(h))
+        if (r < sh_size(h))
         {
-            voidp r1 = h->items.array[r];
+            voidp_t r1 = h->items.array[r];
             if ((*h->compare)(i1, r1) > 0)
             {
                 return false;
@@ -161,24 +205,24 @@ static int s_right(int i)
 }
 
 /*swap two items in a dynamic array*/
-static void s_swap(array *a, int i1, int i2)
+static void s_swap(darray *a, int i1, int i2)
 {
-    voidp temp1 = a->array[i1];
+    voidp_t temp1 = a->array[i1];
     a->array[i1] = a->array[i2];
     a->array[i2] = temp1;
 }
 
 /*Maintains the heap properties*/
-static void s_minHeapifyDown(s_heap *h, int index)
+static void s_minHeapifyDown(sheap *h, int index)
 {
     int l = s_left(index);
     int r = s_right(index);
     int smallest;
-    if (l <= s_heapSize(h) - 1 && (*h->compare)(h->items.array[l], h->items.array[index]) < 0)
+    if (l <= sh_size(h) - 1 && (*h->compare)(h->items.array[l], h->items.array[index]) < 0)
         smallest = l;
     else
         smallest = index;
-    if (r <= s_heapSize(h) - 1 && (*h->compare)(h->items.array[r], h->items.array[smallest]) < 0)
+    if (r <= sh_size(h) - 1 && (*h->compare)(h->items.array[r], h->items.array[smallest]) < 0)
         smallest = r;
     if (smallest != index)
     {
@@ -187,11 +231,11 @@ static void s_minHeapifyDown(s_heap *h, int index)
     }
 }
 /*Maintains the heap properties*/
-static void s_minHeapifyUp(s_heap *h, int index)
+static void s_minHeapifyUp(sheap *h, int index)
 {
     int p = s_parent(index);
     int smallest;
-    if (p <= s_heapSize(h) - 1 && (*h->compare)(h->items.array[index], h->items.array[p]) < 0)
+    if (p <= sh_size(h) - 1 && (*h->compare)(h->items.array[index], h->items.array[p]) < 0)
         smallest = p;
     else
         smallest = index;

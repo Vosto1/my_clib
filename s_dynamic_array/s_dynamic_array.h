@@ -22,7 +22,7 @@
 /**
  * The s_dynamic array stores pointers to the data as void* pointers.
  * This way the type is generic, but all data must be allocated as
- * dynamic memory. The void* pointer is typedefed to voidp
+ * dynamic memory. The void* pointer is typedefed to voidp_t
  * to make it easier to read.
  *
  * The differences between the s_dynamic array (this) and the dynamic array
@@ -34,8 +34,8 @@
  * and only has the main functionality: insert, remove and merge.
  */
 
-typedef void *voidp;
-typedef const void *cvoidp;
+typedef void *voidp_t;
+typedef const void *cvoidp_t;
 typedef unsigned long long size_t;
 
 typedef enum
@@ -45,14 +45,14 @@ typedef enum
     NMEM_DECREASE = 2,          // No MEMory DECREASE (error, check errc global)
 } MEM;
 
-typedef struct
+struct s_dynamicArray
 {
-    voidp *array;
+    voidp_t *array;
     size_t size;
     size_t used;
-} s_dynamicArray;
+};
 
-typedef s_dynamicArray s_array;
+typedef struct s_dynamicArray sdarray;
 
 /**
  * @brief get amount of elements of an array
@@ -60,18 +60,18 @@ typedef s_dynamicArray s_array;
  * @param a array to check
  * @return element count
  */
-size_t sda_count(s_array *a);
+size_t sda_count(sdarray *a);
 /**
  * @brief get size of an array
  *
  * @param a array to check
  * @return array size
  */
-size_t sda_size(s_array *a);
+size_t sda_size(sdarray *a);
 /**
  * create an empty dynamic array
  */
-s_dynamicArray sda_create_empty();
+sdarray sda_create_empty();
 /**
  * initialize a dynamic array
  *
@@ -80,26 +80,26 @@ s_dynamicArray sda_create_empty();
  * @param compare comparison function to compare Data
  * @return the initial size of the array or -1 if error
  */
-size_t sda_init(s_dynamicArray *a, size_t initSize);
+size_t sda_init(sdarray *a, size_t initSize);
 /**
  * remove (free) all items in the array
  *
  * @param a array to remove from
  * @return the amount of items that was removed or -1 if error
  */
-size_t sda_clear(s_array *a);
+size_t sda_clear(sdarray *a);
 /**
  * @brief free array (items not freed)
  *
  * @param a array to free
  */
-void sda_destroy(s_dynamicArray *a);
+void sda_destroy(sdarray *a);
 /**
  * remove (free) all items in array and then free allocated memory for the dynamic array
  *
  * @param a array to free
  */
-void sda_free(s_dynamicArray *a);
+void sda_free(sdarray *a);
 /**
  * insert into the dynamic array
  *
@@ -107,14 +107,14 @@ void sda_free(s_dynamicArray *a);
  * @param item item to insert
  * @return the amount of used indecies in the array or -1 if error
  */
-size_t sda_insert(s_dynamicArray *a, voidp item);
+size_t sda_insert(sdarray *a, voidp_t item);
 /**
  * remove the last element of the dynamic array
  *
  * @param a array to remove from
  * @return a pointer to the removed item
  */
-voidp sda_remove_last(s_dynamicArray *a);
+voidp_t sda_remove_last(sdarray *a);
 /**
  * remove a specific item from the dynamic array
  *
@@ -122,7 +122,7 @@ voidp sda_remove_last(s_dynamicArray *a);
  * @param item item to remove
  * @return a pointer to the removed item or null if error
  */
-voidp sda_remove_at(s_dynamicArray *a, int index);
+voidp_t sda_remove_at(sdarray *a, int index);
 /**
  * merge two dynamic arrays, b will be put on the end of a and b will be freed
  *
@@ -130,21 +130,21 @@ voidp sda_remove_at(s_dynamicArray *a, int index);
  * @param b array to merge with (will be freed)
  * @return the new size of the array (a) or -1 if error
  */
-size_t sda_merge(s_dynamicArray *a, s_dynamicArray *b);
+size_t sda_merge(sdarray *a, sdarray *b);
 /**
  * check if the dynamic array is uninitialized
  *
  * @param a array to try
  * @return true if a.array == NULL
  */
-bool sda_is_null(s_array *a);
+bool sda_is_null(sdarray *a);
 /**
  * check if the dynamic array is empty
  *
  * @param a array to try
  * @return true if a.used == 0
  */
-bool sda_is_empty(s_array *a);
+bool sda_is_empty(sdarray *a);
 /**
  * @brief find an item in the array
  *
@@ -152,5 +152,5 @@ bool sda_is_empty(s_array *a);
  * @param item item to look for
  * @return the index of the item or -1 if it doesnt exist
  */
-static MEM sda_memory_decrease(s_dynamicArray *a);
+static MEM sda_memory_decrease(sdarray *a);
 #endif

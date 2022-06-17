@@ -1,13 +1,13 @@
 #include "test.h"
 
-int compare(cvoidp e1, cvoidp e2)
+int compare(cvoidp_t e1, cvoidp_t e2)
 {
     entry* en1 = (entry*)e1;
     entry* en2 = (entry*)e2;
     return (int)en1->k - (int)en2->k;
 }
 
-size_t hashfn(cvoidp e, const hashtable* ht)
+size_t hashfn(cvoidp_t e, const hashtable* ht)
 {
     entry* f = (entry*)e;
     
@@ -154,7 +154,7 @@ unsigned int auto_tests(int tests, int mod)
         lookups = 0;
     }
     // test trim
-    s_array a = sda_create_empty();
+    sdarray a = sda_create_empty();
     sda_init(&a, 1);
     for (size_t i = 0; i < ht_size(&ht); i++)
         if (ht.entries[i] != UNUSED)

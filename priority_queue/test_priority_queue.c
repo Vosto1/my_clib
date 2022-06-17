@@ -9,14 +9,14 @@ typedef struct
     element e;
 } Item;
 
-int compare(cvoidp x, cvoidp y)
+int compare(cvoidp_t x, cvoidp_t y)
 {
     Item *item1 = (Item *)x;
     Item *item2 = (Item *)y;
     return item1->p - item2->p;
 }
 
-void print(size_t used, voidp a[])
+void print(size_t used, voidp_t a[])
 {
     Item *itemArr = (Item *)a;
     for (int i = 0; i < used; i++)
@@ -34,13 +34,13 @@ Item *createItem(int priority)
     return item;
 }
 
-void heapPrintTree(s_heap *h)
+void heapPrintTree(sheap *h)
 {
     int y = 0;
     int x = 0;
-    for (int i = 0; i < s_heapSize(h); i++)
+    for (int i = 0; i < sh_size(h); i++)
     {
-        for (int j = 0; j < pow(2, i) && j + pow(2, i) <= s_heapSize(h); j++)
+        for (int j = 0; j < pow(2, i) && j + pow(2, i) <= sh_size(h); j++)
         {
             x = j + (int)pow(2, i) - 1;
             y = h->items.used;
@@ -59,8 +59,8 @@ void heapPrintTree(s_heap *h)
 bool integrity_check(int n)
 {
     srand(time(NULL));
-    PriorityQueue pq = createEmptyPQ();
-    assert(initPQ(&pq, 1, &compare) == 1);
+    priorityqueue pq = pq_create_empty();
+    assert(pq_init(&pq, 1, &compare) == 1);
     errorHandler();
     Item *item;
     Item *out;
@@ -85,17 +85,17 @@ bool integrity_check(int n)
             if (val < 81)
             { // 80%
                 item = createItem(val);
-                assert(enqueuePQ(&pq, (void *)item) != -1);
+                assert(pq_enqueue(&pq, (void *)item) != -1);
                 errorHandler();
                 // inc enqs
                 enqcount++;
             }
             else if (val > 80 && val < 88)
             { // 20%
-                if (count(&pq) != 0)
+                if (pq_count(&pq) != 0)
                 {
-                    min = s_peek(&pq.h);
-                    item = dequeuePQ(&pq);
+                    min = sh_peek(&pq.h);
+                    item = pq_dequeue(&pq);
                     assert(item != NULL);
                     errorHandler();
                     result = compare(min, item);
@@ -106,8 +106,8 @@ bool integrity_check(int n)
             }
             else if (val > 87 && val < 95)
             {
-                min = s_peek(&pq.h);
-                if (trydequeuePQ(&pq, (void *)&out))
+                min = sh_peek(&pq.h);
+                if (pq_trydequeue(&pq, (void *)&out))
                 {
                     assert(out != NULL);
                     result = compare(min, out);
@@ -118,18 +118,18 @@ bool integrity_check(int n)
             }
             else
             { // if (val > 94)
-                min = s_peek(&pq.h);
-                if (peekPQ(&pq, (void *)&out))
+                min = sh_peek(&pq.h);
+                if (pq_peek(&pq, (void *)&out))
                 {
                     result = compare(min, out);
                 }
                 // inc peeks
                 pcount++;
             }
-            if (!s_testHeapIntegrity(&pq.h))
+            if (!s_test_heap_integrity(&pq.h))
             {
                 system("clear");
-                printf("PriorityQueue: heap integrity broken\n");
+                printf("priorityqueue: heap integrity broken\n");
                 printf("Structure at error:\n");
                 heapPrintTree(&pq.h);
                 return false;
@@ -137,7 +137,7 @@ bool integrity_check(int n)
             else if (result != 0)
             {
                 system("clear");
-                printf("PriorityQueue: dequeue wrong result.\n");
+                printf("priorityqueue: dequeue wrong result.\n");
                 printf("Structure at error:\n");
                 heapPrintTree(&pq.h);
                 return false;
@@ -158,7 +158,7 @@ bool integrity_check(int n)
     printf("Computed a total of %ld operations and integrity tests.\n", totalTests);
     printf("Total test running time: %fs\n", passed);
     printf("Integrity test exiting...\n");
-    freePQ(&pq);
+    pq_free(&pq);
     errorHandler();
     return true;
 }

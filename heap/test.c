@@ -90,7 +90,7 @@ static void insert_n(heap *h, int n)
 
 static void remove_all(heap *h)
 {
-    assert(arrayClear(&h->items) != -1);
+    assert(da_clear(&h->items) != -1);
     assert(heapSize(h) == 0);
 }
 

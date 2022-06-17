@@ -41,8 +41,8 @@ static double ratio(int used, int size);
 static void print_results(test_result res);
 static void print_status(stats stat);
 static Item *createItem(int value);
-static void printData(array *a);
-static void remove_all(array *a);
+static void printData(darray *a);
+static void remove_all(darray *a);
 void auto_tests(int n, int mod);
 void test_sequence();
 

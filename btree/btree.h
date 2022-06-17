@@ -19,19 +19,19 @@
 #include "../s_dynamic_array/s_dynamic_array.h"
 #include "../utils/error.h"
 
-typedef void *voidp;
-typedef const void *cvoidp;
+typedef void *voidp_t;
+typedef const void *cvoidp_t;
 typedef struct treenode *btree;
 
 struct treenode
 {
-	voidp value;
+	voidp_t value;
 	btree left;
 	btree right;
 };
 
 btree bt_create_empty();
-btree bt_new_node(voidp value);
+btree bt_new_node(voidp_t value);
 
 bool bt_left_is_null(const btree bst);
 bool bt_right_is_null(const btree bst);

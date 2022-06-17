@@ -6,7 +6,7 @@
   Allokerar minne for en ny nod
   om allokeringen lyckades initieras data samt pekare (pekare initieras till NULL).
   Den nya noden (eller NULL) returneras.*/
-static struct node *createListNode(const voidp data)
+static struct node *createListNode(const voidp_t data)
 {
     // ll �r en node ptr
     ll tempNodeptr = (ll)malloc(sizeof(struct node));
@@ -37,7 +37,7 @@ bool ll_is_empty(const ll list)
 }
 
 /*Lagg till nod forst i listan*/
-void ll_add_first(ll *list, const voidp data)
+void ll_add_first(ll *list, const voidp_t data)
 {
     // skapa ny nod
     ll temp = createListNode(data);
@@ -59,7 +59,7 @@ void ll_add_first(ll *list, const voidp data)
 }
 
 /*Lagg till nod sist i listan*/
-void ll_add_last(ll *list, const voidp data)
+void ll_add_last(ll *list, const voidp_t data)
 {
     if ((*list) == NULL)
         ll_add_first(list, data);
@@ -110,11 +110,11 @@ void ll_remove_last(ll *list)
 
 /*Ta bort data ur listan (forsta forekomsten)
   Returnera true om datat finns, annars false*/
-bool ll_remove_element(ll *list, const voidp data, int (*compare)(cvoidp, cvoidp))
+bool ll_remove_element(ll *list, const voidp_t data, int (*compare)(cvoidp_t, cvoidp_t))
 {
     if ((*list) != NULL)
     {
-        if ((*compare)((*list)->data, (cvoidp)data))
+        if ((*compare)((*list)->data, (cvoidp_t)data))
         {
             ll temp = (*list);
             (*list) = (*list)->next;
@@ -132,11 +132,11 @@ bool ll_remove_element(ll *list, const voidp data, int (*compare)(cvoidp, cvoidp
 
 /*ll_search for data in the list
 Om datat finns returneras true, annars false*/
-bool ll_search(const ll list, const voidp data, int (*compare)(cvoidp, cvoidp))
+bool ll_search(const ll list, const voidp_t data, int (*compare)(cvoidp_t, cvoidp_t))
 {
     if (list != NULL)
     {
-        if ((*compare)(list->data, (cvoidp)data))
+        if ((*compare)(list->data, (cvoidp_t)data))
             return true;
         ll_search(list->next, data, compare);
     }
@@ -169,14 +169,14 @@ void ll_clear(ll *list)
 
 /*Returnera forsta datat i listan
   Precondition: listan ar inte tom (testa med assert)*/
-voidp ll_get_first(const ll list)
+voidp_t ll_get_first(const ll list)
 {
     return list->data;
 }
 
 /*Returnera sista datat i listan
   Precondition: listan ar inte tom (testa med assert)*/
-voidp ll_get_last(const ll list)
+voidp_t ll_get_last(const ll list)
 {
     assert(!ll_is_empty(list)); // kommentera f�r att menyn ska fungera
     if (list != NULL)

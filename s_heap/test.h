@@ -26,9 +26,9 @@ typedef enum Test
     INSERTION = 1,
     DELETION = 2,
 } Test;
-// user defined functions needed for the s_heap
+// user defined functions needed for the sheap
 static int compare(const void *x, const void *y);
-static void heapPrintTree(s_heap *h);
+static void heapPrintTree(sheap *h);
 // test functions
 void test_sequence();
 void compute_1_to_n_sequences_of_operations(long n, Test type);

@@ -1,6 +1,6 @@
 #include "btree.h"
 
-btree bt_new_node(voidp value)
+btree bt_new_node(voidp_t value)
 {
     btree n = (btree)malloc(sizeof(struct treenode));
     if (n != NULL)

@@ -32,8 +32,8 @@
  * 0 when they are equal.
  */
 
-typedef void *voidp;
-typedef const void *cvoidp;
+typedef void *voidp_t;
+typedef const void *cvoidp_t;
 typedef unsigned long long size_t;
 
 typedef enum
@@ -43,15 +43,15 @@ typedef enum
     NMEM_DECREASE = 2,          // No MEMory DECREASE (error, check errc global)
 } MEM;
 
-typedef struct
+struct dynamicArray
 {
-    voidp *array;
+    voidp_t *array;
     size_t size;
     size_t used;
-    int (*compare)(cvoidp x, cvoidp y);
-} dynamicArray;
+    int (*compare)(cvoidp_t x, cvoidp_t y);
+};
 
-typedef dynamicArray array;
+typedef struct dynamicArray darray;
 
 /**
  * @brief get amount of elements of an array
@@ -59,33 +59,33 @@ typedef dynamicArray array;
  * @param a array to check
  * @return element count
  */
-size_t elementcount(array *a);
+size_t da_count(darray *a);
 /**
  * @brief get size of an array
  *
  * @param a array to check
  * @return array size
  */
-size_t arraysize(array *a);
+size_t da_size(darray *a);
 /**
  * create an empty dynamic array
  */
-dynamicArray createEmptyDynamicArray();
+darray da_create_empty();
 /**
  * initialize a dynamic array
  *
  * @param a pointer to the array to initialize
  * @param initSize the initial size of the array
- * @param compare comparison function to compare Data
+ * @param compare comparison function to compare items
  * @return the initial size of the array or -1 if error
  */
-size_t initDynamicArray(dynamicArray *a, size_t initSize, int (*compare)(cvoidp x, cvoidp y));
+size_t da_init(darray *a, size_t initSize, int (*compare)(cvoidp_t x, cvoidp_t y));
 /**
  * remove (free) all items in array and then free allocated memory for the dynamic array
  *
  * @param a array to free
  */
-void freeArray(dynamicArray *a);
+void da_free(darray *a);
 /**
  * insert into the dynamic array
  *
@@ -93,14 +93,14 @@ void freeArray(dynamicArray *a);
  * @param item item to insert
  * @return the amount of used indecies in the array or -1 if error
  */
-size_t arrayInsert(dynamicArray *a, voidp item);
+size_t da_insert(darray *a, voidp_t item);
 /**
  * remove the last element of the dynamic array
  *
  * @param a array to remove from
  * @return a pointer to the removed item
  */
-voidp arrayRemoveLast(dynamicArray *a);
+voidp_t da_remove_last(darray *a);
 /**
  * remove a specific item from the dynamic array
  *
@@ -108,7 +108,7 @@ voidp arrayRemoveLast(dynamicArray *a);
  * @param item item to remove
  * @return a pointer to the removed item or null if error
  */
-voidp arrayRemoveItem(dynamicArray *a, voidp item);
+voidp_t da_remove_item(darray *a, voidp_t item);
 /**
  * remove an item at a specific index from the dynamic array
  *
@@ -116,17 +116,17 @@ voidp arrayRemoveItem(dynamicArray *a, voidp item);
  * @param index index to remove item from
  * @return a pointer to the removed item
  */
-voidp arrayRemoveAt(dynamicArray *a, int index);
+voidp_t da_remove_at(darray *a, int index);
 /**
- * convert a Data[] array to a dynamic array
+ * convert a voidp_t[] array to a dynamic array
  *
  * @param a out array
- * @param b Data array to convert to dynamic array
- * @param bsize size of the Data array b
- * @param compare compare function to compare Data needed for initialization of a dynamic array
+ * @param b voidp_t array to convert to dynamic array
+ * @param bsize size of the array b
+ * @param compare compare function to compare voidp_t needed for initialization of a dynamic array
  * @return the size of the result array or -1 if error
  */
-size_t convert(dynamicArray *a, voidp b[], size_t bsize, int (*compare)(cvoidp x, cvoidp y));
+size_t da_convert(darray *a, voidp_t b[], size_t bsize, int (*compare)(cvoidp_t x, cvoidp_t y));
 /**
  * merge two dynamic arrays, b will be put on the end of a and b will be freed
  *
@@ -134,28 +134,28 @@ size_t convert(dynamicArray *a, voidp b[], size_t bsize, int (*compare)(cvoidp x
  * @param b array to merge with (will be freed)
  * @return the new size of the array (a) or -1 if error
  */
-size_t arrayUnion(dynamicArray *a, dynamicArray *b); // add array b on the end of array a O(n)
+size_t da_merge(darray *a, darray *b); // add array b on the end of array a O(n)
 /**
  * remove (free) all items in the array
  *
  * @param a array to remove from
  * @return the amount of items that was removed or -1 if error
  */
-size_t arrayClear(array *a);
+size_t da_clear(darray *a);
 /**
  * check if the dynamic array is uninitialized
  *
  * @param a array to try
  * @return true if a.array == NULL
  */
-bool a_is_null(array *a);
+bool da_is_null(darray *a);
 /**
  * check if the dynamic array is empty
  *
  * @param a array to try
  * @return true if a.used == 0
  */
-bool a_is_empty(array *a);
+bool da_is_empty(darray *a);
 /**
  * @brief find an item in the array
  *
@@ -163,7 +163,7 @@ bool a_is_empty(array *a);
  * @param item item to look for
  * @return the index of the item or -1 if it doesnt exist
  */
-int arrayFind(array *a, voidp item);
+int da_find(darray *a, voidp_t item);
 /**
  * @brief check if an item exists in the array
  *
@@ -172,13 +172,5 @@ int arrayFind(array *a, voidp item);
  * @return true if exists
  * @return false if not exists
  */
-bool arrayExists(array *a, voidp item);
-
-/**
- * checks if the memory should be halved and does so if check is positive
- *
- * @param a to decrease memory for
- * @return result of memory reduction
- */
-static MEM memoryDecrease(dynamicArray *a);
+bool da_exists(darray *a, voidp_t item);
 #endif

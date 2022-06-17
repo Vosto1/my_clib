@@ -1,18 +1,26 @@
 #include "dynamic_array.h"
 
-size_t elementcount(array *a)
+/**
+ * checks if the memory should be halved and does so if check is positive
+ *
+ * @param a to decrease memory for
+ * @return result of memory reduction
+ */
+static MEM memory_decrease(darray *a);
+
+size_t da_count(darray *a)
 {
     return a->used;
 }
 
-size_t arraysize(array *a)
+size_t da_size(darray *a)
 {
     return a->size;
 }
 
-dynamicArray createEmptyDynamicArray()
+darray da_create_empty()
 {
-    dynamicArray a;
+    darray a;
     a.array = NULL;
     a.compare = NULL;
     a.size = 0;
@@ -20,12 +28,12 @@ dynamicArray createEmptyDynamicArray()
     return a;
 }
 
-size_t initDynamicArray(dynamicArray *a, size_t initSize, int (*compare)(cvoidp x, cvoidp y))
+size_t da_init(darray *a, size_t initSize, int (*compare)(cvoidp_t x, cvoidp_t y))
 {
     a->size = 0;
     a->used = 0;
-    voidp *temp;
-    temp = (voidp *)malloc(sizeof(voidp) * initSize);
+    voidp_t *temp;
+    temp = (voidp_t *)malloc(sizeof(voidp_t) * initSize);
     if (temp != NULL)
     {
         a->array = temp;
@@ -35,20 +43,20 @@ size_t initDynamicArray(dynamicArray *a, size_t initSize, int (*compare)(cvoidp 
     }
     else
     {
-        *a = createEmptyDynamicArray();
+        *a = da_create_empty();
         errcset(EMEM_ALLOC);
         return -1;
     }
 }
 
-void freeArray(dynamicArray *a)
+void da_free(darray *a)
 {
-    if (!a_is_null(a))
+    if (!da_is_null(a))
     {
-        if (!a_is_empty(a))
-            arrayClear(a);
+        if (!da_is_empty(a))
+            da_clear(a);
         free(a->array);
-        *a = createEmptyDynamicArray();
+        *a = da_create_empty();
     }
     else
     {
@@ -56,7 +64,7 @@ void freeArray(dynamicArray *a)
     }
 }
 
-size_t arrayInsert(dynamicArray *a, voidp item)
+size_t da_insert(darray *a, voidp_t item)
 {
     if (a == NULL || a->array == NULL)
     {
@@ -68,8 +76,8 @@ size_t arrayInsert(dynamicArray *a, voidp item)
     { // index < size, is a guard
         // when array is full on insert, double the size
         a->size *= 2;
-        voidp *temp;
-        temp = (voidp *)realloc(a->array, sizeof(voidp) * a->size);
+        voidp_t *temp;
+        temp = (voidp_t *)realloc(a->array, sizeof(voidp_t) * a->size);
         if (temp != NULL)
         {
             a->array = temp;
@@ -85,18 +93,18 @@ size_t arrayInsert(dynamicArray *a, voidp item)
     return a->used;
 }
 
-voidp arrayRemoveLast(dynamicArray *a)
+voidp_t da_remove_last(darray *a)
 {
-    if (a_is_empty(a))
+    if (da_is_empty(a))
     {
         errcset(EARR_EMPTY);
         return NULL;
     }
     a->used -= 1;
-    MEM m = memoryDecrease(a);
+    MEM m = memory_decrease(a);
     if (m != NMEM_DECREASE)
     {
-        voidp data = a->array[a->used];
+        voidp_t data = a->array[a->used];
         return data;
     }
     else
@@ -106,33 +114,33 @@ voidp arrayRemoveLast(dynamicArray *a)
     }
 }
 
-voidp arrayRemoveItem(dynamicArray *a, voidp item)
+voidp_t da_remove_item(darray *a, voidp_t item)
 {
     for (int i = 0; i < a->used; i++)
     {
         if ((*a->compare)(item, a->array[i]) == 0)
         { // compare with user defined function
-            return arrayRemoveAt(a, i);
+            return da_remove_at(a, i);
         }
     }
     errcset(EARRDATA_DOESNT_EXIST);
     return NULL;
 }
 
-voidp arrayRemoveAt(dynamicArray *a, int index)
+voidp_t da_remove_at(darray *a, int index)
 {
     if (index > a->used)
     {
         errcset(EINDEX_OUT_OF_BOUNDS);
         return NULL;
     }
-    voidp *data = a->array[index];
+    voidp_t *data = a->array[index];
     for (int i = index; i < a->used; i++)
     {
         a->array[i] = a->array[i + 1];
     }
     a->used -= 1;
-    MEM m = memoryDecrease(a);
+    MEM m = memory_decrease(a);
     if (m != NMEM_DECREASE)
     {
         return data;
@@ -145,21 +153,21 @@ voidp arrayRemoveAt(dynamicArray *a, int index)
     }
 }
 
-size_t convert(dynamicArray *a, voidp b[], size_t bsize, int (*compare)(cvoidp x, cvoidp y))
+size_t da_convert(darray *a, voidp_t b[], size_t bsize, int (*compare)(cvoidp_t x, cvoidp_t y))
 {
-    *a = createEmptyDynamicArray();
-    if (initDynamicArray(a, bsize, compare) != bsize)
+    *a = da_create_empty();
+    if (da_init(a, bsize, compare) != bsize)
     {
         return -1;
     }
     for (int i = 0; i < bsize; i++)
     {
-        arrayInsert(a, b[i]);
+        da_insert(a, b[i]);
     }
     return bsize;
 }
 
-size_t arrayUnion(dynamicArray *a, dynamicArray *b)
+size_t da_merge(darray *a, darray *b)
 {
     if (a == NULL || b == NULL)
     {
@@ -168,9 +176,9 @@ size_t arrayUnion(dynamicArray *a, dynamicArray *b)
     }
     for (int i = 0; i < b->used; i++)
     {
-        arrayInsert(a, b->array[i]);
+        da_insert(a, b->array[i]);
     }
-    // free only array not the elements (freeArray frees all items in the array as well)
+    // free only array not the elements (da_free frees all items in the array as well)
     free(b->array);
     b->size = 0;
     b->used = 0;
@@ -178,42 +186,42 @@ size_t arrayUnion(dynamicArray *a, dynamicArray *b)
     return a->size;
 }
 
-size_t arrayClear(array *a)
+size_t da_clear(darray *a)
 {
-    if (a_is_empty(a))
+    if (da_is_empty(a))
     {
         errcset(EARR_EMPTY);
         return -1;
     }
-    else if (a_is_null(a))
+    else if (da_is_null(a))
     {
         errcset(ENULL_ARG);
         return -1;
     }
     int amount = a->used;
-    voidp d;
+    voidp_t d;
     for (int i = 0; i < amount; i++)
     {
-        d = arrayRemoveLast(a);
+        d = da_remove_last(a);
         free(d);
     }
     return amount;
 }
 
-bool a_is_null(array *a)
+bool da_is_null(darray *a)
 {
     return a->array == NULL;
 }
 
-bool a_is_empty(array *a)
+bool da_is_empty(darray *a)
 {
     return a->used == 0;
 }
 
 // linear search
-int find(array *a, voidp item)
+int find(darray *a, voidp_t item)
 {
-    for (int i = 0; i < elementcount(a); i++)
+    for (int i = 0; i < da_count(a); i++)
     {
         if ((*a->compare)(a->array[i], item))
         {
@@ -223,7 +231,7 @@ int find(array *a, voidp item)
     return -1;
 }
 
-bool arrayExists(array *a, voidp item)
+bool da_exists(darray *a, voidp_t item)
 {
     if (find(a, item) != -1)
     {
@@ -233,16 +241,16 @@ bool arrayExists(array *a, voidp item)
         return false;
 }
 
-// memory check and increase is done in arrayInsert function
-static MEM memoryDecrease(dynamicArray *a)
+// memory check and increase is done in da_insert function
+static MEM memory_decrease(darray *a)
 {
     double ratio = (double)a->used / (double)a->size;
     // if 1/4 of the allocated space is used, halve it
-    if (ratio <= QUARTER && arraysize(a) != 1)
+    if (ratio <= QUARTER && da_size(a) != 1)
     {
         a->size /= 2;
-        voidp *temp;
-        temp = (voidp *)realloc(a->array, sizeof(voidp) * a->size);
+        voidp_t *temp;
+        temp = (voidp_t *)realloc(a->array, sizeof(voidp_t) * a->size);
         if (temp != NULL)
         {
             a->array = temp;

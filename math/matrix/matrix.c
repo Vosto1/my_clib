@@ -77,20 +77,6 @@ void errorHandler1(int err)
 		return;
 }
 
-/* void printMatrix(Matrix mtrx)
-{
-	for (int row = 0; row < mtrx->rows; row++)
-	{
-		for (int col = 0; col < mtrx->columns; col++)
-		{
-			printf(FORMAT_STRING, mtrx->matrix[INDEX(col, row, mtrx->columns)]);
-			printf("\t");
-		}
-		printf("\n\n");
-	}
-	printf("\n\n\n\n");
-} */
-
 void printMatrix(Matrix m)
 {
 	for (int i = 0; i < m->columns; i++)
@@ -210,7 +196,7 @@ typedef struct
 	double determinant;
 } entry;
 
-static int is_equal(cvoidp k, cvoidp l)
+static int is_equal(cvoidp_t k, cvoidp_t l)
 {
 	entry *x = (entry *)k;
 	entry *y = (entry *)l;
@@ -229,7 +215,7 @@ static int is_equal(cvoidp k, cvoidp l)
 	return 0; // equal
 }
 
-size_t myhash(cvoidp ent, const hashtable *ht)
+size_t myhash(cvoidp_t ent, const hashtable *ht)
 {
 	entry *e = (entry *)ent;
 	// use generic hash fn
@@ -248,7 +234,8 @@ ErrorCode1 getDeterminant(Matrix *mtrx, Data *pdet)
 
 	RST; // reset counter
 	hashtable ht;
-	assert(ht_init(&ht, 10, &myhash, &is_equal) == 10);
+	size_t htablesize = (*mtrx)->columns * (*mtrx)->rows;
+	assert(ht_init(&ht, htablesize, &myhash, &is_equal) == htablesize);
 	*pdet = determinantDivideAndConquer(mtrx, &ht);
 	for (int i = 0; i < ht_size(&ht); i++)
 		if (ht.entries[i] != UNUSED)
@@ -302,7 +289,7 @@ static Data determinantDivideAndConquer(Matrix *mtrx, hashtable *ht)
 		}
 		// Divide and Conquer. Get the values that will be used to make a new smaller matrix.
 		List list = createEmptyList();
-		// s_array a = sda_create_empty();
+		// sdarray a = sda_create_empty();
 		for (int row = 0; row < (*mtrx)->rows; row++)
 		{
 			for (int col = 0; col < (*mtrx)->columns; col++)

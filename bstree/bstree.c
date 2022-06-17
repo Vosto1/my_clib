@@ -1,12 +1,12 @@
 #include "bstree.h"
 
-static void print(voidp e)
+static void print(voidp_t e)
 {
     char *c = (char *)e;
     printf("%c", *c);
 }
 
-static bstree new_node(cvoidp element)
+static bstree new_node(cvoidp_t element)
 {
     bstree n = (bstree)malloc(sizeof(struct treenode));
     if (n != NULL)
@@ -25,17 +25,17 @@ static bstree new_node(cvoidp element)
     }
 }
 
-static bool is_smaller(cvoidp element1, cvoidp element2, int (*compare)(cvoidp, cvoidp))
+static bool is_smaller(cvoidp_t element1, cvoidp_t element2, int (*compare)(cvoidp_t, cvoidp_t))
 {
     return (*compare)(element1, element2) < 0;
 }
 
-static bool is_bigger(cvoidp element1, cvoidp element2, int (*compare)(cvoidp, cvoidp))
+static bool is_bigger(cvoidp_t element1, cvoidp_t element2, int (*compare)(cvoidp_t, cvoidp_t))
 {
     return (*compare)(element1, element2) > 0;
 }
 
-static bool is_equal(cvoidp element1, cvoidp element2, int (*compare)(cvoidp, cvoidp))
+static bool is_equal(cvoidp_t element1, cvoidp_t element2, int (*compare)(cvoidp_t, cvoidp_t))
 {
     return (*compare)(element1, element2) == 0;
 }
@@ -55,7 +55,7 @@ bstree bst_create_empty(void)
     return NULL;
 }
 
-static void insert(bstree *current, bstree prev, voidp element, int (*compare)(cvoidp, cvoidp))
+static void insert(bstree *current, bstree prev, voidp_t element, int (*compare)(cvoidp_t, cvoidp_t))
 {
     if (*current == NULL)
     {
@@ -86,19 +86,19 @@ static void insert(bstree *current, bstree prev, voidp element, int (*compare)(c
         insert(&(*current)->left, *current, element, compare);
 }
 
-void bst_insert(bstree *tree, voidp element, int (*compare)(cvoidp, cvoidp))
+void bst_insert(bstree *tree, voidp_t element, int (*compare)(cvoidp_t, cvoidp_t))
 {
     insert(tree, NULL, element, compare);
 }
 
-static bstree *findSmallestNodeRight(bstree *bst, int (*compare)(cvoidp, cvoidp));
-static bstree *findLargestNodeLeft(bstree *bst, int (*compare)(cvoidp, cvoidp));
-static voidp rmWithNoChildren(bstree *bst);
-static voidp rmWithRightChild(bstree *bst);
-static voidp rmWithLeftChild(bstree *bst);
-static voidp rmWithTwoChildren(bstree *bst, int (*compare)(cvoidp, cvoidp));
+static bstree *findSmallestNodeRight(bstree *bst, int (*compare)(cvoidp_t, cvoidp_t));
+static bstree *findLargestNodeLeft(bstree *bst, int (*compare)(cvoidp_t, cvoidp_t));
+static voidp_t rmWithNoChildren(bstree *bst);
+static voidp_t rmWithRightChild(bstree *bst);
+static voidp_t rmWithLeftChild(bstree *bst);
+static voidp_t rmWithTwoChildren(bstree *bst, int (*compare)(cvoidp_t, cvoidp_t));
 
-static bstree *findSmallestNodeRight(bstree *bst, int (*compare)(cvoidp, cvoidp))
+static bstree *findSmallestNodeRight(bstree *bst, int (*compare)(cvoidp_t, cvoidp_t))
 {
     bstree *tmp = &(*bst)->right;
     while (!left_isnull(*tmp))
@@ -108,7 +108,7 @@ static bstree *findSmallestNodeRight(bstree *bst, int (*compare)(cvoidp, cvoidp)
     return tmp;
 }
 
-static bstree *findLargestNodeLeft(bstree *bst, int (*compare)(cvoidp, cvoidp))
+static bstree *findLargestNodeLeft(bstree *bst, int (*compare)(cvoidp_t, cvoidp_t))
 {
     bstree *tmp = &(*bst)->left;
     while (!right_isnull(*tmp))
@@ -118,7 +118,7 @@ static bstree *findLargestNodeLeft(bstree *bst, int (*compare)(cvoidp, cvoidp))
     return tmp;
 }
 
-static voidp rmWithNoChildren(bstree *bst)
+static voidp_t rmWithNoChildren(bstree *bst)
 {
     bstree rm = *bst;
 
@@ -130,7 +130,7 @@ static voidp rmWithNoChildren(bstree *bst)
             else
                 rm->parent->left = NULL;
         *bst = NULL; // for good measure
-        voidp e = (voidp)rm->cont.element;
+        voidp_t e = (voidp_t)rm->cont.element;
         free(rm);
         rm = NULL;
         return e;
@@ -147,13 +147,13 @@ static voidp rmWithNoChildren(bstree *bst)
         datacontainer *new_rm = prev->next;
         prev->next = NULL; // remove pointer to last object of type
 
-        voidp element = (voidp)new_rm->element;
+        voidp_t element = (voidp_t)new_rm->element;
         free(new_rm);
         return element;
     }
 }
 
-static voidp rmWithRightChild(bstree *bst)
+static voidp_t rmWithRightChild(bstree *bst)
 {
     bstree rm = *bst;
     bstree child = rm->right;
@@ -169,7 +169,7 @@ static voidp rmWithRightChild(bstree *bst)
 
         child->parent = parent;
         (*bst) = child; // for good measure
-        voidp e = (voidp)rm->cont.element;
+        voidp_t e = (voidp_t)rm->cont.element;
         free(rm);
         return e;
     }
@@ -185,13 +185,13 @@ static voidp rmWithRightChild(bstree *bst)
         datacontainer *new_rm = prev->next;
         prev->next = NULL; // remove pointer to last object of type
 
-        voidp element = (voidp)new_rm->element;
+        voidp_t element = (voidp_t)new_rm->element;
         free(new_rm);
         return element;
     }
 }
 
-static voidp rmWithLeftChild(bstree *bst)
+static voidp_t rmWithLeftChild(bstree *bst)
 {
     bstree rm = *bst;
     bstree child = rm->left;
@@ -207,7 +207,7 @@ static voidp rmWithLeftChild(bstree *bst)
 
         child->parent = parent;
         (*bst) = child; // for good measure
-        voidp e = (voidp)rm->cont.element;
+        voidp_t e = (voidp_t)rm->cont.element;
         free(rm);
         return e;
     }
@@ -223,13 +223,13 @@ static voidp rmWithLeftChild(bstree *bst)
         datacontainer *new_rm = prev->next;
         prev->next = NULL; // remove pointer to last object of type
 
-        voidp element = (voidp)new_rm->element;
+        voidp_t element = (voidp_t)new_rm->element;
         free(new_rm);
         return element;
     }
 }
 
-static voidp rmWithTwoChildren(bstree *bst, int (*compare)(cvoidp, cvoidp))
+static voidp_t rmWithTwoChildren(bstree *bst, int (*compare)(cvoidp_t, cvoidp_t))
 {
     bstree rm = *bst;
     bstree *repl;
@@ -247,7 +247,7 @@ static voidp rmWithTwoChildren(bstree *bst, int (*compare)(cvoidp, cvoidp))
     // remove node to replace with and replace with node to remove
     if (rm->cont.next == NULL)
     { // if the last of its value
-        voidp element = bst_remove(bst, (voidp)(*repl)->cont.element, compare);
+        voidp_t element = bst_remove(bst, (voidp_t)(*repl)->cont.element, compare);
         bstree parent = rm->parent;
 
         bstree lchild = rm->left;
@@ -270,7 +270,7 @@ static voidp rmWithTwoChildren(bstree *bst, int (*compare)(cvoidp, cvoidp))
         node->parent = rm->parent;
 
         (*bst) = node;
-        voidp e = (voidp)rm->cont.element;
+        voidp_t e = (voidp_t)rm->cont.element;
         free(rm);
         return e;
     }
@@ -286,13 +286,13 @@ static voidp rmWithTwoChildren(bstree *bst, int (*compare)(cvoidp, cvoidp))
         datacontainer *new_rm = prev->next;
         prev->next = NULL; // remove pointer to last object of type
 
-        voidp element = (voidp)new_rm->element;
+        voidp_t element = (voidp_t)new_rm->element;
         free(new_rm);
         return element;
     }
 }
 
-voidp bst_remove(bstree *tree, voidp element, int (*compare)(cvoidp, cvoidp))
+voidp_t bst_remove(bstree *tree, voidp_t element, int (*compare)(cvoidp_t, cvoidp_t))
 {
     if (*tree != NULL)
     {
@@ -338,12 +338,12 @@ bool bst_is_empty(const bstree tree)
     return tree == NULL;
 }
 
-static size_t writeSortedToArray(const bstree tree, voidp **array)
+static size_t writeSortedToArray(const bstree tree, voidp_t **array)
 {
     return bst_toarray_inorder(tree, array);
 }
 
-static void insertFromSortedArray(bstree *tree, voidp *a, int start, int end, int (*compare)(cvoidp, cvoidp))
+static void insertFromSortedArray(bstree *tree, voidp_t *a, int start, int end, int (*compare)(cvoidp_t, cvoidp_t))
 {
     if (start > end)
         return;
@@ -364,11 +364,11 @@ static void free_container_structs(datacontainer *cont)
     }
 }
 
-void bst_merge(bstree *bst1, bstree *bst2, int (*compare)(cvoidp, cvoidp))
+void bst_merge(bstree *bst1, bstree *bst2, int (*compare)(cvoidp_t, cvoidp_t))
 {
     if ((*bst2) == NULL)
         return;
-    voidp *array;
+    voidp_t *array;
     size_t size = writeSortedToArray(*bst2, &array);
     insertFromSortedArray(bst1, array, 0, size - 1, compare);
     // free array
@@ -377,7 +377,7 @@ void bst_merge(bstree *bst1, bstree *bst2, int (*compare)(cvoidp, cvoidp))
     bst_destroy(bst2);
 }
 
-static void preorder(const bstree tree, cvoidp *a, int *index)
+static void preorder(const bstree tree, cvoidp_t *a, int *index)
 {
     if (tree != NULL)
     {
@@ -395,7 +395,7 @@ static void preorder(const bstree tree, cvoidp *a, int *index)
     }
 }
 
-static void inorder(const bstree tree, cvoidp *a, int *index)
+static void inorder(const bstree tree, cvoidp_t *a, int *index)
 {
     if (tree != NULL)
     {
@@ -413,7 +413,7 @@ static void inorder(const bstree tree, cvoidp *a, int *index)
     }
 }
 
-static void postorder(const bstree tree, cvoidp *a, int *index)
+static void postorder(const bstree tree, cvoidp_t *a, int *index)
 {
     if (tree != NULL)
     {
@@ -431,16 +431,16 @@ static void postorder(const bstree tree, cvoidp *a, int *index)
     }
 }
 
-static size_t get_array(const bstree tree, void (*order)(const bstree, cvoidp *, int *), voidp **arr)
+static size_t get_array(const bstree tree, void (*order)(const bstree, cvoidp_t *, int *), voidp_t **arr)
 {
     if (tree != NULL)
     {
         size_t size = bst_count(tree);
-        voidp *a = (voidp *)malloc(sizeof(voidp *) * size);
+        voidp_t *a = (voidp_t *)malloc(sizeof(voidp_t *) * size);
         if (arr != NULL)
         {
             int index = 0;
-            (*order)(tree, (cvoidp *)a, &index);
+            (*order)(tree, (cvoidp_t *)a, &index);
             *arr = a;
             return size;
         }
@@ -457,28 +457,28 @@ static size_t get_array(const bstree tree, void (*order)(const bstree, cvoidp *,
     }
 }
 
-size_t bst_toarray_preorder(const bstree tree, voidp **array)
+size_t bst_toarray_preorder(const bstree tree, voidp_t **array)
 {
     if (tree == NULL)
         return 0;
     return get_array(tree, &preorder, array);
 }
 
-size_t bst_toarray_inorder(const bstree tree, voidp **array)
+size_t bst_toarray_inorder(const bstree tree, voidp_t **array)
 {
     if (tree == NULL)
         return 0;
     return get_array(tree, &inorder, array);
 }
 
-size_t bst_toarray_postorder(const bstree tree, voidp **array)
+size_t bst_toarray_postorder(const bstree tree, voidp_t **array)
 {
     if (tree == NULL)
         return 0;
     return get_array(tree, &postorder, array);
 }
 
-cvoidp bst_find(const bstree tree, voidp element, int (*compare)(cvoidp, cvoidp))
+cvoidp_t bst_find(const bstree tree, voidp_t element, int (*compare)(cvoidp_t, cvoidp_t))
 {
     if (tree != NULL)
     {
@@ -501,7 +501,7 @@ cvoidp bst_find(const bstree tree, voidp element, int (*compare)(cvoidp, cvoidp)
     }
 }
 
-cvoidp bst_rightmost(const bstree *tree, int (*compare)(cvoidp, cvoidp))
+cvoidp_t bst_rightmost(const bstree *tree, int (*compare)(cvoidp_t, cvoidp_t))
 {
     bstree *tmp = (bstree *)tree;
     while ((*tmp)->right != NULL)
@@ -511,7 +511,7 @@ cvoidp bst_rightmost(const bstree *tree, int (*compare)(cvoidp, cvoidp))
     return (*tmp)->cont.element;
 }
 
-cvoidp bst_leftmost(const bstree *tree, int (*compare)(cvoidp, cvoidp))
+cvoidp_t bst_leftmost(const bstree *tree, int (*compare)(cvoidp_t, cvoidp_t))
 {
     bstree *tmp = (bstree *)tree;
     while ((*tmp)->left != NULL)
@@ -590,22 +590,22 @@ static void print_inorder(const char *description, const bstree bst)
 }
 
 #define INIT_SIZE 10
-void bst_balance(bstree *tree, int (*compare)(cvoidp, cvoidp))
+void bst_balance(bstree *tree, int (*compare)(cvoidp_t, cvoidp_t))
 {
     if ((*tree) != NULL)
     {
 
         // write all elements to an array
-        voidp *arr1;
+        voidp_t *arr1;
         size_t arraysize = writeSortedToArray((*tree), &arr1);
         if (arr1 != NULL)
         {
             bstree new = bst_create_empty();
-            s_array arr2 = sda_create_empty();
+            sdarray arr2 = sda_create_empty();
             if (sda_init(&arr2, INIT_SIZE) != -1)
             {
                 // get an array with unique elements
-                voidp tmp = arr1[0];
+                voidp_t tmp = arr1[0];
                 sda_insert(&arr2, tmp);
                 arr1[0] = NULL;
                 for (int i = 1; i < arraysize; i++)
@@ -659,7 +659,7 @@ static void free_all_elements(datacontainer *cont)
 {
     if (cont->next != NULL)
         free_all_elements(cont->next);
-    free((voidp)cont->element);
+    free((voidp_t)cont->element);
 }
 
 static void bstfree(bstree *tree)

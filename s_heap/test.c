@@ -13,14 +13,14 @@ static int compare(const void *x, const void *y)
         return 0;
 }
 
-// s_heap
-static void heapPrintTree(s_heap *h)
+// sheap
+static void heapPrintTree(sheap *h)
 {
     int y = 0;
     int x = 0;
-    for (int i = 0; i < s_heapSize(h); i++)
+    for (int i = 0; i < sh_size(h); i++)
     {
-        for (int j = 0; j < pow(2, i) && j + pow(2, i) <= s_heapSize(h); j++)
+        for (int j = 0; j < pow(2, i) && j + pow(2, i) <= sh_size(h); j++)
         {
             x = j + (int)pow(2, i) - 1;
             y = h->items.used;
@@ -44,30 +44,30 @@ static Item *createItem(int x)
     return item;
 }
 
-static void insert_n(s_heap *h, int n)
+static void insert_n(sheap *h, int n)
 {
     size_t e;
     Item *item;
     for (int j = 0; j < n; j++)
     {
         item = createItem(rand() % 1000);
-        e = s_heapSize(h) + 1;
-        assert(s_heapInsert(h, (void *)item) == e);
+        e = sh_size(h) + 1;
+        assert(sh_insert(h, (void *)item) == e);
         errorHandler();
     }
-    assert(s_heapSize(h) == n);
+    assert(sh_size(h) == n);
 }
 
-static void remove_all(s_heap *h)
+static void remove_all(sheap *h)
 {
-    assert(arrayClear(&h->items) != -1);
-    assert(s_heapSize(h) == 0);
+    assert(da_clear(&h->items) != -1);
+    assert(sh_size(h) == 0);
 }
 
 void compute_1_to_n_sequences_of_operations(long n, Test type)
 {
-    s_heap h = s_createEmptyHeap();
-    assert(s_initHeap(&h, 1, &compare) == 1);
+    sheap h = sh_create_empty();
+    assert(sh_init(&h, 1, &compare) == 1);
     errorHandler();
     long j = 1;
     Item *item;
@@ -83,7 +83,7 @@ void compute_1_to_n_sequences_of_operations(long n, Test type)
             {
                 int val = rand() % 1000;
                 item = createItem(val);
-                assert(s_heapInsert(&h, item) != -1);
+                assert(sh_insert(&h, item) != -1);
             }
             end = now();
             printf("Computed %d insertion operations during %f seconds.\n", j, diff(start, end));
@@ -98,7 +98,7 @@ void compute_1_to_n_sequences_of_operations(long n, Test type)
             start = now();
             for (int i = 0; i < j; i++)
             {
-                item = s_extractMin(&h);
+                item = sh_extract_min(&h);
                 assert(item != NULL);
                 free(item);
             }
@@ -108,14 +108,14 @@ void compute_1_to_n_sequences_of_operations(long n, Test type)
         }
         break;
     }
-    s_freeHeap(&h);
+    sh_free(&h);
     errorHandler();
 }
 
 bool heap_integrity_test(int n)
 {
-    s_heap h = s_createEmptyHeap();
-    assert(s_initHeap(&h, 10, &compare) == 10);
+    sheap h = sh_create_empty();
+    assert(sh_init(&h, 10, &compare) == 10);
     errorHandler();
     Item *item;
     ticks start;
@@ -135,7 +135,7 @@ bool heap_integrity_test(int n)
             if (val < 81)
             { // 80%
                 item = createItem(val);
-                assert(s_heapInsert(&h, item) != -1);
+                assert(sh_insert(&h, item) != -1);
                 // inc counter
                 inscount++;
             }
@@ -143,14 +143,14 @@ bool heap_integrity_test(int n)
             { // 20%
                 if (h.items.used != 0)
                 {
-                    item = s_extractMin(&h);
+                    item = sh_extract_min(&h);
                     assert(item != NULL);
                     free(item);
                     // inc counter
                     delcount++;
                 }
             }
-            if (!s_testHeapIntegrity(&h))
+            if (!s_test_heap_integrity(&h))
             {
                 system("clear");
                 printf("Heap integrity broken\n");
@@ -171,7 +171,7 @@ bool heap_integrity_test(int n)
     printf("Computed a total of %ld operations and tests.\n", totalTests);
     printf("Total test running time: %fs\n", passed);
     printf("Integrity test exiting...\n");
-    s_freeHeap(&h);
+    sh_free(&h);
     errorHandler();
     return true;
 }
@@ -179,8 +179,8 @@ bool heap_integrity_test(int n)
 void test_sequence()
 {
     srand(time(NULL));
-    s_heap h = s_createEmptyHeap();
-    assert(s_initHeap(&h, 10, &compare) == 10);
+    sheap h = sh_create_empty();
+    assert(sh_init(&h, 10, &compare) == 10);
     errorHandler();
     ticks programStart = now();
     ticks start;
@@ -198,79 +198,79 @@ void test_sequence()
     Item *item8 = createItem(21);
     Item *item9 = createItem(45);
 
-    s_heapInsert(&h, item0);
-    s_heapInsert(&h, item1);
-    s_heapInsert(&h, item2);
-    s_heapInsert(&h, item3);
-    s_heapInsert(&h, item4);
-    s_heapInsert(&h, item5);
+    sh_insert(&h, item0);
+    sh_insert(&h, item1);
+    sh_insert(&h, item2);
+    sh_insert(&h, item3);
+    sh_insert(&h, item4);
+    sh_insert(&h, item5);
 
-    assert(s_testHeapIntegrity(&h));
+    assert(s_test_heap_integrity(&h));
 
     printf("print 1\n");
     heapPrintTree(&h);
 
-    assert(compare(s_peek(&h), item5) == 0);
+    assert(compare(sh_peek(&h), item5) == 0);
 
-    rm = s_extractMin(&h);
+    rm = sh_extract_min(&h);
     assert(compare(rm, item5) == 0);
     free(rm);
 
-    s_heapInsert(&h, item6);
-    s_heapInsert(&h, item7);
-    s_heapInsert(&h, item8);
-    s_heapInsert(&h, item9);
+    sh_insert(&h, item6);
+    sh_insert(&h, item7);
+    sh_insert(&h, item8);
+    sh_insert(&h, item9);
 
-    assert(s_testHeapIntegrity(&h));
+    assert(s_test_heap_integrity(&h));
 
     printf("print 2\n");
     heapPrintTree(&h);
 
-    assert(compare(s_peek(&h), item8) == 0);
-    rm = s_extractMin(&h);
+    assert(compare(sh_peek(&h), item8) == 0);
+    rm = sh_extract_min(&h);
     assert(compare(rm, item8) == 0);
     free(rm);
 
-    rm = s_extractMin(&h);
+    rm = sh_extract_min(&h);
     assert(rm != NULL);
     assert(compare(rm, item9) == 0);
     free(rm);
 
-    rm = s_extractMin(&h);
+    rm = sh_extract_min(&h);
     assert(rm != NULL);
     assert(compare(rm, item7) == 0);
     free(rm);
 
-    rm = s_extractMin(&h);
+    rm = sh_extract_min(&h);
     assert(rm != NULL);
     assert(compare(rm, item2) == 0);
     free(rm);
 
-    rm = s_extractMin(&h);
+    rm = sh_extract_min(&h);
     assert(rm != NULL);
     assert(compare(rm, item4) == 0);
     free(rm);
 
-    rm = s_extractMin(&h);
+    rm = sh_extract_min(&h);
     assert(rm != NULL);
     assert(compare(rm, item6) == 0);
     free(rm);
 
-    rm = s_extractMin(&h);
+    rm = sh_extract_min(&h);
     assert(rm != NULL);
     assert(compare(rm, item1) == 0);
     free(rm);
 
-    rm = s_extractMin(&h);
+    rm = sh_extract_min(&h);
     assert(rm != NULL);
     assert(compare(rm, item0) == 0);
     free(rm);
 
-    s_freeHeap(&h);
+    sh_free(&h);
     errorHandler();
 
-    h = s_createEmptyHeap();
-    assert(s_initHeap(&h, 1, &compare) == 1);
+    h = sh_create_empty();
+    assert(sh_init(&h, 1, &compare) == 1);
     errorHandler();
 
     item0 = createItem(97);
@@ -286,14 +286,14 @@ void test_sequence()
 
     Item *b[10] = {item0, item1, item2, item3, item4, item5, item6, item7, item8, item9};
 
-    h = s_buildMinHeap((void *)&b, 10, &compare);
+    h = sh_build_min_heap((void *)&b, 10, &compare);
 
-    printf("build min s_heap\n");
+    printf("build min sheap\n");
     heapPrintTree(&h);
 
-    assert(s_testHeapIntegrity(&h));
+    assert(s_test_heap_integrity(&h));
 
-    s_freeHeap(&h);
+    sh_free(&h);
     errorHandler();
     printf("Tests passed.\n");
 }

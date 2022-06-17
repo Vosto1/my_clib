@@ -1,5 +1,5 @@
 /**
- * @file s_heap.h
+ * @file sheap.h
  * @author Isac Hutchings (isac.hutchings@outlook.com)
  * @brief Simple heap (only the minimum of heap functionality), a generic heap built on a dynamic array.
  * @version 0.1
@@ -14,12 +14,12 @@
 #include "../dynamic_array/dynamic_array.h"
 #include "../utils/error.h"
 
-typedef void *voidp;
-typedef const void *cvoidp;
+typedef void *voidp_t;
+typedef const void *cvoidp_t;
 typedef unsigned long long size_t;
 
 /**
- * The s_heap stores pointers to the data as void* pointers.
+ * The sheap stores pointers to the data as void* pointers.
  * This way the type is generic, but all data must be allocated as
  * dynamic memory.The void* pointer is typedefed to voidp
  * to make it easier to read.
@@ -33,147 +33,104 @@ typedef unsigned long long size_t;
  * 0 when they are equal. It it up to the user to define
  * how you want to sort your items but this is the default way.
  *
- * The differences between the s_heap (this) and the heap is functionality.
- * The s_heap has less functionality than the heap,
- * s_heap has minimum main heap functionality: insert, peek, extract
+ * The differences between the sheap (this) and the heap is functionality.
+ * The sheap has less functionality than the heap,
+ * sheap has minimum main heap functionality: insert, peek, extract
  */
 
 typedef struct
 {
-    array items;
-    int (*compare)(cvoidp x, cvoidp y);
-} s_heap;
+    darray items;
+    int (*compare)(cvoidp_t x, cvoidp_t y);
+} sheap;
 
 /**
- * @brief create an empty s_heap
+ * @brief create an empty sheap
  *
- * @return s_heap initialized to zero and null
+ * @return sheap initialized to zero and null
  */
-s_heap s_createEmptyHeap();
+sheap sh_create_empty();
 /**
- * @brief initialize an s_heap
+ * @brief initialize an sheap
  *
- * @param h pointer to the s_heap to initialize
- * @param size the initial size of the s_heap
+ * @param h pointer to the sheap to initialize
+ * @param size the initial size of the sheap
  * @param compare a function that can compare two items of your data type
  * @return the size the heap is initialized to or -1 if error
  */
-size_t s_initHeap(s_heap *h, size_t size, int (*compare)(cvoidp x, cvoidp y));
+size_t sh_init(sheap *h, size_t size, int (*compare)(cvoidp_t x, cvoidp_t y));
 /**
- * @brief remove (free) all items in the s_heap and free the s_heap
+ * @brief remove (free) all items in the sheap and free the sheap
  *
- * @param h the s_heap to free
+ * @param h the sheap to free
  */
-void s_freeHeap(s_heap *h);
+void sh_free(sheap *h);
 
 /**
- * @brief get the size of the s_heap (item count)
+ * @brief get the size of the sheap (item count)
  *
- * @param h the s_heap to get the size of
+ * @param h the sheap to get the size of
  * @return item count
  */
-size_t s_heapSize(s_heap *h);
+size_t sh_size(sheap *h);
 /**
- * @brief peek the top item in the s_heap without removing it
+ * @brief peek the top item in the sheap without removing it
  *
- * @param h s_heap to peek
+ * @param h sheap to peek
  * @return pointer to the item with the smallest key
  */
-voidp s_peek(s_heap *h);
+voidp_t sh_peek(sheap *h);
 /**
- * @brief check if a s_heap is null
+ * @brief check if a sheap is null
  *
- * @param h s_heap to check
+ * @param h sheap to check
  * @return true if null
  * @return false it not null
  */
-bool sh_is_null(s_heap *h);
+bool sh_is_null(sheap *h);
 /**
- * @brief check if a s_heap is empty (not if its null)
+ * @brief check if a sheap is empty (not if its null)
  *
- * @param h s_heap to check
+ * @param h sheap to check
  * @return true if empty
  * @return false if not empty
  */
-bool sh_is_empty(s_heap *h);
+bool sh_is_empty(sheap *h);
 
 /**
- * @brief insert an item of your data type into the s_heap
+ * @brief insert an item of your data type into the sheap
  *
- * @param h s_heap to insert into
+ * @param h sheap to insert into
  * @param item a pointer to the memory of the item
  * @return the item count in the heap or -1 if error
  */
-size_t s_heapInsert(s_heap *h, voidp item);
+size_t sh_insert(sheap *h, voidp_t item);
 /**
- * @brief extracts the top item (with the smallest key) and removes it from the s_heap
+ * @brief extracts the top item (with the smallest key) and removes it from the sheap
  *
- * @param h s_heap to extract from
+ * @param h sheap to extract from
  * @return a pointer to the extracted item or null if error
  */
-voidp s_extractMin(s_heap *h);
+voidp_t sh_extract_min(sheap *h);
 /**
- * @brief build an s_heap from an array of your data type (Data)
+ * @brief build an sheap from an array of your data type (Data)
  *
  * @param unorderedList an array of Data
  * @param size the size of the array of Data
  * @param compare a function that can compare two items of your data type
  * @return the heap that was created
  */
-s_heap s_buildMinHeap(voidp *unorderedList, size_t size, int (*compare)(cvoidp x, cvoidp y));
+sheap sh_build_min_heap(voidp_t *unorderedList, size_t size, int (*compare)(cvoidp_t x, cvoidp_t y));
 
 #ifdef __TESTING__
 /**
- * @brief tests the integrity of the s_heap
+ * @brief tests the integrity of the sheap
  *
- * @param h s_heap to test
+ * @param h sheap to test
  * @return true if test passed
  * @return false if test not passed
  */
-bool s_testHeapIntegrity(s_heap *h);
+bool s_test_heap_integrity(sheap *h);
 #endif
-/**
- * @brief get the parent index of another index
- *
- * @param i index to get parent off of
- * @return parent index
- */
-static int s_parent(int i);
-/**
- * @brief get the left index of another index
- *
- * @param i index to get left off of
- * @return left index
- */
-static int s_left(int i);
-/**
- * @brief get the right index of another index
- *
- * @param i index to get right off of
- * @return right index
- */
-static int s_right(int i);
-/**
- * @brief swap the item on index i1 with the item on index i2
- *
- * @param a the array to swap items in
- * @param i1 index of item 1
- * @param i2 index of item 2
- */
-static void s_swap(array *a, int i1, int i2);
-/**
- * @brief compare parent with children, if there is a heap violation then switch parent and child then recursively continue down the s_heap
- *
- * @param h s_heap to heapify
- * @param index index to start on
- */
-static void s_minHeapifyDown(s_heap *h, int index);
-/**
- * @brief compare child with parent, if there is a heap violation then swap the child and the parent and then recursively continue up the s_heap
- *
- * @param h s_heap to heapify
- * @param index index to start on
- */
-static void s_minHeapifyUp(s_heap *h, int index);
 
 #endif

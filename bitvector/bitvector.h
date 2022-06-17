@@ -19,7 +19,7 @@
 
 typedef unsigned char byte;
 typedef unsigned long long size_t;
-typedef s_dynamicArray bitvector;
+typedef sdarray bitvector;
 
 typedef struct
 {

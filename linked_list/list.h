@@ -16,13 +16,13 @@
 #include <string.h>
 #include <stdbool.h>
 
-typedef void *voidp;
-typedef const void *cvoidp;
+typedef void *voidp_t;
+typedef const void *cvoidp_t;
 
 /*doubly-linked list*/
 struct node
 {
-    voidp data;
+    voidp_t data;
     struct node *next;
     struct node *previous;
 };
@@ -36,10 +36,10 @@ ll ll_create_empty(void);
 bool ll_is_empty(const ll list);
 
 // adds a new node first in the list
-void ll_add_first(ll *list, const voidp data);
+void ll_add_first(ll *list, const voidp_t data);
 
 // adds a new node last in the list
-void ll_add_last(ll *list, const voidp data);
+void ll_add_last(ll *list, const voidp_t data);
 
 // remove the node first in the list
 void ll_remove_first(ll *list);
@@ -48,10 +48,10 @@ void ll_remove_first(ll *list);
 void ll_remove_last(ll *list);
 
 // ta bort data ur listan (forsta forekomsten), returnera 0 om datat inte finns, annars 1
-bool ll_remove_element(ll *list, const voidp data);
+bool ll_remove_element(ll *list, const voidp_t data);
 
 // Sok efter data i listan, returnera 1 om datat finns, annars 0.
-bool ll_search(const ll list, const voidp data);
+bool ll_search(const ll list, const voidp_t data);
 
 // returnera hur manga noder som finns i listan
 int ll_node_count(const ll list);
@@ -60,9 +60,9 @@ int ll_node_count(const ll list);
 void ll_clear(ll *list);
 
 // returnera forsta datat i listan
-voidp ll_get_first(const ll list);
+voidp_t ll_get_first(const ll list);
 
 // returnera sista datat i listan
-voidp ll_get_last(const ll list);
+voidp_t ll_get_last(const ll list);
 
 #endif

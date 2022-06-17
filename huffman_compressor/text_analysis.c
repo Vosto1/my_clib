@@ -2,14 +2,14 @@
 
 #define ALPHABET 26
 
-static int compare(cvoidp e1, cvoidp e2)
+static int compare(cvoidp_t e1, cvoidp_t e2)
 {
     entry *en1 = (entry *)e1;
     entry *en2 = (entry *)e2;
     return (int)en1->k - (int)en2->k;
 }
 
-static size_t hash(cvoidp e, const hashtable *ht)
+static size_t hash(cvoidp_t e, const hashtable *ht)
 {
     entry *f = (entry *)e;
 
