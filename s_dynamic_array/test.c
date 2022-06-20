@@ -107,7 +107,7 @@ void auto_tests(int n, int mod)
             for (int j = 0; j < next_tests; j++)
             {
                 d = createItem(rand() % 1000);
-                assert(sda_insert(&a, (void *)d) != -1);
+                assert(sda_insert(&a, (void *)d) != 0);
                 errorHandler();
             }
             end = now();
@@ -145,7 +145,7 @@ void auto_tests(int n, int mod)
             for (int j = 0; j < next_tests; j++)
             {
                 int size = rand() % 100 + 1;
-                s_dynamicArray c = sda_create_empty();
+                sdarray c = sda_create_empty();
                 assert(sda_init(&c, size) == size);
                 for (int k = 0; k < size; k++)
                     sda_insert(&c, createItem(rand() % 1000));
@@ -153,7 +153,7 @@ void auto_tests(int n, int mod)
                 for (int k = 0; k < size; k++)
                     sda_insert(&a, createItem(rand() % 1000));
                 errorHandler();
-                assert(sda_merge(&a, &c) != -1);
+                assert(sda_merge(&a, &c) != 0);
                 errorHandler();
                 operations += size + size;
             }
@@ -162,7 +162,7 @@ void auto_tests(int n, int mod)
             sprintf(operation, "merge (%lld insertions)", operations);
 
             // extra tests
-            s_dynamicArray b = sda_create_empty();
+            sdarray b = sda_create_empty();
             assert(sda_init(&b, 10) == 10);
             for (int i = 0; i < rand() % 20; i++)
                 sda_insert(&b, createItem(rand() % 100));
@@ -204,7 +204,7 @@ void test_sequence()
     for (int i = 0; i < 10; i++)
     {
         itemptr = createItem(i);
-        assert(sda_insert(&a, (void *)itemptr) != -1);
+        assert(sda_insert(&a, (void *)itemptr) != 0);
         errorHandler();
         assert(a.used == (i + 1));
         itemptr = (Item *)a.array[i];
@@ -216,7 +216,7 @@ void test_sequence()
     for (int i = 0; i < 5; i++)
     {
         itemptr = createItem(i + a.used);
-        assert(sda_insert(&a, (void *)itemptr) != -1);
+        assert(sda_insert(&a, (void *)itemptr) != 0);
         errorHandler();
         itemptr = (Item *)a.array[a.used - 1];
         assert(itemptr->value == i + (a.used - 1));
@@ -227,22 +227,22 @@ void test_sequence()
     printData(&a);
 
     itemptr = createItem(1);
-    assert(sda_insert(&a, (void *)itemptr) != -1);
+    assert(sda_insert(&a, (void *)itemptr) != 0);
 
     itemptr = createItem(2);
-    assert(sda_insert(&a, (void *)itemptr) != -1);
+    assert(sda_insert(&a, (void *)itemptr) != 0);
 
     itemptr = createItem(3);
-    assert(sda_insert(&a, (void *)itemptr) != -1);
+    assert(sda_insert(&a, (void *)itemptr) != 0);
 
     itemptr = createItem(4);
-    assert(sda_insert(&a, (void *)itemptr) != -1);
+    assert(sda_insert(&a, (void *)itemptr) != 0);
 
     printData(&a);
     printf("%d %d\n\n", a.used, a.size);
 
     itemptr = createItem(5);
-    assert(sda_insert(&a, (void *)itemptr) != -1);
+    assert(sda_insert(&a, (void *)itemptr) != 0);
     for (int i = a.used; i > 5; i--)
     {
         itemptr = (Item *)sda_remove_last(&a);
@@ -273,7 +273,7 @@ void test_sequence()
 
     printData(&a);
 
-    assert(sda_clear(&a) != -1);
+    assert(sda_clear(&a) != 0);
     assert(a.used == 0);
 
     sda_free(&a);

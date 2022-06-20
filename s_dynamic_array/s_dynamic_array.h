@@ -76,16 +76,15 @@ sdarray sda_create_empty();
  * initialize a dynamic array
  *
  * @param a pointer to the array to initialize
- * @param initSize the initial size of the array
- * @param compare comparison function to compare Data
- * @return the initial size of the array or -1 if error
+ * @param init_size the initial size of the array
+ * @return the size of the new array or 0 if error
  */
-size_t sda_init(sdarray *a, size_t initSize);
+size_t sda_init(sdarray *a, size_t init_size);
 /**
  * remove (free) all items in the array
  *
  * @param a array to remove from
- * @return the amount of items that was removed or -1 if error
+ * @return the amount of items that was removed or 0 if error
  */
 size_t sda_clear(sdarray *a);
 /**
@@ -105,7 +104,7 @@ void sda_free(sdarray *a);
  *
  * @param a array to insert into
  * @param item item to insert
- * @return the amount of used indecies in the array or -1 if error
+ * @return the amount of used indecies in the array or 0 if error
  */
 size_t sda_insert(sdarray *a, voidp_t item);
 /**
@@ -128,7 +127,7 @@ voidp_t sda_remove_at(sdarray *a, int index);
  *
  * @param a array to merge to (result array)
  * @param b array to merge with (will be freed)
- * @return the new size of the array (a) or -1 if error
+ * @return the new size of the array (a) or 0 if error
  */
 size_t sda_merge(sdarray *a, sdarray *b);
 /**
@@ -145,12 +144,4 @@ bool sda_is_null(sdarray *a);
  * @return true if a.used == 0
  */
 bool sda_is_empty(sdarray *a);
-/**
- * @brief find an item in the array
- *
- * @param a array to check
- * @param item item to look for
- * @return the index of the item or -1 if it doesnt exist
- */
-static MEM sda_memory_decrease(sdarray *a);
 #endif

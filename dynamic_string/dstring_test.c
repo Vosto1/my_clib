@@ -36,5 +36,8 @@ int main(void)
 	/* Se till att strangarna blivit nollstallda */
 	assert(str1 == NULL);
 	assert(str2 == NULL);
+
+	printf("\n");
+	printf("Tests passed.\n");
 	return 0;
 }

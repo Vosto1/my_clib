@@ -1,5 +1,15 @@
 #include "s_dynamic_array.h"
 
+
+/**
+ * @brief find an item in the array
+ *
+ * @param a array to check
+ * @param item item to look for
+ * @return the index of the item or -1 if it doesnt exist
+ */
+static MEM sda_memory_decrease(sdarray *a);
+
 size_t sda_count(sdarray *a)
 {
     return a->used;
@@ -19,23 +29,23 @@ sdarray sda_create_empty()
     return a;
 }
 
-size_t sda_init(sdarray *a, size_t initSize)
+size_t sda_init(sdarray *a, size_t init_size)
 {
     a->size = 0;
     a->used = 0;
     voidp_t *temp;
-    temp = (voidp_t *)malloc(sizeof(voidp_t) * initSize);
+    temp = (voidp_t *)malloc(sizeof(voidp_t) * init_size);
     if (temp != NULL)
     {
         a->array = temp;
-        a->size = initSize;
-        return initSize;
+        a->size = init_size;
+        return init_size;
     }
     else
     {
         *a = sda_create_empty();
         errcset(EMEM_ALLOC);
-        return -1;
+        return 0;
     }
 }
 
@@ -43,13 +53,12 @@ size_t sda_clear(sdarray *a)
 {
     if (sda_is_empty(a))
     {
-        errcset(EARR_EMPTY);
-        return -1;
+        return 1; // its empty job already done
     }
     else if (sda_is_null(a))
     {
         errcset(ENULL_ARG);
-        return -1;
+        return 0;
     }
     int amount = a->used;
     voidp_t d;
@@ -67,9 +76,6 @@ void sda_destroy(sdarray *a)
     {
         free(a->array);
         *a = sda_create_empty();
-        a->size = 0;
-        a->used = 0;
-        a->array = NULL;
     }
     else
     {
@@ -86,11 +92,11 @@ void sda_free(sdarray *a)
             sda_clear(a);
             sda_destroy(a);
         }
+        else
+            sda_destroy(a);
     }
     else
-    {
         errcset(EFREE_NULLPTR);
-    }
 }
 
 size_t sda_insert(sdarray *a, voidp_t item)
@@ -98,7 +104,7 @@ size_t sda_insert(sdarray *a, voidp_t item)
     if (a == NULL || a->array == NULL)
     {
         errcset(ENULL_ARG);
-        return -1;
+        return 0;
     }
     // memory increase
     if (a->used == a->size)
@@ -114,7 +120,7 @@ size_t sda_insert(sdarray *a, voidp_t item)
         else
         {
             errcset(EMEM_IREALLOC);
-            return -1;
+            return 0;
         }
     }
     a->used += 1;
@@ -169,26 +175,12 @@ voidp_t sda_remove_at(sdarray *a, int index)
     }
 }
 
-size_t sda_convert(sdarray *a, voidp_t b[], size_t bsize)
-{
-    *a = sda_create_empty();
-    if (sda_init(a, bsize) != bsize)
-    {
-        return -1;
-    }
-    for (int i = 0; i < bsize; i++)
-    {
-        sda_insert(a, b[i]);
-    }
-    return bsize;
-}
-
 size_t sda_merge(sdarray *a, sdarray *b)
 {
     if (a == NULL || b == NULL)
     {
         errcset(ENULL_ARG);
-        return -1;
+        return 0;
     }
     for (int i = 0; i < b->used; i++)
     {

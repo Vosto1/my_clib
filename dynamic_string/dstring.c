@@ -14,7 +14,7 @@ dstring ds_init(const char* s)
          Glom inte att testa sa att allokeringen lyckades
 	   - Det �r tillatet att anv�nda inbyggda strangfunktioner (som t.ex strcpy())
 	   - Kom ihag att anvanda assert() */
-	const char* temp;
+	char* temp;
 	temp = (char*)malloc(sizeof(char) * (strlen(s) + 1));
 	assert(temp != NULL);
 	strcpy(temp, s);
@@ -139,4 +139,17 @@ void ds_delete(dstring* del)
 	free(*del);
 	*del = NULL;
 	// Postcondition: *del ar NULL och minnet ar frigjort - beh�ver inte testas med assert
+}
+
+size_t ds_copy(dstring dest, dstring src)
+{
+	if (src == NULL || strlen(src) == 0)
+	{
+		// error
+		return 0;
+	}
+	dstring tmp = (dstring)malloc(strlen(src) + 1);
+
+
+
 }
