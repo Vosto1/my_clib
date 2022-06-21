@@ -91,14 +91,20 @@ void bst_insert(bstree *tree, voidp_t element, int (*compare)(cvoidp_t, cvoidp_t
     insert(tree, NULL, element, compare);
 }
 
-static bstree *findSmallestNodeRight(bstree *bst, int (*compare)(cvoidp_t, cvoidp_t));
-static bstree *findLargestNodeLeft(bstree *bst, int (*compare)(cvoidp_t, cvoidp_t));
-static voidp_t rmWithNoChildren(bstree *bst);
-static voidp_t rmWithRightChild(bstree *bst);
-static voidp_t rmWithLeftChild(bstree *bst);
-static voidp_t rmWithTwoChildren(bstree *bst, int (*compare)(cvoidp_t, cvoidp_t));
+static bstree *find_smallest_node_right(bstree *bst, int (*compare)(cvoidp_t, cvoidp_t));
+static bstree *find_largest_node_left(bstree *bst, int (*compare)(cvoidp_t, cvoidp_t));
+static voidp_t rm_with_no_children(bstree *bst);
+static voidp_t rm_with_right_child(bstree *bst);
+static voidp_t rm_with_left_child(bstree *bst);
+static voidp_t rm_with_two_children(bstree *bst, int (*compare)(cvoidp_t, cvoidp_t));
+static voidp_t rm_element_occurance(bstree rm);
+static bstree remove_node(bstree *tree, bstree rm, int (*compare)(cvoidp_t, cvoidp_t));
+static bstree rm_node_with_no_children(bstree *bst);
+static bstree rm_node_with_right_child(bstree *bst);
+static bstree rm_node_with_left_child(bstree *bst);
+static bstree rm_node_with_two_children(bstree *bst, int (*compare)(cvoidp_t, cvoidp_t));
 
-static bstree *findSmallestNodeRight(bstree *bst, int (*compare)(cvoidp_t, cvoidp_t))
+static bstree *find_smallest_node_right(bstree *bst, int (*compare)(cvoidp_t, cvoidp_t))
 {
     bstree *tmp = &(*bst)->right;
     while (!left_isnull(*tmp))
@@ -108,7 +114,7 @@ static bstree *findSmallestNodeRight(bstree *bst, int (*compare)(cvoidp_t, cvoid
     return tmp;
 }
 
-static bstree *findLargestNodeLeft(bstree *bst, int (*compare)(cvoidp_t, cvoidp_t))
+static bstree *find_largest_node_left(bstree *bst, int (*compare)(cvoidp_t, cvoidp_t))
 {
     bstree *tmp = &(*bst)->left;
     while (!right_isnull(*tmp))
@@ -118,24 +124,8 @@ static bstree *findLargestNodeLeft(bstree *bst, int (*compare)(cvoidp_t, cvoidp_
     return tmp;
 }
 
-static voidp_t rmWithNoChildren(bstree *bst)
+static voidp_t rm_element_occurance(bstree rm)
 {
-    bstree rm = *bst;
-
-    if (rm->cont.next == NULL)
-    { // if the last of its value
-        if (rm->parent != NULL)
-            if (rm->parent->right == rm)
-                rm->parent->right = NULL;
-            else
-                rm->parent->left = NULL;
-        *bst = NULL; // for good measure
-        voidp_t e = (voidp_t)rm->cont.element;
-        free(rm);
-        rm = NULL;
-        return e;
-    }
-    else
     { // handle values that already exist in the tree
         datacontainer *tmp = rm->cont.next;
         datacontainer *prev = &rm->cont;
@@ -153,7 +143,28 @@ static voidp_t rmWithNoChildren(bstree *bst)
     }
 }
 
-static voidp_t rmWithRightChild(bstree *bst)
+static voidp_t rm_with_no_children(bstree *bst)
+{
+    bstree rm = *bst;
+
+    if (rm->cont.next == NULL)
+    { // if the last of its value
+        if (rm->parent != NULL)
+            if (rm->parent->right == rm)
+                rm->parent->right = NULL;
+            else
+                rm->parent->left = NULL;
+        *bst = NULL; // for good measure
+        voidp_t e = (voidp_t)rm->cont.element;
+        free(rm);
+        rm = NULL;
+        return e;
+    }
+    else
+        rm_element_occurance(rm);
+}
+
+static voidp_t rm_with_right_child(bstree *bst)
 {
     bstree rm = *bst;
     bstree child = rm->right;
@@ -174,24 +185,10 @@ static voidp_t rmWithRightChild(bstree *bst)
         return e;
     }
     else
-    { // handle values that already exist in the tree
-        datacontainer *tmp = rm->cont.next;
-        datacontainer *prev = &rm->cont;
-        while (tmp->next != NULL)
-        {
-            prev = tmp;
-            tmp = tmp->next;
-        }
-        datacontainer *new_rm = prev->next;
-        prev->next = NULL; // remove pointer to last object of type
-
-        voidp_t element = (voidp_t)new_rm->element;
-        free(new_rm);
-        return element;
-    }
+        rm_element_occurance(rm);
 }
 
-static voidp_t rmWithLeftChild(bstree *bst)
+static voidp_t rm_with_left_child(bstree *bst)
 {
     bstree rm = *bst;
     bstree child = rm->left;
@@ -212,24 +209,10 @@ static voidp_t rmWithLeftChild(bstree *bst)
         return e;
     }
     else
-    { // handle values that already exist in the tree
-        datacontainer *tmp = rm->cont.next;
-        datacontainer *prev = &rm->cont;
-        while (tmp->next != NULL)
-        {
-            prev = tmp;
-            tmp = tmp->next;
-        }
-        datacontainer *new_rm = prev->next;
-        prev->next = NULL; // remove pointer to last object of type
-
-        voidp_t element = (voidp_t)new_rm->element;
-        free(new_rm);
-        return element;
-    }
+        rm_element_occurance(rm);
 }
 
-static voidp_t rmWithTwoChildren(bstree *bst, int (*compare)(cvoidp_t, cvoidp_t))
+static voidp_t rm_with_two_children(bstree *bst, int (*compare)(cvoidp_t, cvoidp_t))
 {
     bstree rm = *bst;
     bstree *repl;
@@ -237,23 +220,22 @@ static voidp_t rmWithTwoChildren(bstree *bst, int (*compare)(cvoidp_t, cvoidp_t)
     int random = rand() % 2;
     if (random == 1)
     {
-        repl = findSmallestNodeRight(bst, compare);
+        repl = find_smallest_node_right(bst, compare);
     }
     else
     {
-        repl = findLargestNodeLeft(bst, compare);
+        repl = find_largest_node_left(bst, compare);
     }
 
     // remove node to replace with and replace with node to remove
     if (rm->cont.next == NULL)
     { // if the last of its value
-        voidp_t element = bst_remove(bst, (voidp_t)(*repl)->cont.element, compare);
+        bstree node = remove_node(bst, *repl, compare);
         bstree parent = rm->parent;
 
         bstree lchild = rm->left;
         bstree rchild = rm->right;
 
-        bstree node = new_node(element);
         if (lchild != NULL)
             lchild->parent = node;
         if (rchild != NULL)
@@ -275,20 +257,136 @@ static voidp_t rmWithTwoChildren(bstree *bst, int (*compare)(cvoidp_t, cvoidp_t)
         return e;
     }
     else
-    { // handle values that already exist in the tree
-        datacontainer *tmp = rm->cont.next;
-        datacontainer *prev = &rm->cont;
-        while (tmp->next != NULL)
-        {
-            prev = tmp;
-            tmp = tmp->next;
-        }
-        datacontainer *new_rm = prev->next;
-        prev->next = NULL; // remove pointer to last object of type
+        rm_element_occurance(rm);
+}
 
-        voidp_t element = (voidp_t)new_rm->element;
-        free(new_rm);
-        return element;
+static bstree rm_node_with_no_children(bstree *bst)
+{
+    bstree rm = *bst;
+
+    if (rm->parent != NULL)
+        if (rm->parent->right == rm)
+            rm->parent->right = NULL;
+        else
+            rm->parent->left = NULL;
+    *bst = NULL; // for good measure
+    return rm;
+}
+
+static bstree rm_node_with_right_child(bstree *bst)
+{
+    bstree rm = *bst;
+    bstree child = rm->right;
+    bstree parent = rm->parent;
+
+    if (rm->parent != NULL)
+        if (parent->right == rm)
+            parent->right = child;
+        else
+            parent->left = child;
+
+    child->parent = parent;
+    (*bst) = child; // for good measure
+    return rm;
+}
+
+static bstree rm_node_with_left_child(bstree *bst)
+{
+    bstree rm = *bst;
+    bstree child = rm->left;
+    bstree parent = rm->parent;
+
+    if (rm->parent != NULL)
+        if (parent->right == rm)
+            parent->right = child;
+        else
+            parent->left = child;
+
+    child->parent = parent;
+    (*bst) = child; // for good measure
+    return rm;
+}
+
+static bstree rm_node_with_two_children(bstree *bst, int (*compare)(cvoidp_t, cvoidp_t))
+{
+    bstree rm = *bst;
+    bstree *repl;
+    // get replacement node
+    int random = rand() % 2;
+    if (random == 1)
+    {
+        repl = find_smallest_node_right(bst, compare);
+    }
+    else
+    {
+        repl = find_largest_node_left(bst, compare);
+    }
+
+    // remove node to replace with and replace with node to remove
+    bstree element = remove_node(bst, (voidp_t)(*repl)->cont.element, compare);
+    bstree parent = rm->parent;
+
+    bstree lchild = rm->left;
+    bstree rchild = rm->right;
+
+    bstree node = new_node(element);
+    if (lchild != NULL)
+        lchild->parent = node;
+    if (rchild != NULL)
+        rchild->parent = node;
+
+    if (parent != NULL)
+        if (parent->right == rm)
+            parent->right = node;
+        else
+            parent->left = node;
+
+    node->left = lchild;
+    node->right = rchild;
+    node->parent = rm->parent;
+
+    (*bst) = node; // set the new node at rms' position in the tree
+    return rm;
+}
+
+static bstree remove_node(bstree *tree, bstree rm, int (*compare)(cvoidp_t, cvoidp_t))
+{
+    if (*tree != NULL)
+    {
+        if (rm == *tree) // comparing adresses
+        {
+            if (left_isnull(*tree) && right_isnull(*tree))
+            { // if the node doesnt have children
+                return rm_node_with_no_children(tree);
+            }
+            else if (left_isnull(*tree))
+            { // if the node has a right child
+                return rm_node_with_right_child(tree);
+            }
+            else if (right_isnull(*tree))
+            { // if the node has a left child
+                return rm_node_with_left_child(tree);
+            }
+            else
+            { // if the node has two children
+                return rm_node_with_two_children(tree, compare);
+            }
+        }
+        else
+        { // tree->element was not equal to element
+            if (is_bigger((*tree)->cont.element, rm->cont.element, compare))
+            {
+                return remove_node(&(*tree)->right, rm, compare);
+            }
+            else
+            {
+                return remove_node(&(*tree)->left, rm, compare);
+            }
+        }
+    }
+    else
+    { // btree doesnt contain element
+        return NULL;
     }
 }
 
@@ -300,19 +398,19 @@ voidp_t bst_remove(bstree *tree, voidp_t element, int (*compare)(cvoidp_t, cvoid
         {
             if (left_isnull(*tree) && right_isnull(*tree))
             { // if the node doesnt have children
-                return rmWithNoChildren(tree);
+                return rm_with_no_children(tree);
             }
             else if (left_isnull(*tree))
             { // if the node has a right child
-                return rmWithRightChild(tree);
+                return rm_with_right_child(tree);
             }
             else if (right_isnull(*tree))
             { // if the node has a left child
-                return rmWithLeftChild(tree);
+                return rm_with_left_child(tree);
             }
             else
             { // if the node has two children
-                return rmWithTwoChildren(tree, compare);
+                return rm_with_two_children(tree, compare);
             }
         }
         else

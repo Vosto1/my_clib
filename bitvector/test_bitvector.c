@@ -30,8 +30,9 @@ void auto_tests(int tests, int lengthRange)
 
     // stats
     ticks start, end, testStart, testEnd;
-    seconds testTime, teststotalTime;
+    seconds testTime, teststotalTime, avg = 0.0f;
     size_t boolsWrittenAndRead = 0;
+    int avglen = 0;
 
     testStart = now();
     for (int k = 0; k < tests; k++)
@@ -61,10 +62,7 @@ void auto_tests(int tests, int lengthRange)
         // read file that was written
         assert(read_binary_from_file("autotestfile.bin", &fromFile) != 0);
 
-        // debug
-        // printbinary(&bin);
-        // printbinary(&fromFile);
-
+        // check both binaries are equal
         byte b1, b2;
         for (int x = 0; x < bin.amountOfBytes; x++)
         {
@@ -73,9 +71,8 @@ void auto_tests(int tests, int lengthRange)
             assert(b1 == b2);
         }
         assert(bits2bools(&fromFile, &out) != false);
-        // debug
-        // printbitvector(&bv);
-        // printbitvector(&out);
+        
+        // check both bvs are equal (bv read from file and original)
         bool *a;
         bool *b;
         for (int x = 0; x < bv.used; x++)
@@ -92,9 +89,13 @@ void auto_tests(int tests, int lengthRange)
         testTime = diff(start, end);
         printf("bitvector test %d successful (bitvector length %d, test time: %f)\n", k, length, testTime);
         boolsWrittenAndRead += length;
+        avg += testTime;
+        avglen += length;
     }
     testEnd = now();
     teststotalTime = diff(testStart, testEnd);
+    avg /= tests; // calc average exec time
+    avglen /= tests;
     printf("%d tests passed, bools written to and read from file: %lld time: ", tests, boolsWrittenAndRead);
     char unit = 's';
     if (teststotalTime > 60.0f && teststotalTime < 3600.0f)
@@ -102,7 +103,7 @@ void auto_tests(int tests, int lengthRange)
         teststotalTime /= 60;
         unit = 'm';
     }
-    printf("%f%c\n", teststotalTime, unit);
+    printf("%f%c, with an average time of %fs (average bv length: %d)\n", teststotalTime, unit, avg, avglen);
 }
 
 void test_sequence()

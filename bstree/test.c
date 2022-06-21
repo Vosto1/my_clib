@@ -97,7 +97,7 @@ static int compare(cvoidp_t v1, cvoidp_t v2)
 }
 
 // checks if the entire tree is traversable until null
-// if the tree is not valid this function will continue forever or crash the program
+// if the tree is not valid this function will continue forever and/or crash the program
 static bool nullcheck(const bstree bt)
 {
     if (bt != NULL)
@@ -131,7 +131,7 @@ static bool integrity_compar(const bstree parent, const bstree child, bool (*com
     datacontainer *ptmp = &parent->cont;
     datacontainer *ctmp = &child->cont;
     // make sure that all elements (with the same value) of the parent is
-    // larger than all the elements (same values) of the child
+    // larger or smaller than all the elements (same values) of the child
     while (ctmp->next != NULL && ptmp->next != NULL)
     {
         p = (voidp_t)ptmp->element;
@@ -211,9 +211,7 @@ static bool bstree_test_suit(const bstree tree)
 }
 
 // auto tests
-// change comparison functions to right side large side to the opposite and test functionality (no mixing!)
-
-#define TYPES_MOD 6
+#define TYPES_MOD 6 // types + 1 to get 0-->amount_types with modulu
 #define MOD_MERGE 100
 
 void auto_tests(int n, int mod)
@@ -251,7 +249,6 @@ void auto_tests(int n, int mod)
                 insertion++;
                 break;
             case 1: // remove
-                break;
                 if (tree != NULL)
                 {
                     element = randomElement(tree);
