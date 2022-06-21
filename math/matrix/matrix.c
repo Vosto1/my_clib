@@ -225,6 +225,22 @@ size_t myhash(cvoidp_t ent, const hashtable *ht)
 	return f;
 }
 
+// Equation to calculate initial size of the hashtable:
+// https://www.wolframalpha.com/input?i=exponential+fit+%7B3%2C4%7D%2C+%7B4%2C17%7D%2C+%7B5%2C56%7D%2C+%7B6%2C157%7D%2C+%7B7%2C284%7D%2C+%7B8%2C961%7D%2C+%7B9%2C2224%7D%2C+%7B10%2C5021%7D%2C+%7B11%2C11144%7D%2C+%7B12%2C24433%7D%2C+%7B13%2C53080%7D%2C+%7B14%2C114493%7D
+
+// Eulers number; e constant
+#define E 2.718281828459045091
+
+//#define EXP_CONSTANT 0.773143ss
+#define EXP_CONSTANT 0.7777777
+#define COEFFICIENT_CONSTANT 2.28164
+
+static size_t size(size_t n)
+{
+	long double exponent = (long double)n * EXP_CONSTANT;
+	return (size_t)(COEFFICIENT_CONSTANT * powl(E, exponent));
+}
+
 ErrorCode1 getDeterminant(Matrix *mtrx, Data *pdet)
 {
 	if (mtrx == NULL)
@@ -234,9 +250,14 @@ ErrorCode1 getDeterminant(Matrix *mtrx, Data *pdet)
 
 	RST; // reset counter
 	hashtable ht;
-	size_t htablesize = (*mtrx)->columns * (*mtrx)->rows;
+	// calculate initial hashtable size to optimize memory allocation
+	size_t n = (size_t)(*mtrx)->rows; // (cols == rows)
+	size_t htablesize = size(n);
+	if (htablesize % 2 == 0)
+		htablesize += 1;
 	assert(ht_init(&ht, htablesize, &myhash, &is_equal) == htablesize);
 	*pdet = determinantDivideAndConquer(mtrx, &ht);
+	printf("initial hashtable size: %lld\n", htablesize);
 	for (int i = 0; i < ht_size(&ht); i++)
 		if (ht.entries[i] != UNUSED)
 		{
@@ -260,9 +281,6 @@ static Data determinantDivideAndConquer(Matrix *mtrx, hashtable *ht)
 	if ((res = (entry *)ht_lookup(ht, e)) != NULL)
 	{
 		free(e);
-		/* printMatrix(*mtrx);
-		printMatrix(res->m);
-		printf("%f\n", res->determinant); */
 		return res->determinant;
 	}
 	free(e);
@@ -321,7 +339,7 @@ static Data determinantDivideAndConquer(Matrix *mtrx, hashtable *ht)
 			e->determinant = ret;
 			e->m = smallerMatrix;
 			ht_insert(ht, e);
-			// freeMatrix(&smallerMatrix); //It works!!! The error was the INDEX() macro. It was still using the macro used for tests: COL.
+			// freeMatrix(&smallerMatrix); // The function is not destructive to the original matrix. Only smallerMatrix is freed i.e. the matrices made in this function.
 			result += factor * ret;
 		}
 		else
@@ -335,7 +353,7 @@ static Data determinantDivideAndConquer(Matrix *mtrx, hashtable *ht)
 			e->determinant = ret;
 			e->m = smallerMatrix;
 			ht_insert(ht, e);
-			// freeMatrix(&smallerMatrix); //It works!!! The function is not destructive to the original matrix. Only smallerMatrix is freed i.e. the matrices made in this function.
+			// freeMatrix(&smallerMatrix); // The function is not destructive to the original matrix. Only smallerMatrix is freed i.e. the matrices made in this function.
 			result += -1 * factor * ret; // odd columns are negative. See Chapter "Determinants" in "Grundl�ggande linj�r algebra" by Hillevi Gavel. (Why even or odd: page 101).
 		}
 	}
@@ -619,8 +637,8 @@ Data determinantDivideAndConquerSlow(Matrix *mtrx)
 		int rows = sqrt(nrOfNodes); // square matrix so: rows == columns ---> rows * rows || columns * columns || rows * columns = size: sqrt(size) = columns = rows.
 		int columns = rows;
 		Matrix smallerMatrix = NULL;
-		errorHandler(makeMatrix(rows, columns, &smallerMatrix));
-		errorHandler(initializeMatrixFromList(smallerMatrix, list)); // list made with the double for loop
+		errorHandler1(makeMatrix(rows, columns, &smallerMatrix));
+		errorHandler1(initializeMatrixFromList(smallerMatrix, list)); // list made with the double for loop
 		clearList(&list);
 		// printMatrix(smallerMatrix); // debug print
 		// Recursive call to do the same with the new smaller matrix. Divide and Conquer.

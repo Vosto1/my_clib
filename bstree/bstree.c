@@ -1,11 +1,6 @@
 #include "bstree.h"
 
-static void print(voidp_t e)
-{
-    char *c = (char *)e;
-    printf("%c", *c);
-}
-
+// create a new bstree node
 static bstree new_node(cvoidp_t element)
 {
     bstree n = (bstree)malloc(sizeof(struct treenode));
@@ -24,6 +19,14 @@ static bstree new_node(cvoidp_t element)
         return NULL;
     }
 }
+
+// compare functions
+
+static bool is_smaller(cvoidp_t element1, cvoidp_t element2, int (*compare)(cvoidp_t, cvoidp_t));
+static bool is_bigger(cvoidp_t element1, cvoidp_t element2, int (*compare)(cvoidp_t, cvoidp_t));
+static bool is_equal(cvoidp_t element1, cvoidp_t element2, int (*compare)(cvoidp_t, cvoidp_t));
+static bool left_isnull(const bstree bst);
+static bool right_isnull(const bstree bst);
 
 static bool is_smaller(cvoidp_t element1, cvoidp_t element2, int (*compare)(cvoidp_t, cvoidp_t))
 {
@@ -91,8 +94,10 @@ void bst_insert(bstree *tree, voidp_t element, int (*compare)(cvoidp_t, cvoidp_t
     insert(tree, NULL, element, compare);
 }
 
-static bstree *find_smallest_node_right(bstree *bst, int (*compare)(cvoidp_t, cvoidp_t));
-static bstree *find_largest_node_left(bstree *bst, int (*compare)(cvoidp_t, cvoidp_t));
+// remove element helper functions
+
+static bstree *find_smallest_right(bstree *bst, int (*compare)(cvoidp_t, cvoidp_t));
+static bstree *find_largest_left(bstree *bst, int (*compare)(cvoidp_t, cvoidp_t));
 static voidp_t rm_with_no_children(bstree *bst);
 static voidp_t rm_with_right_child(bstree *bst);
 static voidp_t rm_with_left_child(bstree *bst);
@@ -104,7 +109,7 @@ static bstree rm_node_with_right_child(bstree *bst);
 static bstree rm_node_with_left_child(bstree *bst);
 static bstree rm_node_with_two_children(bstree *bst, int (*compare)(cvoidp_t, cvoidp_t));
 
-static bstree *find_smallest_node_right(bstree *bst, int (*compare)(cvoidp_t, cvoidp_t))
+static bstree *find_smallest_right(bstree *bst, int (*compare)(cvoidp_t, cvoidp_t))
 {
     bstree *tmp = &(*bst)->right;
     while (!left_isnull(*tmp))
@@ -114,7 +119,7 @@ static bstree *find_smallest_node_right(bstree *bst, int (*compare)(cvoidp_t, cv
     return tmp;
 }
 
-static bstree *find_largest_node_left(bstree *bst, int (*compare)(cvoidp_t, cvoidp_t))
+static bstree *find_largest_left(bstree *bst, int (*compare)(cvoidp_t, cvoidp_t))
 {
     bstree *tmp = &(*bst)->left;
     while (!right_isnull(*tmp))
@@ -126,21 +131,20 @@ static bstree *find_largest_node_left(bstree *bst, int (*compare)(cvoidp_t, cvoi
 
 static voidp_t rm_element_occurance(bstree rm)
 {
-    { // handle values that already exist in the tree
-        datacontainer *tmp = rm->cont.next;
-        datacontainer *prev = &rm->cont;
-        while (tmp->next != NULL)
-        {
-            prev = tmp;
-            tmp = tmp->next;
-        }
-        datacontainer *new_rm = prev->next;
-        prev->next = NULL; // remove pointer to last object of type
-
-        voidp_t element = (voidp_t)new_rm->element;
-        free(new_rm);
-        return element;
+    // handle values that already exist in the tree
+    datacontainer *tmp = rm->cont.next;
+    datacontainer *prev = &rm->cont;
+    while (tmp->next != NULL)
+    {
+        prev = tmp;
+        tmp = tmp->next;
     }
+    datacontainer *new_rm = prev->next;
+    prev->next = NULL; // remove pointer to last object of type
+
+    voidp_t element = (voidp_t)new_rm->element;
+    free(new_rm);
+    return element;
 }
 
 static voidp_t rm_with_no_children(bstree *bst)
@@ -220,14 +224,14 @@ static voidp_t rm_with_two_children(bstree *bst, int (*compare)(cvoidp_t, cvoidp
     int random = rand() % 2;
     if (random == 1)
     {
-        repl = find_smallest_node_right(bst, compare);
+        repl = find_smallest_right(bst, compare);
     }
     else
     {
-        repl = find_largest_node_left(bst, compare);
+        repl = find_largest_left(bst, compare);
     }
 
-    // remove node to replace with and replace with node to remove
+    // remove node to replace with, and then replace with node to remove with that
     if (rm->cont.next == NULL)
     { // if the last of its value
         bstree node = remove_node(bst, *repl, compare);
@@ -315,14 +319,14 @@ static bstree rm_node_with_two_children(bstree *bst, int (*compare)(cvoidp_t, cv
     int random = rand() % 2;
     if (random == 1)
     {
-        repl = find_smallest_node_right(bst, compare);
+        repl = find_smallest_right(bst, compare);
     }
     else
     {
-        repl = find_largest_node_left(bst, compare);
+        repl = find_largest_left(bst, compare);
     }
 
-    // remove node to replace with and replace with node to remove
+    // remove node to replace with, and then replace with node to remove with that
     bstree element = remove_node(bst, (voidp_t)(*repl)->cont.element, compare);
     bstree parent = rm->parent;
 
@@ -353,7 +357,7 @@ static bstree remove_node(bstree *tree, bstree rm, int (*compare)(cvoidp_t, cvoi
 {
     if (*tree != NULL)
     {
-        if (rm == *tree) // comparing adresses
+        if (rm == *tree) // comparing adresses, because we want to remove a node, not an element.
         {
             if (left_isnull(*tree) && right_isnull(*tree))
             { // if the node doesnt have children
@@ -373,8 +377,8 @@ static bstree remove_node(bstree *tree, bstree rm, int (*compare)(cvoidp_t, cvoi
             }
         }
         else
-        { // tree->element was not equal to element
-            if (is_bigger((*tree)->cont.element, rm->cont.element, compare))
+        { // was not equal
+            if (is_bigger((*tree)->cont.element, rm->cont.element, compare)) // find the node by comparing size of elements
             {
                 return remove_node(&(*tree)->right, rm, compare);
             }
@@ -459,6 +463,7 @@ static void free_container_structs(datacontainer *cont)
     {
         free_container_structs(cont->next);
         free(cont);
+        cont = NULL;
     }
 }
 
@@ -471,7 +476,7 @@ void bst_merge(bstree *bst1, bstree *bst2, int (*compare)(cvoidp_t, cvoidp_t))
     insertFromSortedArray(bst1, array, 0, size - 1, compare);
     // free array
     free(array);
-    // free only nodes of bst2
+    // free nodes only of bst2
     bst_destroy(bst2);
 }
 
@@ -658,33 +663,6 @@ int bst_mindepth(const bstree tree)
     if (tree != NULL)
         return (int)ceil(log((double)bst_node_count(tree) + 1.0f) / log(2.0f));
     return 0;
-}
-
-static void pio(const bstree bst)
-{
-    if (bst == NULL)
-        return;
-    pio(bst->left);
-    datacontainer *tmp = &bst->cont;
-    while (tmp != NULL)
-    {
-        char *ch = (char *)tmp->element;
-        printf("['%c';%d] ", *ch, (int)*ch);
-        tmp = tmp->next;
-    }
-    pio(bst->right);
-}
-
-static void print_inorder(const char *description, const bstree bst)
-{
-    if (bst != NULL)
-    {
-        if (description != NULL)
-            printf("%s ", description);
-        printf("(format: [char;(int)char])\n");
-        pio(bst);
-        printf("\n\n");
-    }
 }
 
 #define INIT_SIZE 10
