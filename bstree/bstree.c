@@ -447,13 +447,13 @@ static size_t get_array(const bstree tree, void (*order)(const bstree, cvoidp_t 
         else
         {
             errcset(EBTREE_WRITEARR_MEMALLOC);
-            return -1;
+            return 0;
         }
     }
     else
     {
         errcset(EBTREE_WRITEARR_EMPTY);
-        return -1;
+        return 0;
     }
 }
 
@@ -602,7 +602,7 @@ void bst_balance(bstree *tree, int (*compare)(cvoidp_t, cvoidp_t))
         {
             bstree new = bst_create_empty();
             sdarray arr2 = sda_create_empty();
-            if (sda_init(&arr2, INIT_SIZE) != -1)
+            if (sda_init(&arr2, INIT_SIZE) != 0)
             {
                 // get an array with unique elements
                 voidp_t tmp = arr1[0];

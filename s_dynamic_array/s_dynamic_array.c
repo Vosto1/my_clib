@@ -1,13 +1,5 @@
 #include "s_dynamic_array.h"
 
-
-/**
- * @brief find an item in the array
- *
- * @param a array to check
- * @param item item to look for
- * @return the index of the item or -1 if it doesnt exist
- */
 static MEM sda_memory_decrease(sdarray *a);
 
 size_t sda_count(sdarray *a)

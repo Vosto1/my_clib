@@ -51,7 +51,7 @@ priorityqueue pq_create_empty();
  * @param pq pointer to the priority queue to initialize
  * @param size the initial size of the priority queue
  * @param compare a function that can compare two items of your data type
- * @return the size the priority queue is initialized to or -1 if error
+ * @return the size the priority queue is initialized to or 0 if error
  */
 size_t pq_init(priorityqueue *pq, size_t size, int (*compare)(cvoidp_t x, cvoidp_t y));
 /**
@@ -73,7 +73,7 @@ size_t pq_count(priorityqueue *pq);
  *
  * @param pq the priority queue to enqueue the item
  * @param item the item to enqueue
- * @return  the item count in the priority queue or -1 if error
+ * @return  the item count in the priority queue or 0 if error
  */
 size_t pq_enqueue(priorityqueue *pq, voidp_t item);
 /**

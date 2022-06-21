@@ -61,7 +61,7 @@ static void insert_n(sdarray *a, int n)
         item = createItem(rand() % 1000);
         e = a->used + 1;
         assert(sda_insert(a, (void *)item) == e);
-        errorHandler();
+        error_handler();
     }
     assert(a->used == n);
 }
@@ -80,7 +80,7 @@ void auto_tests(int n, int mod)
     assert(a.used == 0);
 
     assert(sda_init(&a, 10) == 10);
-    errorHandler();
+    error_handler();
     assert(a.array != NULL);
     assert(a.size == 10);
     assert(a.used == 0);
@@ -108,7 +108,7 @@ void auto_tests(int n, int mod)
             {
                 d = createItem(rand() % 1000);
                 assert(sda_insert(&a, (void *)d) != 0);
-                errorHandler();
+                error_handler();
             }
             end = now();
             remove_all(&a);
@@ -122,7 +122,7 @@ void auto_tests(int n, int mod)
                 d = (Item *)sda_remove_at(&a, rand() % a.used);
                 assert(d != NULL);
                 free(d);
-                errorHandler();
+                error_handler();
             }
             end = now();
             break;
@@ -135,7 +135,7 @@ void auto_tests(int n, int mod)
                 d = (Item *)sda_remove_last(&a);
                 assert(d != NULL);
                 free(d);
-                errorHandler();
+                error_handler();
             }
             end = now();
             break;
@@ -149,12 +149,12 @@ void auto_tests(int n, int mod)
                 assert(sda_init(&c, size) == size);
                 for (int k = 0; k < size; k++)
                     sda_insert(&c, createItem(rand() % 1000));
-                errorHandler();
+                error_handler();
                 for (int k = 0; k < size; k++)
                     sda_insert(&a, createItem(rand() % 1000));
-                errorHandler();
+                error_handler();
                 assert(sda_merge(&a, &c) != 0);
-                errorHandler();
+                error_handler();
                 operations += size + size;
             }
             end = now();
@@ -166,11 +166,11 @@ void auto_tests(int n, int mod)
             assert(sda_init(&b, 10) == 10);
             for (int i = 0; i < rand() % 20; i++)
                 sda_insert(&b, createItem(rand() % 100));
-            errorHandler();
+            error_handler();
             sda_clear(&b);
-            errorHandler();
+            error_handler();
             sda_destroy(&b);
-            errorHandler();
+            error_handler();
             // clear followed by destroy is the same as free
             break;
         }
@@ -196,7 +196,7 @@ void test_sequence()
     assert(a.used == 0);
 
     assert(sda_init(&a, 10) == 10);
-    errorHandler();
+    error_handler();
     assert(a.array != NULL);
     assert(a.size == 10);
     assert(a.used == 0);
@@ -205,7 +205,7 @@ void test_sequence()
     {
         itemptr = createItem(i);
         assert(sda_insert(&a, (void *)itemptr) != 0);
-        errorHandler();
+        error_handler();
         assert(a.used == (i + 1));
         itemptr = (Item *)a.array[i];
         assert(itemptr->value == i);
@@ -217,7 +217,7 @@ void test_sequence()
     {
         itemptr = createItem(i + a.used);
         assert(sda_insert(&a, (void *)itemptr) != 0);
-        errorHandler();
+        error_handler();
         itemptr = (Item *)a.array[a.used - 1];
         assert(itemptr->value == i + (a.used - 1));
     }

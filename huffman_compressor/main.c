@@ -19,7 +19,7 @@ void print(hashtable *ht)
 int main(void)
 {
     char *d;
-    size_t str = readTextFile("textAnalysis.txt", &d);
+    size_t str = read_text_file("textAnalysis.txt", &d);
     for (int i = 0; i < str; i++)
     {
         printf("%c", d[i]);
@@ -32,7 +32,7 @@ int main(void)
         c = (char)(i + b);
         a[i] = c;
     } */
-    hashtable ht = letterOccurances(d, str);
+    hashtable ht = letter_occurances(d, str);
     print(&ht);
     return 0;
 }

@@ -16,7 +16,7 @@ size_t hashfn(cvoidp_t e, const hashtable* ht)
     return index;
 }
 
-entry* createEntry(key k, value v)
+entry* _create_entry(key k, value v)
 {
     entry* e = (entry*)malloc(sizeof(entry));
     e->k = k;
@@ -35,20 +35,6 @@ entry* randomElement(hashtable* ht)
     }
     return UNUSED;
 }
-
-// better random concept but not working (too lazy to fix rn)
-/* entry* randomElement(hashtable* ht) {
-    size_t size = ht_size(ht);
-    size_t startIndex = rand() % ht_size(ht);
-    size_t i = startIndex;
-    size_t index = 0;
-    for (; i < size + startIndex; i++) {
-        index = i % size; // "wrap around"
-        if (ht->entries[index] != UNUSED)
-            return (entry*)ht->entries[i];
-    }
-    return UNUSED;
-} */
 
 // debug
 void print(hashtable* ht)
@@ -99,12 +85,12 @@ unsigned int auto_tests(int tests, int mod)
             if (random < 80)
             { // insert
                 //printf("insertion, element count: %d\n", ht_count(&ht));
-                element = createEntry((char)val, val);
+                element = _create_entry((char)val, val);
                 existsht = ht_lookup(&ht, element) != NULL; // check if element already exists in ht
                 count = ht_count(&ht);
                 // debug
                 //print(&ht);
-                assert(ht_insert(&ht, element) != -1);
+                assert(ht_insert(&ht, element) != false);
                 // debug
                 //print(&ht);
                 if (!existsht) // if it already existed the element was "updated" (its not visible since its updated to the same values)
@@ -188,10 +174,10 @@ void test_sequence()
     entry* del;
     hashtable ht = ht_create_empty();
     ht_init(&ht, 3, &hashfn, &compare);
-    entry* e1 = createEntry('c', 1);
-    entry* e2 = createEntry('/', 3);
-    entry* e3 = createEntry('#', 7);
-    entry* e4 = createEntry('<', 5);
+    entry* e1 = _create_entry('c', 1);
+    entry* e2 = _create_entry('/', 3);
+    entry* e3 = _create_entry('#', 7);
+    entry* e4 = _create_entry('<', 5);
 
     assert(ht_delete(&ht, e1) == UNUSED);
     assert(ht_lookup(&ht, e1) == UNUSED);
@@ -203,7 +189,7 @@ void test_sequence()
     del = ht_delete(&ht, e2);
     assert(ht_size(&ht) == 3);
     assert(del != NULL);
-    //free(del);
+
     assert(ht_lookup(&ht, e2) == NULL);
     print(&ht);
     assert(ht_lookup(&ht, e1) != UNUSED && ht_lookup(&ht, e3) != UNUSED);

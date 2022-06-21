@@ -28,20 +28,19 @@ typedef struct
     byte *bytes;
 } binary;
 
-size_t bitCount(bitvector *bv);
-bitvector bvcreateEmpty();
-size_t bvinit(bitvector *bv);
-size_t bvadd(bitvector *bv, bool value);
-size_t bvmerge(bitvector *bv, bitvector *unionWith);
-bool bvremoveLast(bitvector *bv);
-size_t bvclear(bitvector *bv);
-bool *bvat(bitvector *bv, int index);
+size_t bit_count(bitvector *bv);
+bitvector bv_create_empty();
+size_t bv_init(bitvector *bv);
+size_t bv_add(bitvector *bv, bool value);
+size_t bv_merge(bitvector *bv, bitvector *unionWith);
+bool bv_remove_last(bitvector *bv);
+bool *bv_at(bitvector *bv, int index);
+size_t bv_clear(bitvector *bv);
 unsigned int bools2bits(bitvector *bv, binary *out);
-size_t bits2bools(binary *b, bitvector *out);
-size_t writeBinaryToFile(binary *b, char *file);
-size_t readBinaryFromFile(char *file, binary *b);
+bool bits2bools(binary *b, bitvector *out);
+size_t write_binary_to_file(binary *b, char *file);
+size_t read_binary_from_file(char *file, binary *b);
 
-static unsigned int sizeBits(unsigned int bytes);
 void printbitvector(bitvector *bv);
 void printbinary(binary *bin);
 

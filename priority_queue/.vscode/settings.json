@@ -2,6 +2,7 @@
     "files.associations": {
         "dynamic_array.h": "c",
         "heap.h": "c",
-        "s_heap.h": "c"
+        "s_heap.h": "c",
+        "test_priority_queue.h": "c"
     }
 }

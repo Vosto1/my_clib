@@ -346,7 +346,7 @@ void auto_tests(int n, int mod)
             }
         }
         end = now();
-        errorHandler();
+        error_handler();
         if (tree != NULL)
             bst_free(&tree);
         tree = bst_create_empty();

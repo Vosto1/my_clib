@@ -1,9 +1,12 @@
 #include "test_priority_queue.h"
 
+#define PASSED 0
+#define NOT_PASSED -1
+
 int main(void)
 {
     if (integrity_check(300))
-        return 0;
+        return PASSED;
     else
-        return -1;
+        return NOT_PASSED;
 }

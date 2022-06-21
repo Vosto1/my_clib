@@ -37,14 +37,11 @@ void ht_destroy(hashtable *ht);
 void ht_free(hashtable *ht);
 size_t ht_trim(hashtable *ht);
 
-size_t ht_insert(hashtable *ht, voidp_t element);
+bool ht_insert(hashtable *ht, voidp_t element);
 voidp_t ht_delete(hashtable *ht, cvoidp_t element);
 voidp_t ht_lookup(const hashtable *ht, cvoidp_t element);
 
 size_t ht_size(const hashtable *ht);
 size_t ht_count(const hashtable *ht);
-
-static size_t indexof(hashtable *ht, cvoidp_t valueToSearchFor);
-static size_t linear_probe(hashtable *ht, voidp_t element);
 
 #endif

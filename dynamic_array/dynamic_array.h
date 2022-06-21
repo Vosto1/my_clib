@@ -75,11 +75,17 @@ darray da_create_empty();
  * initialize a dynamic array
  *
  * @param a pointer to the array to initialize
- * @param initSize the initial size of the array
+ * @param init_size the initial size of the array
  * @param compare comparison function to compare items
- * @return the initial size of the array or -1 if error
+ * @return the initial size of the array or 0 if error
  */
-size_t da_init(darray *a, size_t initSize, int (*compare)(cvoidp_t x, cvoidp_t y));
+size_t da_init(darray *a, size_t init_size, int (*compare)(cvoidp_t x, cvoidp_t y));
+/**
+ * @brief free the array but not the items
+ * 
+ * @param a array to free
+ */
+void da_destroy(darray *a);
 /**
  * remove (free) all items in array and then free allocated memory for the dynamic array
  *
@@ -87,11 +93,18 @@ size_t da_init(darray *a, size_t initSize, int (*compare)(cvoidp_t x, cvoidp_t y
  */
 void da_free(darray *a);
 /**
+ * remove (free) all items in the array
+ *
+ * @param a array to remove from
+ * @return the amount of items that was removed or 0 if error
+ */
+size_t da_clear(darray *a);
+/**
  * insert into the dynamic array
  *
  * @param a array to insert into
  * @param item item to insert
- * @return the amount of used indecies in the array or -1 if error
+ * @return the amount of used indecies in the array or 0 if error
  */
 size_t da_insert(darray *a, voidp_t item);
 /**
@@ -118,30 +131,13 @@ voidp_t da_remove_item(darray *a, voidp_t item);
  */
 voidp_t da_remove_at(darray *a, int index);
 /**
- * convert a voidp_t[] array to a dynamic array
- *
- * @param a out array
- * @param b voidp_t array to convert to dynamic array
- * @param bsize size of the array b
- * @param compare compare function to compare voidp_t needed for initialization of a dynamic array
- * @return the size of the result array or -1 if error
- */
-size_t da_convert(darray *a, voidp_t b[], size_t bsize, int (*compare)(cvoidp_t x, cvoidp_t y));
-/**
  * merge two dynamic arrays, b will be put on the end of a and b will be freed
  *
  * @param a array to merge to (result array)
  * @param b array to merge with (will be freed)
- * @return the new size of the array (a) or -1 if error
+ * @return the new size of the array (a) or 0 if error
  */
 size_t da_merge(darray *a, darray *b); // add array b on the end of array a O(n)
-/**
- * remove (free) all items in the array
- *
- * @param a array to remove from
- * @return the amount of items that was removed or -1 if error
- */
-size_t da_clear(darray *a);
 /**
  * check if the dynamic array is uninitialized
  *

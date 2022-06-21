@@ -62,7 +62,7 @@ typedef struct
  *
  * @return heap initialized to zero and null
  */
-heap createEmptyHeap();
+heap h_create_empty();
 /**
  * @brief initialize a heap
  *
@@ -71,9 +71,9 @@ heap createEmptyHeap();
  * @param compare a function that can compare two items of your data type
  * @param setKey a function that can set a key of an item of your data type
  * @param minKey a function that based on a base element of your data type can create a smaller key
- * @return the size the heap is initialized to or -1 if error
+ * @return the size the heap is initialized to or 0 if error
  */
-size_t initHeap(heap *h,
+size_t h_init(heap *h,
                 size_t size,
                 int (*compare)(cvoidp_t x, cvoidp_t y),
                 voidp_t (*setKey)(voidp_t x, voidp_t key),
@@ -83,7 +83,7 @@ size_t initHeap(heap *h,
  *
  * @param h the heap to free
  */
-void freeHeap(heap *h);
+void h_free(heap *h);
 
 /**
  * @brief get the size of the heap (item count)
@@ -91,14 +91,14 @@ void freeHeap(heap *h);
  * @param h the heap to get the size of
  * @return item count
  */
-size_t heapSize(heap *h);
+size_t h_size(heap *h);
 /**
  * @brief peek the top item in the heap without removing it
  *
  * @param h heap to peek
  * @return pointer to the item with the smallest key
  */
-voidp_t _min(heap *h);
+voidp_t h_min(heap *h);
 /**
  * @brief check if a heap is null
  *
@@ -121,9 +121,9 @@ bool h_is_empty(heap *h);
  *
  * @param h heap to insert into
  * @param item a pointer to the memory of the item
- * @return the item count in the heap or -1 if error
+ * @return the item count in the heap or a value larger than the size of the heap is error
  */
-size_t heapInsert(heap *h, voidp_t item);
+size_t h_insert(heap *h, voidp_t item);
 /**
  * @brief removes the specified item from the heap
  *
@@ -131,23 +131,23 @@ size_t heapInsert(heap *h, voidp_t item);
  * @param item a pointer to the item which should be removed
  * @return a pointer to the item removed from the heap or null if error
  */
-voidp_t heapRemove(heap *h, voidp_t item);
+voidp_t h_remove(heap *h, voidp_t item);
 /**
  * @brief extracts the top item (with the smallest key) and removes it from the heap
  *
  * @param h heap to extract from
  * @return a pointer to the extracted item or null if error
  */
-voidp_t extractMin(heap *h);
+voidp_t h_extract_min(heap *h);
 /**
  * @brief decreases a key of the specified item to the specified key. If the item doesnt exist or th key is equal or larger than the current key an error is set.
  *
  * @param h heap the item exists in
  * @param item the item to decrease key on
  * @param newKey the new key the item should have
- * @return the new index of the item or -1 if error
+ * @return the new index of the item or a value larger than the size of the heap is error
  */
-int decreaseKey(heap *h, voidp_t item, voidp_t newKey);
+size_t h_decrease_key(heap *h, voidp_t item, voidp_t newKey);
 /**
  * @brief build a heap from an array
  *
@@ -158,12 +158,11 @@ int decreaseKey(heap *h, voidp_t item, voidp_t newKey);
  * @param minKey a function that based on a base element of your data type can create a smaller key
  * @return the heap that was created
  */
-heap buildMinHeap(voidp_t *unorderedList,
+heap h_build_min_heap(voidp_t *unorderedList,
                   size_t size,
                   int (*compare)(cvoidp_t x, cvoidp_t y),
                   voidp_t (*setKey)(voidp_t x, voidp_t key),
                   void (*minKey)(voidp_t base, voidp_t *out));
-
 #ifdef __TESTING__
 /**
  * @brief tests the integrity of the heap
@@ -172,50 +171,7 @@ heap buildMinHeap(voidp_t *unorderedList,
  * @return true if test passed
  * @return false if test not passed
  */
-bool testHeapIntegrity(heap *h);
+bool test_heap_integrity(heap *h);
 #endif
-/**
- * @brief get the parent index of another index
- *
- * @param i index to get parent off of
- * @return parent index
- */
-static int parent(int i);
-/**
- * @brief get the left index of another index
- *
- * @param i index to get left off of
- * @return left index
- */
-static int left(int i);
-/**
- * @brief get the right index of another index
- *
- * @param i index to get right off of
- * @return right index
- */
-static int right(int i);
-/**
- * @brief swap the item on index i1 with the item on index i2
- *
- * @param a the array to swap items in
- * @param i1 index of item 1
- * @param i2 index of item 2
- */
-static void swap(darray *a, int i1, int i2);
-/**
- * @brief compare parent with children, if there is a heap violation then switch parent and child then recursively continue down the heap
- *
- * @param h heap to heapify
- * @param index index to start on
- */
-static int minHeapifyDown(heap *h, int index);
-/**
- * @brief compare child with parent, if there is a heap violation then swap the child and the parent and then recursively continue up the heap
- *
- * @param h heap to heapify
- * @param index index to start on
- */
-static int minHeapifyUp(heap *h, int index);
 
 #endif

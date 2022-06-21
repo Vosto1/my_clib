@@ -38,14 +38,14 @@ static void swap(darray *a, int i1, int i2);
  * @param h sheap to heapify
  * @param index index to start on
  */
-static void minHeapifyDown(sheap *h, int index);
+static void min_heapify_down(sheap *h, int index);
 /**
  * @brief compare child with parent, if there is a heap violation then swap the child and the parent and then recursively continue up the sheap
  *
  * @param h sheap to heapify
  * @param index index to start on
  */
-static void minHeapifyUp(sheap *h, int index);
+static void min_heapify_up(sheap *h, int index);
 
 sheap sh_create_empty()
 {
@@ -97,6 +97,8 @@ bool sh_is_empty(sheap *h)
     return da_is_empty(&h->items);
 }
 
+#define FLAG_ERROR 1000
+
 /*
  * Add to the heap.
  */
@@ -105,9 +107,9 @@ size_t sh_insert(sheap *h, voidp_t item)
     da_insert(&(h->items), item);
     if (errc != SUCCESS)
     {
-        return -1;
+        return sh_size(h) + FLAG_ERROR;
     }
-    s_minHeapifyUp(h, sh_size(h) - 1);
+    min_heapify_up(h, sh_size(h) - 1);
     return h->items.used;
 }
 
@@ -133,7 +135,7 @@ voidp_t sh_extract_min(sheap *h)
     if (sh_size(h) != 0)
     { // if the heap is not empty after removal
         h->items.array[0] = tempLast;
-        s_minHeapifyDown(h, 0);
+        min_heapify_down(h, 0);
     }
     return tempMin;
 }
@@ -150,7 +152,7 @@ sheap sh_build_min_heap(voidp_t *unorderedList, size_t size, int (*compare)(cvoi
     for (int i = 0; i < size; i++)
         da_insert(&h.items, unorderedList[i]);
     for (int j = size / 2; j >= 0; j--)
-        s_minHeapifyDown(&h, j);
+        min_heapify_down(&h, j);
     return h;
 }
 
@@ -159,8 +161,8 @@ bool s_test_heap_integrity(sheap *h)
 {
     for (int i = 0; i < sh_size(h); i++)
     {
-        int l = s_left(i);
-        int r = s_right(i);
+        int l = left(i);
+        int r = right(i);
         voidp_t i1 = h->items.array[i];
         if (l < sh_size(h))
         {
@@ -187,25 +189,25 @@ bool s_test_heap_integrity(sheap *h)
  * https://stackoverflow.com/questions/22900388/why-in-a-heap-implemented-by-array-the-index-0-is-left-unused
  */
 /*given index for an item, returns index of parent*/
-static int s_parent(int i)
+static int parent(int i)
 {
     return (i - 1) / 2;
 }
 
 /*given index for an item, returns index of its left child*/
-static int s_left(int i)
+static int left(int i)
 {
     return (2 * i) + 1;
 }
 
 /*given index for an item, returns index of its right child*/
-static int s_right(int i)
+static int right(int i)
 {
     return (2 * i) + 2;
 }
 
 /*swap two items in a dynamic array*/
-static void s_swap(darray *a, int i1, int i2)
+static void swap(darray *a, int i1, int i2)
 {
     voidp_t temp1 = a->array[i1];
     a->array[i1] = a->array[i2];
@@ -213,10 +215,10 @@ static void s_swap(darray *a, int i1, int i2)
 }
 
 /*Maintains the heap properties*/
-static void s_minHeapifyDown(sheap *h, int index)
+static void min_heapify_down(sheap *h, int index)
 {
-    int l = s_left(index);
-    int r = s_right(index);
+    int l = left(index);
+    int r = right(index);
     int smallest;
     if (l <= sh_size(h) - 1 && (*h->compare)(h->items.array[l], h->items.array[index]) < 0)
         smallest = l;
@@ -226,14 +228,14 @@ static void s_minHeapifyDown(sheap *h, int index)
         smallest = r;
     if (smallest != index)
     {
-        s_swap(&(h->items), index, smallest);
-        s_minHeapifyDown(h, smallest);
+        swap(&(h->items), index, smallest);
+        min_heapify_down(h, smallest);
     }
 }
 /*Maintains the heap properties*/
-static void s_minHeapifyUp(sheap *h, int index)
+static void min_heapify_up(sheap *h, int index)
 {
-    int p = s_parent(index);
+    int p = parent(index);
     int smallest;
     if (p <= sh_size(h) - 1 && (*h->compare)(h->items.array[index], h->items.array[p]) < 0)
         smallest = p;
@@ -241,7 +243,7 @@ static void s_minHeapifyUp(sheap *h, int index)
         smallest = index;
     if (smallest != index)
     {
-        s_swap(&(h->items), index, smallest);
-        s_minHeapifyUp(h, smallest);
+        swap(&(h->items), index, smallest);
+        min_heapify_up(h, smallest);
     }
 }

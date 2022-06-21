@@ -4,6 +4,6 @@
 int main(void)
 {
     //test_sequence();
-    auto_tests(100, 100); // randmax
+    auto_tests(100, 1000); // randmax
     return SUCCESS;
 }

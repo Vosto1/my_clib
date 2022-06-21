@@ -61,7 +61,7 @@ bool integrity_check(int n)
     srand(time(NULL));
     priorityqueue pq = pq_create_empty();
     assert(pq_init(&pq, 1, &compare) == 1);
-    errorHandler();
+    error_handler();
     Item *item;
     Item *out;
     Item *min;
@@ -85,8 +85,8 @@ bool integrity_check(int n)
             if (val < 81)
             { // 80%
                 item = createItem(val);
-                assert(pq_enqueue(&pq, (void *)item) != -1);
-                errorHandler();
+                assert(pq_enqueue(&pq, (void *)item) != 0);
+                error_handler();
                 // inc enqs
                 enqcount++;
             }
@@ -97,7 +97,7 @@ bool integrity_check(int n)
                     min = sh_peek(&pq.h);
                     item = pq_dequeue(&pq);
                     assert(item != NULL);
-                    errorHandler();
+                    error_handler();
                     result = compare(min, item);
                     free(item);
                     // inc dqs
@@ -159,6 +159,6 @@ bool integrity_check(int n)
     printf("Total test running time: %fs\n", passed);
     printf("Integrity test exiting...\n");
     pq_free(&pq);
-    errorHandler();
+    error_handler();
     return true;
 }

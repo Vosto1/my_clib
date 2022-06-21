@@ -1,7 +1,7 @@
 #include "file.h"
 
 // return read bytes
-size_t readFile(const char *filepath, void **out)
+size_t read_file(const char *filepath, void **out)
 {
 	// make filepointer and open file
 	FILE *rfp = fopen(filepath, "rb"); // rb == read binary
@@ -35,7 +35,7 @@ size_t readFile(const char *filepath, void **out)
 }
 
 // return written bytes
-size_t writeFile(const char *filepath, void *contents, size_t size)
+size_t write_file(const char *filepath, void *contents, size_t size)
 {
 	// make filepointer and open file
 	FILE *wfp = fopen(filepath, "wb"); // wb == write binary
@@ -59,17 +59,17 @@ size_t writeFile(const char *filepath, void *contents, size_t size)
 }
 
 // read file and return contents as a string (by ref)
-size_t readTextFile(char *filepath, char **out)
+size_t read_text_file(char *filepath, char **out)
 {
 	void *buffer;
-	size_t readBytes = readFile(filepath, &buffer);
+	size_t readBytes = read_file(filepath, &buffer);
 	*out = (char *)buffer;
 	return readBytes;
 }
 
-size_t writeTextFile(char *filepath, char **string, size_t size)
+size_t write_text_file(char *filepath, char **string, size_t size)
 {
-	return writeFile(filepath, (void *)string, size);
+	return write_file(filepath, (void *)string, size);
 }
 
 // future functions

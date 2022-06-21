@@ -12,6 +12,6 @@ typedef struct
     key k;
 } entry;
 
-hashtable letterOccurances(char *string, int strsize);
+hashtable letter_occurances(char *string, int strsize);
 
 #endif

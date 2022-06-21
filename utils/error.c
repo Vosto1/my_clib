@@ -91,7 +91,7 @@ const char *error(ErrorCode e)
     }
 }
 
-void errorHandler()
+void error_handler()
 {
     if (errc != SUCCESS)
     {

@@ -56,7 +56,7 @@ sheap sh_create_empty();
  * @param h pointer to the sheap to initialize
  * @param size the initial size of the sheap
  * @param compare a function that can compare two items of your data type
- * @return the size the heap is initialized to or -1 if error
+ * @return the size the heap is initialized to or 0 if error
  */
 size_t sh_init(sheap *h, size_t size, int (*compare)(cvoidp_t x, cvoidp_t y));
 /**
@@ -102,7 +102,7 @@ bool sh_is_empty(sheap *h);
  *
  * @param h sheap to insert into
  * @param item a pointer to the memory of the item
- * @return the item count in the heap or -1 if error
+ * @return the item count in the heap or a value larger than the item count in the heap if error
  */
 size_t sh_insert(sheap *h, voidp_t item);
 /**

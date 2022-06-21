@@ -10,14 +10,14 @@ void auto_tests(int tests, int lengthRange)
     // 4 assert that it is equal to the original
     // 5 loop on this algorithm thousands of times.
 
-    bitvector bv = bvcreateEmpty();
-    errorHandler();
-    bvinit(&bv);
-    errorHandler();
-    bitvector out = bvcreateEmpty();
-    errorHandler();
-    bvinit(&out);
-    errorHandler();
+    bitvector bv = bv_create_empty();
+    error_handler();
+    bv_init(&bv);
+    error_handler();
+    bitvector out = bv_create_empty();
+    error_handler();
+    bv_init(&out);
+    error_handler();
     binary bin;
     bin.amountOfBytes = 0;
     bin.residualBits = 0;
@@ -45,10 +45,10 @@ void auto_tests(int tests, int lengthRange)
             switch (j)
             {
             case 0:
-                bvadd(&bv, true);
+                assert(bv_add(&bv, true) != 0);
                 break;
             case 1:
-                bvadd(&bv, false);
+                assert(bv_add(&bv, false) != 0);
                 break;
             }
         }
@@ -57,9 +57,9 @@ void auto_tests(int tests, int lengthRange)
         // convert to binary
         assert(bools2bits(&bv, &bin) == bin.amountOfBytes);
         // write to file
-        writeBinaryToFile(&bin, "autotestfile.bin");
+        assert(write_binary_to_file(&bin, "autotestfile.bin") != 0);
         // read file that was written
-        readBinaryFromFile("autotestfile.bin", &fromFile);
+        assert(read_binary_from_file("autotestfile.bin", &fromFile) != 0);
 
         // debug
         // printbinary(&bin);
@@ -72,7 +72,7 @@ void auto_tests(int tests, int lengthRange)
             b2 = fromFile.bytes[x];
             assert(b1 == b2);
         }
-        bits2bools(&fromFile, &out);
+        assert(bits2bools(&fromFile, &out) != false);
         // debug
         // printbitvector(&bv);
         // printbitvector(&out);
@@ -80,14 +80,14 @@ void auto_tests(int tests, int lengthRange)
         bool *b;
         for (int x = 0; x < bv.used; x++)
         {
-            a = bvat(&bv, x);
-            b = bvat(&out, x);
+            a = bv_at(&bv, x);
+            b = bv_at(&out, x);
             assert((*a) == (*b));
         }
 
         // reset bitvectors
-        bvclear(&bv);
-        bvclear(&out);
+        assert(bv_clear(&bv) != 0);
+        assert(bv_clear(&out) != 0);
         end = now();
         testTime = diff(start, end);
         printf("bitvector test %d successful (bitvector length %d, test time: %f)\n", k, length, testTime);
@@ -109,10 +109,10 @@ void test_sequence()
 {
     srand(time(NULL));
 
-    bitvector bv = bvcreateEmpty();
-    errorHandler();
-    bvinit(&bv);
-    errorHandler();
+    bitvector bv = bv_create_empty();
+    error_handler();
+    bv_init(&bv);
+    error_handler();
     bool *newbool;
     int j;
     for (int i = 0; i < 12; i++)
@@ -121,10 +121,10 @@ void test_sequence()
         switch (j)
         {
         case 0:
-            bvadd(&bv, true);
+            assert(bv_add(&bv, true) != 0);
             break;
         case 1:
-            bvadd(&bv, false);
+            assert(bv_add(&bv, false) != 0);
             break;
         }
     }
@@ -135,11 +135,11 @@ void test_sequence()
     b.amountOfBytes = 0;
     b.bytes = NULL;
 
-    bools2bits(&bv, &b);
+    assert(bools2bits(&bv, &b) != 0);
     printbinary(&b);
 
     bitvector out;
-    bits2bools(&b, &out);
+    assert(bits2bools(&b, &out) != false);
 
     printf("converted from:\n");
     printbitvector(&bv);
@@ -148,15 +148,15 @@ void test_sequence()
 
     printf("written bits:\n");
     printbinary(&b);
-    assert(writeBinaryToFile(&b, "./test2.txt") != -1);
-    errorHandler();
+    assert(write_binary_to_file(&b, "./test2.txt") != 0);
+    error_handler();
     binary read;
-    assert(readBinaryFromFile("./test2.txt", &read) != -1);
+    assert(read_binary_from_file("./test2.txt", &read) != 0);
     printf("read bits:\n");
     printbinary(&read);
 
     bitvector readbv;
-    bits2bools(&read, &readbv);
+    assert(bits2bools(&read, &readbv) != false);
 
     printbitvector(&readbv);
 }

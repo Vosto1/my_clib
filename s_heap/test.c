@@ -53,14 +53,14 @@ static void insert_n(sheap *h, int n)
         item = createItem(rand() % 1000);
         e = sh_size(h) + 1;
         assert(sh_insert(h, (void *)item) == e);
-        errorHandler();
+        error_handler();
     }
     assert(sh_size(h) == n);
 }
 
 static void remove_all(sheap *h)
 {
-    assert(da_clear(&h->items) != -1);
+    assert(da_clear(&h->items) != 0);
     assert(sh_size(h) == 0);
 }
 
@@ -68,7 +68,7 @@ void compute_1_to_n_sequences_of_operations(long n, Test type)
 {
     sheap h = sh_create_empty();
     assert(sh_init(&h, 1, &compare) == 1);
-    errorHandler();
+    error_handler();
     long j = 1;
     Item *item;
     ticks start;
@@ -83,7 +83,7 @@ void compute_1_to_n_sequences_of_operations(long n, Test type)
             {
                 int val = rand() % 1000;
                 item = createItem(val);
-                assert(sh_insert(&h, item) != -1);
+                assert(sh_insert(&h, item) == sh_size(&h));
             }
             end = now();
             printf("Computed %d insertion operations during %f seconds.\n", j, diff(start, end));
@@ -109,14 +109,14 @@ void compute_1_to_n_sequences_of_operations(long n, Test type)
         break;
     }
     sh_free(&h);
-    errorHandler();
+    error_handler();
 }
 
 bool heap_integrity_test(int n)
 {
     sheap h = sh_create_empty();
     assert(sh_init(&h, 10, &compare) == 10);
-    errorHandler();
+    error_handler();
     Item *item;
     ticks start;
     ticks end;
@@ -135,7 +135,7 @@ bool heap_integrity_test(int n)
             if (val < 81)
             { // 80%
                 item = createItem(val);
-                assert(sh_insert(&h, item) != -1);
+                assert(sh_insert(&h, item) == sh_size(&h));
                 // inc counter
                 inscount++;
             }
@@ -172,7 +172,7 @@ bool heap_integrity_test(int n)
     printf("Total test running time: %fs\n", passed);
     printf("Integrity test exiting...\n");
     sh_free(&h);
-    errorHandler();
+    error_handler();
     return true;
 }
 
@@ -181,7 +181,7 @@ void test_sequence()
     srand(time(NULL));
     sheap h = sh_create_empty();
     assert(sh_init(&h, 10, &compare) == 10);
-    errorHandler();
+    error_handler();
     ticks programStart = now();
     ticks start;
     ticks end;
@@ -267,11 +267,11 @@ void test_sequence()
     free(rm);
 
     sh_free(&h);
-    errorHandler();
+    error_handler();
 
     h = sh_create_empty();
     assert(sh_init(&h, 1, &compare) == 1);
-    errorHandler();
+    error_handler();
 
     item0 = createItem(97);
     item1 = createItem(82);
@@ -294,6 +294,6 @@ void test_sequence()
     assert(s_test_heap_integrity(&h));
 
     sh_free(&h);
-    errorHandler();
+    error_handler();
     printf("Tests passed.\n");
 }

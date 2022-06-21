@@ -45,16 +45,14 @@ size_t da_init(darray *a, size_t initSize, int (*compare)(cvoidp_t x, cvoidp_t y
     {
         *a = da_create_empty();
         errcset(EMEM_ALLOC);
-        return -1;
+        return 0;
     }
 }
 
-void da_free(darray *a)
+void da_destroy(darray *a)
 {
     if (!da_is_null(a))
     {
-        if (!da_is_empty(a))
-            da_clear(a);
         free(a->array);
         *a = da_create_empty();
     }
@@ -64,12 +62,51 @@ void da_free(darray *a)
     }
 }
 
+void da_free(darray *a)
+{
+    if (!da_is_null(a))
+    {
+        if (!da_is_empty(a))
+        {
+            da_clear(a);
+            da_destroy(a);
+        }
+        else
+            da_destroy(a);
+    }
+    else
+    {
+        errcset(EFREE_NULLPTR);
+    }
+}
+
+size_t da_clear(darray *a)
+{
+    if (da_is_empty(a))
+    {
+        return 1;  // its empty job already done
+    }
+    else if (da_is_null(a))
+    {
+        errcset(ENULL_ARG);
+        return 0;
+    }
+    int amount = a->used;
+    voidp_t d;
+    for (int i = 0; i < amount; i++)
+    {
+        d = da_remove_last(a);
+        free(d);
+    }
+    return amount;
+}
+
 size_t da_insert(darray *a, voidp_t item)
 {
     if (a == NULL || a->array == NULL)
     {
         errcset(ENULL_ARG);
-        return -1;
+        return 0;
     }
     // memory increase
     if (a->used == a->size)
@@ -85,7 +122,7 @@ size_t da_insert(darray *a, voidp_t item)
         else
         {
             errcset(EMEM_IREALLOC);
-            return -1;
+            return 0;
         }
     }
     a->used += 1;
@@ -153,26 +190,12 @@ voidp_t da_remove_at(darray *a, int index)
     }
 }
 
-size_t da_convert(darray *a, voidp_t b[], size_t bsize, int (*compare)(cvoidp_t x, cvoidp_t y))
-{
-    *a = da_create_empty();
-    if (da_init(a, bsize, compare) != bsize)
-    {
-        return -1;
-    }
-    for (int i = 0; i < bsize; i++)
-    {
-        da_insert(a, b[i]);
-    }
-    return bsize;
-}
-
 size_t da_merge(darray *a, darray *b)
 {
     if (a == NULL || b == NULL)
     {
         errcset(ENULL_ARG);
-        return -1;
+        return 0;
     }
     for (int i = 0; i < b->used; i++)
     {
@@ -186,27 +209,6 @@ size_t da_merge(darray *a, darray *b)
     return a->size;
 }
 
-size_t da_clear(darray *a)
-{
-    if (da_is_empty(a))
-    {
-        errcset(EARR_EMPTY);
-        return -1;
-    }
-    else if (da_is_null(a))
-    {
-        errcset(ENULL_ARG);
-        return -1;
-    }
-    int amount = a->used;
-    voidp_t d;
-    for (int i = 0; i < amount; i++)
-    {
-        d = da_remove_last(a);
-        free(d);
-    }
-    return amount;
-}
 
 bool da_is_null(darray *a)
 {

@@ -79,6 +79,6 @@ const char *error(ErrorCode e);
  * default error handler
  * this handler terminates the program on error
  */
-void errorHandler();
+void error_handler();
 
 #endif

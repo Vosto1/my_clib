@@ -2,14 +2,14 @@
 
 #define ALPHABET 26
 
-static int compare(cvoidp_t e1, cvoidp_t e2)
+static int _compare(cvoidp_t e1, cvoidp_t e2)
 {
     entry *en1 = (entry *)e1;
     entry *en2 = (entry *)e2;
     return (int)en1->k - (int)en2->k;
 }
 
-static size_t hash(cvoidp_t e, const hashtable *ht)
+static size_t _hash(cvoidp_t e, const hashtable *ht)
 {
     entry *f = (entry *)e;
 
@@ -18,7 +18,7 @@ static size_t hash(cvoidp_t e, const hashtable *ht)
     return index;
 }
 
-static entry *createEntry(key k, value v)
+static entry *_create_entry(key k, value v)
 {
     entry *e = (entry *)malloc(sizeof(entry));
     e->k = k;
@@ -26,10 +26,10 @@ static entry *createEntry(key k, value v)
     return e;
 }
 
-hashtable letterOccurances(char *string, int strsize)
+hashtable letter_occurances(char *string, int strsize)
 {
     hashtable ht;
-    if (ht_init(&ht, ALPHABET, &hash, &compare) != ALPHABET)
+    if (ht_init(&ht, ALPHABET, &_hash, &_compare) != ALPHABET)
     {
         errcset(EHASHDICT);
         return ht;
@@ -39,7 +39,7 @@ hashtable letterOccurances(char *string, int strsize)
     entry *l;
     for (int i = 0; i < strsize; i++)
     {
-        e = createEntry(string[i], 1);
+        e = _create_entry(string[i], 1);
         l = ht_lookup(&ht, e);
         if (l == UNUSED)
         {

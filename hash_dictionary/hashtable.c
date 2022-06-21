@@ -1,5 +1,8 @@
 #include "hashtable.h"
 
+static size_t indexof(hashtable *ht, cvoidp_t value_to_search_for);
+static size_t linear_probe(hashtable *ht, voidp_t element);
+
 hashtable ht_create_empty()
 {
     hashtable ht;
@@ -16,7 +19,7 @@ size_t ht_init(hashtable *ht, size_t size, size_t (*hash)(cvoidp_t, const hashta
     if (!ht->entries)
     {
         errcset(EMEM_ALLOC);
-        return -1;
+        return 0;
     }
     ht->size = size;
     for (size_t i = 0; i < ht->size; i++)
@@ -68,10 +71,10 @@ size_t ht_trim(hashtable *ht)
 {
     size_t size = ht_size(ht);
     sdarray a = sda_create_empty();
-    if (sda_init(&a, 1) != 1)
+    if (sda_init(&a, size) != size)
     {
         errcset(EHASH_TRIM_BUFFER);
-        return -1;
+        return 0;
     }
 
     // move all elements from the hashtable to an array
@@ -85,7 +88,7 @@ size_t ht_trim(hashtable *ht)
     if (temp == NULL)
     {
         errcset(EHASH_TRIM_MEMALLOC);
-        return -1;
+        return 0;
     }
     ht->entries = temp;
     ht->size = elementCount;
@@ -105,14 +108,14 @@ size_t ht_trim(hashtable *ht)
     return ht->size;
 }
 
-size_t ht_insert(hashtable *ht, voidp_t element)
+// returns true if insert was successful, otherwise false
+bool ht_insert(hashtable *ht, voidp_t element)
 {
     size_t index = linear_probe(ht, element);
-    voidp_t e = ht->entries[index];
-    if ((*ht->compare)(element, e) == 0) // if the value is set at index
-        return index;
-    else // fatal error (hashtable overflow with error)
-        return -1;
+    if (index > ht_size(ht))
+        return false;
+    else
+        return true;
 }
 
 voidp_t ht_delete(hashtable *ht, cvoidp_t element)
@@ -184,19 +187,21 @@ size_t ht_count(const hashtable *ht)
     return count;
 }
 
+#define FLAG_INDEX_ERROR 1000
+
 // get index of an element in the table
-static size_t indexof(hashtable *ht, cvoidp_t valueToSearchFor)
+static size_t indexof(hashtable *ht, cvoidp_t value_to_search_for)
 {
     size_t size = ht_size(ht);
     size_t index = 0;
     size_t i = 0;
-    size_t hash = (*ht->hash)(valueToSearchFor, ht);
+    size_t hash = (*ht->hash)(value_to_search_for, ht);
     voidp_t e;
     for (size_t i = 0; i < size; i++)
     {
         index = (hash + i) % size;
         e = ht->entries[index];
-        if ((*ht->compare)(valueToSearchFor, e) == 0)
+        if ((*ht->compare)(value_to_search_for, e) == 0)
         {
             return index; // found element at index: [index]
         }
@@ -204,7 +209,7 @@ static size_t indexof(hashtable *ht, cvoidp_t valueToSearchFor)
     // this function should only be called if
     // we know that the element is present in the table
     errcset(EHASHDATA_DOESNT_EXIST);
-    return -1;
+    return ht->size + FLAG_INDEX_ERROR;
 }
 
 // try find slot that is empty or has the same key and set
@@ -231,7 +236,7 @@ static size_t linear_probe(hashtable *ht, voidp_t element)
     if (sda_init(&a, ht_size(ht)) != ht_size(ht))
     {
         errcset(EHASHTABLE_OVERFLOW_BUFFER);
-        return -1;
+        return ht->size + FLAG_INDEX_ERROR;
     }
 
     // move all elements from the hashtable to an array
@@ -254,7 +259,7 @@ static size_t linear_probe(hashtable *ht, voidp_t element)
     if (temp == NULL)
     {
         errcset(EHASHTABLE_OVERFLOW_MEMALLOC);
-        return -1; // fatal error
+        return ht->size + FLAG_INDEX_ERROR; // fatal error
     }
     ht->entries = temp;
 
