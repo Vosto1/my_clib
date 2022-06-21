@@ -231,7 +231,7 @@ size_t myhash(cvoidp_t ent, const hashtable *ht)
 // Eulers number; e constant
 #define E 2.718281828459045091
 
-//#define EXP_CONSTANT 0.773143ss
+//#define EXP_CONSTANT 0.773143
 #define EXP_CONSTANT 0.7777777
 #define COEFFICIENT_CONSTANT 2.28164
 
