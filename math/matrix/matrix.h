@@ -1,7 +1,7 @@
 #ifndef MATRIX_H
 #define MATRIX_H
 
-#include "../../s_dynamic_array/s_dynamic_array.h"
+#include "../../s_dynamic_array/sdarray.h"
 #include "../../hash_dictionary/hashtable.h"
 #include "../../hash_dictionary/hash.h"
 #include "../../hash_dictionary/hash.h"

@@ -9,7 +9,7 @@
 #include <time.h>
 #include <stdlib.h>
 #include <assert.h>
-#include "s_dynamic_array.h"
+#include "sdarray.h"
 #include "../utils/error.h"
 #include "../utils/timer.h"
 

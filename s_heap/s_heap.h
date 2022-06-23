@@ -11,7 +11,7 @@
 #ifndef _HEAP_H
 #define _HEAP_H
 
-#include "../dynamic_array/dynamic_array.h"
+#include "../dynamic_array/darray.h"
 #include "../utils/error.h"
 
 typedef void *voidp_t;

@@ -15,7 +15,7 @@
 #include <stdio.h>
 #include "../utils/file.h"
 #include "../utils/error.h"
-#include "../s_dynamic_array/s_dynamic_array.h"
+#include "../s_dynamic_array/sdarray.h"
 
 typedef unsigned char byte;
 typedef unsigned long long dim_t;

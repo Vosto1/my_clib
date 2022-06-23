@@ -147,7 +147,7 @@ unsigned int auto_tests(int tests, int mod)
             avg_collisions = (double)collisions / (double)insertions;
         else
             avg_collisions = 0.0f;
-        printf("Computed %lld operations (%d insertions with %d collisions and %.1f average collisions, %d deletions %d lookups) during %f\n", nexttests, insertions, collisions, avg_collisions, deletions, lookups, subtest);
+        printf("Computed %d operations (%d insertions with %d collisions and %.1f average collisions, %d deletions %d lookups) during %f\n", nexttests, insertions, collisions, avg_collisions, deletions, lookups, subtest);
         insertions = 0;
         deletions = 0;
         lookups = 0;
@@ -178,7 +178,7 @@ unsigned int auto_tests(int tests, int mod)
 
     prgEnd = now();
     seconds programTime = diff(prgStart, prgEnd);
-    printf("Test completed, computed %d operations during %fs\n", operations, programTime);
+    printf("Test completed, computed %lld operations during %fs\n", operations, programTime);
     ht_free(&ht);
     return operations;
 }

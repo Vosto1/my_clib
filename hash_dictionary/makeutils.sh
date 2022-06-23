@@ -7,8 +7,8 @@ if [ "$#" -ne 1 ]; then
 fi
 
 # remove old ones if they are present
-rm build.sh
-rm memcheck.sh
+rm build.sh &> /dev/null
+rm memcheck.sh &> /dev/null
 
 # create new files
 touch build.sh
