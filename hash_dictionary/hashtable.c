@@ -111,7 +111,7 @@ dim_t ht_trim(hashtable *ht)
 // returns collisions if insert was successful, otherwise -1
 int ht_insert(hashtable *ht, voidp_t element)
 {
-    int collisions;
+    int collisions = 0;
     dim_t index = linear_probe(ht, element, &collisions);
     if (index > ht_size(ht))
         return -1;
@@ -153,7 +153,6 @@ voidp_t ht_lookup(const hashtable *ht, cvoidp_t element)
 {
     dim_t size = ht_size(ht);
     dim_t index = 0;
-    dim_t i = 0;
     dim_t hash = (*ht->hash)(element, ht);
     voidp_t e;
     for (dim_t i = 0; i < size; i++)
@@ -196,7 +195,6 @@ static dim_t indexof(hashtable *ht, cvoidp_t value_to_search_for)
 {
     dim_t size = ht_size(ht);
     dim_t index = 0;
-    dim_t i = 0;
     dim_t hash = (*ht->hash)(value_to_search_for, ht);
     voidp_t e;
     for (dim_t i = 0; i < size; i++)
