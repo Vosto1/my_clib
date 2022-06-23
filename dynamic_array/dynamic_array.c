@@ -8,12 +8,12 @@
  */
 static MEM memory_decrease(darray *a);
 
-size_t da_count(darray *a)
+dim_t da_count(darray *a)
 {
     return a->used;
 }
 
-size_t da_size(darray *a)
+dim_t da_size(darray *a)
 {
     return a->size;
 }
@@ -28,7 +28,7 @@ darray da_create_empty()
     return a;
 }
 
-size_t da_init(darray *a, size_t initSize, int (*compare)(cvoidp_t x, cvoidp_t y))
+dim_t da_init(darray *a, dim_t initSize, int (*compare)(cvoidp_t x, cvoidp_t y))
 {
     a->size = 0;
     a->used = 0;
@@ -80,7 +80,7 @@ void da_free(darray *a)
     }
 }
 
-size_t da_clear(darray *a)
+dim_t da_clear(darray *a)
 {
     if (da_is_empty(a))
     {
@@ -101,7 +101,7 @@ size_t da_clear(darray *a)
     return amount;
 }
 
-size_t da_insert(darray *a, voidp_t item)
+dim_t da_insert(darray *a, voidp_t item)
 {
     if (a == NULL || a->array == NULL)
     {
@@ -190,7 +190,7 @@ voidp_t da_remove_at(darray *a, int index)
     }
 }
 
-size_t da_merge(darray *a, darray *b)
+dim_t da_merge(darray *a, darray *b)
 {
     if (a == NULL || b == NULL)
     {

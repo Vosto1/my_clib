@@ -2,12 +2,12 @@
 
 static MEM sda_memory_decrease(sdarray *a);
 
-size_t sda_count(sdarray *a)
+dim_t sda_count(sdarray *a)
 {
     return a->used;
 }
 
-size_t sda_size(sdarray *a)
+dim_t sda_size(sdarray *a)
 {
     return a->size;
 }
@@ -21,7 +21,7 @@ sdarray sda_create_empty()
     return a;
 }
 
-size_t sda_init(sdarray *a, size_t init_size)
+dim_t sda_init(sdarray *a, dim_t init_size)
 {
     a->size = 0;
     a->used = 0;
@@ -41,7 +41,7 @@ size_t sda_init(sdarray *a, size_t init_size)
     }
 }
 
-size_t sda_clear(sdarray *a)
+dim_t sda_clear(sdarray *a)
 {
     if (sda_is_empty(a))
     {
@@ -91,7 +91,7 @@ void sda_free(sdarray *a)
         errcset(EFREE_NULLPTR);
 }
 
-size_t sda_insert(sdarray *a, voidp_t item)
+dim_t sda_insert(sdarray *a, voidp_t item)
 {
     if (a == NULL || a->array == NULL)
     {
@@ -167,7 +167,7 @@ voidp_t sda_remove_at(sdarray *a, int index)
     }
 }
 
-size_t sda_merge(sdarray *a, sdarray *b)
+dim_t sda_merge(sdarray *a, sdarray *b)
 {
     if (a == NULL || b == NULL)
     {

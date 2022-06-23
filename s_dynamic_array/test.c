@@ -54,7 +54,7 @@ static void printData(sdarray *a)
 
 static void insert_n(sdarray *a, int n)
 {
-    size_t e;
+    dim_t e;
     Item *item;
     for (int j = 0; j < n; j++)
     {

@@ -18,7 +18,7 @@ write/read files
  * @param contents a pointer to the buffer where the contents of the file will be written to
  * @return bytes read
  */
-size_t read_file(const char *filepath, void **contents);
+dim_t read_file(const char *filepath, void **contents);
 
 /**
  * write data to file (binary)
@@ -28,7 +28,7 @@ size_t read_file(const char *filepath, void **contents);
  * @param size the size of the contents in bytes
  * @return bytes written
  */
-size_t write_file(const char *filepath, void *contents, size_t size);
+dim_t write_file(const char *filepath, void *contents, dim_t size);
 
 /**
  * @brief read a textfile
@@ -37,7 +37,7 @@ size_t write_file(const char *filepath, void *contents, size_t size);
  * @param out a pointer to the buffer where the contents of the text file will be written to
  * @return bytes read
  */
-size_t read_text_file(char *filepath, char **out);
+dim_t read_text_file(char *filepath, char **out);
 
 /**
  * @brief write text to text file
@@ -47,6 +47,6 @@ size_t read_text_file(char *filepath, char **out);
  * @param size size of string
  * @return bytes written
  */
-size_t write_text_file(char *filepath, char **string, size_t size);
+dim_t write_text_file(char *filepath, char **string, dim_t size);
 
 #endif

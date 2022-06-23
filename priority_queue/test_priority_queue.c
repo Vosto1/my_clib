@@ -16,7 +16,7 @@ int compare(cvoidp_t x, cvoidp_t y)
     return item1->p - item2->p;
 }
 
-void print(size_t used, voidp_t a[])
+void print(dim_t used, voidp_t a[])
 {
     Item *itemArr = (Item *)a;
     for (int i = 0; i < used; i++)

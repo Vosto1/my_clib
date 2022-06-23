@@ -1,22 +1,22 @@
 #include "test.h"
 
-int compare(cvoidp_t e1, cvoidp_t e2)
+static int compare(cvoidp_t e1, cvoidp_t e2)
 {
     entry* en1 = (entry*)e1;
     entry* en2 = (entry*)e2;
     return (int)en1->k - (int)en2->k;
 }
 
-size_t hashfn(cvoidp_t e, const hashtable* ht)
+static dim_t hashfn(cvoidp_t e, const hashtable* ht)
 {
     entry* f = (entry*)e;
     
-    size_t index = f->k * 37;
+    dim_t index = f->k * 37;
     index %= ht_size(ht);
     return index;
 }
 
-entry* _create_entry(key k, value v)
+static entry* _create_entry(key k, value v)
 {
     entry* e = (entry*)malloc(sizeof(entry));
     e->k = k;
@@ -24,10 +24,15 @@ entry* _create_entry(key k, value v)
     return e;
 }
 
-entry* randomElement(hashtable* ht)
+char rascii()
 {
-    size_t size = ht_size(ht);
-    size_t i = 0;
+    return (char)(rand() % 94 + 32); // ascii character value span
+}
+
+static entry* randomElement(hashtable* ht)
+{
+    dim_t size = ht_size(ht);
+    dim_t i = 0;
     for (; i < size; i++)
     {
         if (ht->entries[i] != UNUSED)
@@ -37,7 +42,7 @@ entry* randomElement(hashtable* ht)
 }
 
 // debug
-void print(hashtable* ht)
+static void print(hashtable* ht)
 {
     for (int i = 0; i < ht_size(ht); i++)
     {
@@ -52,7 +57,7 @@ void print(hashtable* ht)
     printf("\n");
 }
 
-void pvalue(entry* e)
+static void pvalue(entry* e)
 {
     printf("key: %c value: %d\n", e->k, e->v);
 }
@@ -68,6 +73,8 @@ unsigned int auto_tests(int tests, int mod)
     unsigned int count;
     unsigned int operations = 0, deletions = 0, insertions = 0, lookups = 0;
     unsigned int random, nexttests, val;
+    double avg_collisions;
+    int collisions = 0, tmp_col;
     entry* element;
     entry* e;
     entry* del; 
@@ -80,7 +87,7 @@ unsigned int auto_tests(int tests, int mod)
         start = now();
         for (unsigned int j = 0; j < nexttests; j++)
         {
-            val = rand() % 94 + 32; // ascii character value span
+            val = rand(); // random integer instead to get more collisions //rascii(); // random ascii character
             random = rand() % 100;
             if (random < 80)
             { // insert
@@ -90,7 +97,9 @@ unsigned int auto_tests(int tests, int mod)
                 count = ht_count(&ht);
                 // debug
                 //print(&ht);
-                assert(ht_insert(&ht, element) != false);
+                tmp_col = ht_insert(&ht, element);
+                assert(tmp_col != -1);
+                collisions += tmp_col;
                 // debug
                 //print(&ht);
                 if (!existsht) // if it already existed the element was "updated" (its not visible since its updated to the same values)
@@ -134,27 +143,32 @@ unsigned int auto_tests(int tests, int mod)
         }
         end = now();
         seconds subtest = diff(start, end);
-        printf("Computed %d operations (%d insertions %d deletions %d lookups) during %f\n", nexttests, insertions, deletions, lookups, subtest);
+        if (insertions != 0)
+            avg_collisions = (double)collisions / (double)insertions;
+        else
+            avg_collisions = 0.0f;
+        printf("Computed %d operations (%d insertions with %d collisions and %.1f average collisions, %d deletions %d lookups) during %f\n", nexttests, insertions, collisions, avg_collisions, deletions, lookups, subtest);
         insertions = 0;
         deletions = 0;
         lookups = 0;
+        collisions = 0;
     }
     // test trim
     sdarray a = sda_create_empty();
     sda_init(&a, 1);
-    for (size_t i = 0; i < ht_size(&ht); i++)
+    for (dim_t i = 0; i < ht_size(&ht); i++)
         if (ht.entries[i] != UNUSED)
             sda_insert(&a, ht.entries[i]);
     
-    size_t count1 = ht_count(&ht);
+    dim_t count1 = ht_count(&ht);
     ht_trim(&ht);
     //print(&ht);
-    size_t count2 = ht_count(&ht);
+    dim_t count2 = ht_count(&ht);
     assert(count1 == count2);
-    size_t acount = sda_count(&a);
-    size_t h;
+    dim_t acount = sda_count(&a);
+    dim_t h;
     entry* en;
-    for (size_t i = 0; i < acount; i++)
+    for (dim_t i = 0; i < acount; i++)
     {
         en = sda_remove_last(&a);
         h = hashfn(en, &ht);

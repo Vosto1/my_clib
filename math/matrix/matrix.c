@@ -200,8 +200,8 @@ static int is_equal(cvoidp_t k, cvoidp_t l)
 {
 	entry *x = (entry *)k;
 	entry *y = (entry *)l;
-	Matrix a = (Matrix)x->m; // Im lazy
-	Matrix b = (Matrix)y->m;
+	Matrix a = (Matrix)x->m;
+	Matrix b = (Matrix)y->m; // Im lazy
 	if (a->columns != b->columns || a->rows != b->rows) // must be of same dimensions to be equal
 		return -1;										// not equal
 	for (int col = 0; col < a->columns; col++)
@@ -215,7 +215,7 @@ static int is_equal(cvoidp_t k, cvoidp_t l)
 	return 0; // equal
 }
 
-size_t myhash(cvoidp_t ent, const hashtable *ht)
+dim_t myhash(cvoidp_t ent, const hashtable *ht)
 {
 	entry *e = (entry *)ent;
 	// use generic hash fn
@@ -232,15 +232,17 @@ size_t myhash(cvoidp_t ent, const hashtable *ht)
 #define E 2.718281828459045091
 
 //#define EXP_CONSTANT 0.773143
-#define EXP_CONSTANT 0.7777777
+#define EXP_CONSTANT 0.7777777 // I use this constant instead so that the size grows a little bit faster than the amount of calls
 #define COEFFICIENT_CONSTANT 2.28164
 
-static size_t size(size_t n)
+static dim_t size(dim_t n)
 {
 	long double exponent = (long double)n * EXP_CONSTANT;
-	return (size_t)(COEFFICIENT_CONSTANT * powl(E, exponent));
+	return (dim_t)(COEFFICIENT_CONSTANT * powl(E, exponent));
 }
 
+// if the matrix is smaller or equal to 4x4 then the naive version should be called (no memoization)
+// otherwise this (memoized) version should be called.
 ErrorCode1 getDeterminant(Matrix *mtrx, Data *pdet)
 {
 	if (mtrx == NULL)
@@ -251,8 +253,8 @@ ErrorCode1 getDeterminant(Matrix *mtrx, Data *pdet)
 	RST; // reset counter
 	hashtable ht;
 	// calculate initial hashtable size to optimize memory allocation
-	size_t n = (size_t)(*mtrx)->rows; // (cols == rows)
-	size_t htablesize = size(n);
+	dim_t n = (dim_t)(*mtrx)->rows; // (cols == rows)
+	dim_t htablesize = size(n);
 	if (htablesize % 2 == 0)
 		htablesize += 1;
 	assert(ht_init(&ht, htablesize, &myhash, &is_equal) == htablesize);

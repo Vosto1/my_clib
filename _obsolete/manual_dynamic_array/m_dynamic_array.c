@@ -9,7 +9,7 @@ m_dynamicArray m_createEmptyDynamicArray()
     return a;
 }
 
-size_t m_initDynamicArray(m_dynamicArray *a, size_t initSize)
+dim_t m_initDynamicArray(m_dynamicArray *a, dim_t initSize)
 {
     Data *temp;
     temp = (Data *)malloc(sizeof(Data) * initSize);

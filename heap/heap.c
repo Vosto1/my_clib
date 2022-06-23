@@ -57,8 +57,8 @@ heap h_create_empty()
     return h;
 }
 
-size_t h_init(heap *h,
-                size_t size,
+dim_t h_init(heap *h,
+                dim_t size,
                 int (*compare)(cvoidp_t x, cvoidp_t y),
                 voidp_t (*setKey)(voidp_t x, voidp_t key),
                 void (*minKey)(voidp_t base, voidp_t *out))
@@ -81,7 +81,7 @@ void h_free(heap *h)
     }
 }
 
-size_t h_size(heap *h)
+dim_t h_size(heap *h)
 {
     return h->items.used;
 }
@@ -110,7 +110,7 @@ bool h_is_empty(heap *h)
 /*
  * Add to the heap.
  */
-size_t h_insert(heap *h, voidp_t item)
+dim_t h_insert(heap *h, voidp_t item)
 {
     da_insert(&(h->items), item);
     if (errc != SUCCESS)
@@ -177,7 +177,7 @@ voidp_t h_extract_min(heap *h)
  * Increases the items priority by assigning it a higher value Key.
  * The properties of the data structure must be preserved.
  */
-size_t h_decrease_key(heap *h, voidp_t item, voidp_t newKey)
+dim_t h_decrease_key(heap *h, voidp_t item, voidp_t newKey)
 {
     for (int i = 0; i < h_size(h); i++)
     {
@@ -208,7 +208,7 @@ size_t h_decrease_key(heap *h, voidp_t item, voidp_t newKey)
  * builds heap from an unordered list (array)
  */
 heap h_build_min_heap(voidp_t *unorderedList,
-                  size_t size,
+                  dim_t size,
                   int (*compare)(cvoidp_t x, cvoidp_t y),
                   voidp_t (*setKey)(voidp_t x, voidp_t key),
                   void (*minKey)(voidp_t base, voidp_t *out))

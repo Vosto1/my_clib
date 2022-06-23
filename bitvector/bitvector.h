@@ -18,7 +18,7 @@
 #include "../s_dynamic_array/s_dynamic_array.h"
 
 typedef unsigned char byte;
-typedef unsigned long long size_t;
+typedef unsigned long long dim_t;
 typedef sdarray bitvector;
 
 typedef struct
@@ -28,18 +28,18 @@ typedef struct
     byte *bytes;
 } binary;
 
-size_t bit_count(bitvector *bv);
+dim_t bit_count(bitvector *bv);
 bitvector bv_create_empty();
-size_t bv_init(bitvector *bv);
-size_t bv_add(bitvector *bv, bool value);
-size_t bv_merge(bitvector *bv, bitvector *unionWith);
+dim_t bv_init(bitvector *bv);
+dim_t bv_add(bitvector *bv, bool value);
+dim_t bv_merge(bitvector *bv, bitvector *unionWith);
 bool bv_remove_last(bitvector *bv);
 bool *bv_at(bitvector *bv, int index);
-size_t bv_clear(bitvector *bv);
+dim_t bv_clear(bitvector *bv);
 unsigned int bools2bits(bitvector *bv, binary *out);
 bool bits2bools(binary *b, bitvector *out);
-size_t write_binary_to_file(binary *b, char *file);
-size_t read_binary_from_file(char *file, binary *b);
+dim_t write_binary_to_file(binary *b, char *file);
+dim_t read_binary_from_file(char *file, binary *b);
 
 void printbitvector(bitvector *bv);
 void printbinary(binary *bin);

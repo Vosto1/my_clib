@@ -440,7 +440,7 @@ bool bst_is_empty(const bstree tree)
     return tree == NULL;
 }
 
-static size_t writeSortedToArray(const bstree tree, voidp_t **array)
+static dim_t writeSortedToArray(const bstree tree, voidp_t **array)
 {
     return bst_toarray_inorder(tree, array);
 }
@@ -472,7 +472,7 @@ void bst_merge(bstree *bst1, bstree *bst2, int (*compare)(cvoidp_t, cvoidp_t))
     if ((*bst2) == NULL)
         return;
     voidp_t *array;
-    size_t size = writeSortedToArray(*bst2, &array);
+    dim_t size = writeSortedToArray(*bst2, &array);
     insertFromSortedArray(bst1, array, 0, size - 1, compare);
     // free array
     free(array);
@@ -534,11 +534,11 @@ static void postorder(const bstree tree, cvoidp_t *a, int *index)
     }
 }
 
-static size_t get_array(const bstree tree, void (*order)(const bstree, cvoidp_t *, int *), voidp_t **arr)
+static dim_t get_array(const bstree tree, void (*order)(const bstree, cvoidp_t *, int *), voidp_t **arr)
 {
     if (tree != NULL)
     {
-        size_t size = bst_count(tree);
+        dim_t size = bst_count(tree);
         voidp_t *a = (voidp_t *)malloc(sizeof(voidp_t *) * size);
         if (arr != NULL)
         {
@@ -560,21 +560,21 @@ static size_t get_array(const bstree tree, void (*order)(const bstree, cvoidp_t 
     }
 }
 
-size_t bst_toarray_preorder(const bstree tree, voidp_t **array)
+dim_t bst_toarray_preorder(const bstree tree, voidp_t **array)
 {
     if (tree == NULL)
         return 0;
     return get_array(tree, &preorder, array);
 }
 
-size_t bst_toarray_inorder(const bstree tree, voidp_t **array)
+dim_t bst_toarray_inorder(const bstree tree, voidp_t **array)
 {
     if (tree == NULL)
         return 0;
     return get_array(tree, &inorder, array);
 }
 
-size_t bst_toarray_postorder(const bstree tree, voidp_t **array)
+dim_t bst_toarray_postorder(const bstree tree, voidp_t **array)
 {
     if (tree == NULL)
         return 0;
@@ -673,7 +673,7 @@ void bst_balance(bstree *tree, int (*compare)(cvoidp_t, cvoidp_t))
 
         // write all elements to an array
         voidp_t *arr1;
-        size_t arraysize = writeSortedToArray((*tree), &arr1);
+        dim_t arraysize = writeSortedToArray((*tree), &arr1);
         if (arr1 != NULL)
         {
             bstree new = bst_create_empty();

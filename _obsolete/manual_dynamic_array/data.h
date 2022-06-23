@@ -4,7 +4,7 @@
 #include <stdio.h>
 #define PLACEHOLDER -1
 
-typedef unsigned long long size_t;
+typedef unsigned long long dim_t;
 typedef struct
 {
     int value;
@@ -16,7 +16,7 @@ typedef Item Data;
 
 Data createPlaceholderData();
 resultType compareData(Data x, Data y);
-void printData(size_t size, Data a[]);
+void printData(dim_t size, Data a[]);
 
 #endif
 

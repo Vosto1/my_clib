@@ -13,7 +13,7 @@ resultType compareData(Data x, Data y)
     return x.value - y.value;
 }
 
-void printData(size_t size, Data a[])
+void printData(dim_t size, Data a[])
 {
     for (int i = 0; i < size; i++)
     {

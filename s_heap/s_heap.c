@@ -55,7 +55,7 @@ sheap sh_create_empty()
     return h;
 }
 
-size_t sh_init(sheap *h, size_t size, int (*compare)(cvoidp_t x, cvoidp_t y))
+dim_t sh_init(sheap *h, dim_t size, int (*compare)(cvoidp_t x, cvoidp_t y))
 {
     h->compare = compare;
     return da_init(&(h->items), size, compare);
@@ -73,7 +73,7 @@ void sh_free(sheap *h)
     }
 }
 
-size_t sh_size(sheap *h)
+dim_t sh_size(sheap *h)
 {
     return h->items.used;
 }
@@ -102,7 +102,7 @@ bool sh_is_empty(sheap *h)
 /*
  * Add to the heap.
  */
-size_t sh_insert(sheap *h, voidp_t item)
+dim_t sh_insert(sheap *h, voidp_t item)
 {
     da_insert(&(h->items), item);
     if (errc != SUCCESS)
@@ -145,7 +145,7 @@ voidp_t sh_extract_min(sheap *h)
  * go through the non-leafs "backwards" and heapify-down
  * builds heap from an unordered list (array)
  */
-sheap sh_build_min_heap(voidp_t *unorderedList, size_t size, int (*compare)(cvoidp_t x, cvoidp_t y))
+sheap sh_build_min_heap(voidp_t *unorderedList, dim_t size, int (*compare)(cvoidp_t x, cvoidp_t y))
 {
     sheap h;
     sh_init(&h, size, compare);

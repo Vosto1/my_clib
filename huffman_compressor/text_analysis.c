@@ -9,11 +9,11 @@ static int _compare(cvoidp_t e1, cvoidp_t e2)
     return (int)en1->k - (int)en2->k;
 }
 
-static size_t _hash(cvoidp_t e, const hashtable *ht)
+static dim_t _hash(cvoidp_t e, const hashtable *ht)
 {
     entry *f = (entry *)e;
 
-    size_t index = f->k * 37;
+    dim_t index = f->k * 37;
     index %= ht_size(ht);
     return index;
 }

@@ -31,7 +31,7 @@ void auto_tests(int tests, int lengthRange)
     // stats
     ticks start, end, testStart, testEnd;
     seconds testTime, teststotalTime, avg = 0.0f;
-    size_t boolsWrittenAndRead = 0;
+    dim_t boolsWrittenAndRead = 0;
     int avglen = 0;
 
     testStart = now();

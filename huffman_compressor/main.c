@@ -19,7 +19,7 @@ void print(hashtable *ht)
 int main(void)
 {
     char *d;
-    size_t str = read_text_file("textAnalysis.txt", &d);
+    dim_t str = read_text_file("textAnalysis.txt", &d);
     for (int i = 0; i < str; i++)
     {
         printf("%c", d[i]);

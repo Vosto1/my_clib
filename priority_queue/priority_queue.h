@@ -16,7 +16,7 @@
 
 typedef void *voidp_t;
 typedef const void *cvoidp_t;
-typedef unsigned long long size_t;
+typedef unsigned long long dim_t;
 
 typedef struct
 {
@@ -53,7 +53,7 @@ priorityqueue pq_create_empty();
  * @param compare a function that can compare two items of your data type
  * @return the size the priority queue is initialized to or 0 if error
  */
-size_t pq_init(priorityqueue *pq, size_t size, int (*compare)(cvoidp_t x, cvoidp_t y));
+dim_t pq_init(priorityqueue *pq, dim_t size, int (*compare)(cvoidp_t x, cvoidp_t y));
 /**
  * @brief remove (free) all items in the priority queue and free it
  *
@@ -67,7 +67,7 @@ void pq_free(priorityqueue *pq);
  * @param pq pointer to the priority queue to get the count from
  * @return item count
  */
-size_t pq_count(priorityqueue *pq);
+dim_t pq_count(priorityqueue *pq);
 /**
  * @brief enqueue an item into the priority queue
  *
@@ -75,7 +75,7 @@ size_t pq_count(priorityqueue *pq);
  * @param item the item to enqueue
  * @return  the item count in the priority queue or 0 if error
  */
-size_t pq_enqueue(priorityqueue *pq, voidp_t item);
+dim_t pq_enqueue(priorityqueue *pq, voidp_t item);
 /**
  * @brief dequeue an item from the priority queue
  *

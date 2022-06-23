@@ -73,7 +73,7 @@ static void print_inorder(const char *description, const bstree bt)
 }
 
 // array print
-static void print_array(item **array, size_t size)
+static void print_array(item **array, dim_t size)
 {
     if (size == 0)
     {
@@ -368,7 +368,7 @@ void auto_tests(int n, int mod)
 #define SIZE3 5
 #define SIZE4 3
 
-static void initt(bstree *t, size_t size, const char arr[])
+static void initt(bstree *t, dim_t size, const char arr[])
 {
     for (int x = 0; x < size; x++)
         bst_insert(t, vcreate(arr[x]), &compare);
@@ -646,7 +646,7 @@ void test_sequence()
     //// to array
 
     bstree toarr = bst_create_empty();
-    size_t size;
+    dim_t size;
     item **arr3;
     item *comp;
 

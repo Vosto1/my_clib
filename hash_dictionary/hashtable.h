@@ -20,28 +20,28 @@
 
 typedef void *voidp_t;
 typedef const void *cvoidp_t;
-typedef unsigned long long size_t;
+typedef unsigned long long dim_t; // dimension/size (same as size_t)
 
 typedef struct htabl hashtable;
 struct htabl
 {
-    size_t (*hash)(cvoidp_t, const hashtable *);
+    dim_t (*hash)(cvoidp_t, const hashtable *);
     int (*compare)(cvoidp_t, cvoidp_t);
     voidp_t *entries;
-    size_t size;
+    dim_t size;
 };
 
 hashtable ht_create_empty();
-size_t ht_init(hashtable *ht, size_t size, size_t (*hash)(cvoidp_t, const hashtable *), int (*compare)(cvoidp_t, cvoidp_t));
+dim_t ht_init(hashtable *ht, dim_t size, dim_t (*hash)(cvoidp_t, const hashtable *), int (*compare)(cvoidp_t, cvoidp_t));
 void ht_destroy(hashtable *ht);
 void ht_free(hashtable *ht);
-size_t ht_trim(hashtable *ht);
+dim_t ht_trim(hashtable *ht);
 
-bool ht_insert(hashtable *ht, voidp_t element);
+int ht_insert(hashtable *ht, voidp_t element);
 voidp_t ht_delete(hashtable *ht, cvoidp_t element);
 voidp_t ht_lookup(const hashtable *ht, cvoidp_t element);
 
-size_t ht_size(const hashtable *ht);
-size_t ht_count(const hashtable *ht);
+dim_t ht_size(const hashtable *ht);
+dim_t ht_count(const hashtable *ht);
 
 #endif

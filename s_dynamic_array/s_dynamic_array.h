@@ -36,7 +36,7 @@
 
 typedef void *voidp_t;
 typedef const void *cvoidp_t;
-typedef unsigned long long size_t;
+typedef unsigned long long dim_t;
 
 typedef enum
 {                               // decrease memory results
@@ -48,8 +48,8 @@ typedef enum
 struct s_dynamicArray
 {
     voidp_t *array;
-    size_t size;
-    size_t used;
+    dim_t size;
+    dim_t used;
 };
 
 typedef struct s_dynamicArray sdarray;
@@ -60,14 +60,14 @@ typedef struct s_dynamicArray sdarray;
  * @param a array to check
  * @return element count
  */
-size_t sda_count(sdarray *a);
+dim_t sda_count(sdarray *a);
 /**
  * @brief get size of an array
  *
  * @param a array to check
  * @return array size
  */
-size_t sda_size(sdarray *a);
+dim_t sda_size(sdarray *a);
 /**
  * create an empty dynamic array
  */
@@ -79,14 +79,14 @@ sdarray sda_create_empty();
  * @param init_size the initial size of the array
  * @return the size of the new array or 0 if error
  */
-size_t sda_init(sdarray *a, size_t init_size);
+dim_t sda_init(sdarray *a, dim_t init_size);
 /**
  * remove (free) all items in the array
  *
  * @param a array to remove from
  * @return the amount of items that was removed or 0 if error
  */
-size_t sda_clear(sdarray *a);
+dim_t sda_clear(sdarray *a);
 /**
  * @brief free array (items not freed)
  *
@@ -106,7 +106,7 @@ void sda_free(sdarray *a);
  * @param item item to insert
  * @return the amount of used indecies in the array or 0 if error
  */
-size_t sda_insert(sdarray *a, voidp_t item);
+dim_t sda_insert(sdarray *a, voidp_t item);
 /**
  * remove the last element of the dynamic array
  *
@@ -129,7 +129,7 @@ voidp_t sda_remove_at(sdarray *a, int index);
  * @param b array to merge with (will be freed)
  * @return the new size of the array (a) or 0 if error
  */
-size_t sda_merge(sdarray *a, sdarray *b);
+dim_t sda_merge(sdarray *a, sdarray *b);
 /**
  * check if the dynamic array is uninitialized
  *

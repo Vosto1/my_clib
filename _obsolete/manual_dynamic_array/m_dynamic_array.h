@@ -26,8 +26,8 @@ typedef enum
 typedef struct
 {
     Data *array;
-    size_t size;
-    size_t used;
+    dim_t size;
+    dim_t used;
 } m_dynamicArray;
 
 typedef m_dynamicArray m_array;
@@ -46,7 +46,7 @@ m_dynamicArray m_createEmptyDynamicArray();
  * @param initSize desired initial size of the array
  * @return size of the manual dynamic array that was created
  */
-size_t m_initDynamicArray(m_dynamicArray *a, size_t initSize);
+dim_t m_initDynamicArray(m_dynamicArray *a, dim_t initSize);
 
 /**
  * free a manual dynamic array

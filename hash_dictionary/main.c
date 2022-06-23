@@ -1,7 +1,5 @@
 #include "test.h"
 
-// I need to count collisions!
-
 int main(void)
 {
     //test_sequence();
@@ -14,6 +12,6 @@ int main(void)
     }
     ticks end = now();
     seconds secs = diff(start, end);
-    printf("Computer %d operations in %d tests during %f seconds.\n", operations, tests, secs);
+    printf("Computed %d operations in %d tests during %f seconds.\n", operations, tests, secs);
     return 0;
 }

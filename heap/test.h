@@ -19,7 +19,7 @@ typedef struct
     Element element;
 } Item;
 
-typedef unsigned long long size_t;
+typedef unsigned long long dim_t;
 
 // user defined functions needed for the heap
 static int compare(const void *x, const void *y);

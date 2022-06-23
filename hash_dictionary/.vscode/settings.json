@@ -2,6 +2,8 @@
     "files.associations": {
         "hashtable.h": "c",
         "dynamic_array.h": "c",
-        "test.h": "c"
+        "test.h": "c",
+        "error.h": "c",
+        "s_dynamic_array.h": "c"
     }
 }

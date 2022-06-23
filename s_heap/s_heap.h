@@ -16,7 +16,7 @@
 
 typedef void *voidp_t;
 typedef const void *cvoidp_t;
-typedef unsigned long long size_t;
+typedef unsigned long long dim_t;
 
 /**
  * The sheap stores pointers to the data as void* pointers.
@@ -58,7 +58,7 @@ sheap sh_create_empty();
  * @param compare a function that can compare two items of your data type
  * @return the size the heap is initialized to or 0 if error
  */
-size_t sh_init(sheap *h, size_t size, int (*compare)(cvoidp_t x, cvoidp_t y));
+dim_t sh_init(sheap *h, dim_t size, int (*compare)(cvoidp_t x, cvoidp_t y));
 /**
  * @brief remove (free) all items in the sheap and free the sheap
  *
@@ -72,7 +72,7 @@ void sh_free(sheap *h);
  * @param h the sheap to get the size of
  * @return item count
  */
-size_t sh_size(sheap *h);
+dim_t sh_size(sheap *h);
 /**
  * @brief peek the top item in the sheap without removing it
  *
@@ -104,7 +104,7 @@ bool sh_is_empty(sheap *h);
  * @param item a pointer to the memory of the item
  * @return the item count in the heap or a value larger than the item count in the heap if error
  */
-size_t sh_insert(sheap *h, voidp_t item);
+dim_t sh_insert(sheap *h, voidp_t item);
 /**
  * @brief extracts the top item (with the smallest key) and removes it from the sheap
  *
@@ -120,7 +120,7 @@ voidp_t sh_extract_min(sheap *h);
  * @param compare a function that can compare two items of your data type
  * @return the heap that was created
  */
-sheap sh_build_min_heap(voidp_t *unorderedList, size_t size, int (*compare)(cvoidp_t x, cvoidp_t y));
+sheap sh_build_min_heap(voidp_t *unorderedList, dim_t size, int (*compare)(cvoidp_t x, cvoidp_t y));
 
 #ifdef __TESTING__
 /**

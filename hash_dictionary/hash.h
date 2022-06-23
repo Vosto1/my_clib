@@ -1,7 +1,7 @@
 #ifndef HASH_H
 #define HASH_H
 
-typedef unsigned long long size_t;
+typedef unsigned long long dim_t;
 #define HASH size_t
 #define UCHAR unsigned char
 
