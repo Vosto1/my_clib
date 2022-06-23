@@ -1,2 +1,0 @@
-I need to use valgrind to test memory leaks
-+ s_dynamic_array is tested!
