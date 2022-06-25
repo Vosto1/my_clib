@@ -9,7 +9,7 @@ cfiles=$(ls | grep -e '\.c$')
 # check if c/hfiles variables are empty
 # if they are script cannot run
 if [ -z "$hfiles" ] || [ -z "$cfiles" ]; then
-    printf "script must be used in a directory with header (.h) and c source (.c) files!"
+    printf "script must be used in a directory with header (.h) and c source (.c) files!\n"
     exit -1
 fi
 

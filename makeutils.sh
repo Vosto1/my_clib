@@ -31,3 +31,6 @@ printf "#!/bin/bash\n# new file to save test results in\ntouch vmemtest.log\n# r
 # add exec privileges
 chmod u+x build.sh
 chmod u+x memcheck.sh
+
+# exit normally
+exit 0
