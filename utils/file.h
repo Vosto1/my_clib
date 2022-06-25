@@ -10,6 +10,7 @@ write/read files
 
 #define BYTE sizeof(unsigned char)
 #define ELEMENT_SIZE 1
+typedef unsigned long long dim_t;
 
 /**
  * read contents of a file (binary)

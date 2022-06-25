@@ -40,7 +40,6 @@ dim_t bv_merge(bitvector *bv, bitvector *mergeWith)
         errcset(ENULL_ARG);
         return -1;
     }
-    bool b;
     for (int i = 0; i < bit_count(mergeWith); i++)
         bv_add(bv, mergeWith->array[i]);
     return bit_count(bv);
@@ -73,6 +72,11 @@ bool *bv_at(bitvector *bv, int index)
 dim_t bv_clear(bitvector *bv)
 {
     return sda_clear(bv);
+}
+
+void bv_delete(bitvector *bv)
+{
+    sda_free(bv);
 }
 
 // converts a bitvector into an array of bytes

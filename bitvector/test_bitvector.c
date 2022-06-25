@@ -104,6 +104,8 @@ void auto_tests(int tests, int lengthRange)
         unit = 'm';
     }
     printf("%f%c, with an average time of %fs (average bv length: %d)\n", teststotalTime, unit, avg, avglen);
+    bv_delete(&bv);
+    bv_delete(&out);
 }
 
 void test_sequence()
@@ -114,7 +116,6 @@ void test_sequence()
     error_handler();
     bv_init(&bv);
     error_handler();
-    bool *newbool;
     int j;
     for (int i = 0; i < 12; i++)
     {

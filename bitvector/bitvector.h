@@ -36,6 +36,7 @@ dim_t bv_merge(bitvector *bv, bitvector *unionWith);
 bool bv_remove_last(bitvector *bv);
 bool *bv_at(bitvector *bv, int index);
 dim_t bv_clear(bitvector *bv);
+void bv_delete(bitvector *bv);
 unsigned int bools2bits(bitvector *bv, binary *out);
 bool bits2bools(binary *b, bitvector *out);
 dim_t write_binary_to_file(binary *b, char *file);
