@@ -69,6 +69,8 @@ bool *bv_at(bitvector *bv, int index)
         return (bool *)bv->array[index];
 }
 
+
+// I need to have a look at clear and delete, they are leaky!
 dim_t bv_clear(bitvector *bv)
 {
     return sda_clear(bv);
