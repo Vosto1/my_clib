@@ -1,4 +1,4 @@
-#include "dynamic_array.h"
+#include "darray.h"
 
 /**
  * checks if the memory should be halved and does so if check is positive

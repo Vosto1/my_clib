@@ -1,4 +1,4 @@
-#include "s_dynamic_array.h"
+#include "sdarray.h"
 
 static MEM sda_memory_decrease(sdarray *a);
 
