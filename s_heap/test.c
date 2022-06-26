@@ -1,5 +1,11 @@
 #include "test.h"
 
+static int compare(const void *x, const void *y);
+static void heapPrintTree(sheap *h);
+static Item *createItem(int x);
+static void insert_n(sheap *h, int n);
+static void remove_all(sheap *h);
+
 // dynamic array
 static int compare(const void *x, const void *y)
 {
@@ -20,9 +26,9 @@ static void heapPrintTree(sheap *h)
     int x = 0;
     for (int i = 0; i < sh_size(h); i++)
     {
-        for (int j = 0; j < pow(2, i) && j + pow(2, i) <= sh_size(h); j++)
+        for (int j = 0; j < pow(2.0, (double)i) && j + pow(2.0, (double)i) <= sh_size(h); j++)
         {
-            x = j + (int)pow(2, i) - 1;
+            x = j + (int)pow(2.0, (double)i) - 1;
             y = h->items.used;
             if (y > x)
             {
@@ -86,7 +92,7 @@ void compute_1_to_n_sequences_of_operations(long n, Test type)
                 assert(sh_insert(&h, item) == sh_size(&h));
             }
             end = now();
-            printf("Computed %d insertion operations during %f seconds.\n", j, diff(start, end));
+            printf("Computed %ld insertion operations during %f seconds.\n", j, diff(start, end));
             j *= 2;
             remove_all(&h);
         }
@@ -103,7 +109,7 @@ void compute_1_to_n_sequences_of_operations(long n, Test type)
                 free(item);
             }
             end = now();
-            printf("Computed %d extract min operations during %f seconds.\n", j, diff(start, end));
+            printf("Computed %ld extract min operations during %f seconds.\n", j, diff(start, end));
             j *= 2;
         }
         break;
@@ -182,9 +188,6 @@ void test_sequence()
     sheap h = sh_create_empty();
     assert(sh_init(&h, 10, &compare) == 10);
     error_handler();
-    ticks programStart = now();
-    ticks start;
-    ticks end;
     Item *rm;
 
     Item *item0 = createItem(97);

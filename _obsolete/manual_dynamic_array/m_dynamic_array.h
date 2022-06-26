@@ -16,7 +16,7 @@ typedef enum
 {
     MEM_HALVED = 0,     // memory halved
     MEM_MS_REACHED = 1, // MEMory Min Size REACHED
-    NMEM_DECREASE = 2,  // No MEMory DECREASE
+    ERRMEM_DECREASE = 2,  // No MEMory DECREASE
     NMEM_INCREASE = 3,  // No MEMory INCREASE
     MEM_DOUBLED = 4,    // memory doubled
 } MEM;

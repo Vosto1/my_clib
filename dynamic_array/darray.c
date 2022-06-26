@@ -139,7 +139,7 @@ voidp_t da_remove_last(darray *a)
     }
     a->used -= 1;
     MEM m = memory_decrease(a);
-    if (m != NMEM_DECREASE)
+    if (m != ERRMEM_DECREASE)
     {
         voidp_t data = a->array[a->used];
         return data;
@@ -178,7 +178,7 @@ voidp_t da_remove_at(darray *a, int index)
     }
     a->used -= 1;
     MEM m = memory_decrease(a);
-    if (m != NMEM_DECREASE)
+    if (m != ERRMEM_DECREASE)
     {
         return data;
     }
@@ -261,7 +261,7 @@ static MEM memory_decrease(darray *a)
         else
         {
             errcset(EMEM_DREALLOC);
-            return NMEM_DECREASE;
+            return ERRMEM_DECREASE;
         }
     }
     return MEM_MS_REACHED_NO_NEED;

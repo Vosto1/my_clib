@@ -1,0 +1,6 @@
+../dynamic_array/darray.c
+main.c
+s_heap.c
+test.c
+../utils/error.c
+../utils/timer.c

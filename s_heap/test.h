@@ -6,7 +6,8 @@
 #include <stdbool.h>
 #include <assert.h>
 #include <stdio.h>
-#include "../dynamic_array/dynamic_array.h"
+#include <math.h>
+#include "../dynamic_array/darray.h"
 #include "../utils/timer.h"
 #include "s_heap.h"
 
@@ -26,9 +27,7 @@ typedef enum Test
     INSERTION = 1,
     DELETION = 2,
 } Test;
-// user defined functions needed for the sheap
-static int compare(const void *x, const void *y);
-static void heapPrintTree(sheap *h);
+
 // test functions
 void test_sequence();
 void compute_1_to_n_sequences_of_operations(long n, Test type);

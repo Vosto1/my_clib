@@ -1,9 +1,0 @@
-make *.c file dependency scan script
-
---> run in a directory with a c project with c and h files.
-The script makes a list of all *.c files that must be added to The
-gcc call to build correctly.
-
-The file can then be used with makeutils.sh
-
-example file in this directory: "example"

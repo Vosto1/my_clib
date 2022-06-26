@@ -1,6 +1,0 @@
-../utils/error.c
-../utils/timer.c
-../s_dynamic_array/sdarray.c
-hashtable.c
-main.c
-test.c

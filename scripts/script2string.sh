@@ -4,12 +4,14 @@
 
 # if there was missing arguments
 test -z "$1" || test -z "$2" && printf "usage: ./script2string [script] [file]\n" && exit -1
-# if the file already exists
-exists=$(ls | grep -e "^$2$")
-test -n "$exists" && printf "cannot overwrite the file \"$2\"!\n" && exit -2
 # if the script file doesnt exist
-exists=$(ls | grep -e "^$1$")
-test -z "$exists" && printf "the file \"$1\" doesnt exist!\n" && exit -3
+fname=$(basename $1)
+exists=$(ls $(dirname $1) | grep -e "^$fname$")
+test -z "$exists" && printf "the file \"$1\" doesnt exist!\n" && exit -2
+# if the file already exists
+fname=$(basename $2)
+exists=$(ls $(dirname $2) | grep -e "^$fname$")
+test -n "$exists" && printf "cannot overwrite the file \"$2\"!\n" && exit -3
 
 # create file
 touch $2

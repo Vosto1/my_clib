@@ -1,0 +1,2 @@
+# I need to check if all the .c files exist, if they dont, remove them from the variable
+# I also need to check for things I have to link, for example for the math.h library

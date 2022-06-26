@@ -7,9 +7,9 @@ hfiles=$(ls | grep -e '\.h$')
 cfiles=$(ls | grep -e '\.c$')
 
 # check if c/hfiles variables are empty
-# if they are script cannot run
+# if they are the script cannot run
 if [ -z "$hfiles" ] || [ -z "$cfiles" ]; then
-    printf "script must be used in a directory with header (.h) and c source (.c) files!\n"
+    printf "the script must be used in a directory with header (.h) and c source (.c) files!\n"
     exit -1
 fi
 
@@ -39,12 +39,10 @@ dependencies="${dependencies//'.h'/".c"}"
 # remove leading newline
 dependencies="${dependencies/'\n'/""}"
 
-# I need ot check if all the .c files exist, if they dont, remove from the variable
-
 # remove duplicates
 rmduplicates=$(printf "$dependencies\n$cfiles\n" | sort | uniq)
 
-# merge included .c files and the .c files from this directory and write to fil
+# merge included .c files and the .c files from this directory and write to file
 printf "$rmduplicates" > filesc.txt
 # exit normally
 printf "directory scanned\n"

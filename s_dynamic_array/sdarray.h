@@ -42,7 +42,7 @@ typedef enum
 {                               // decrease memory results
     MEM_HALVED = 0,             // memory halved
     MEM_MS_REACHED_NO_NEED = 1, // MEMory Min Size REACHED or no need
-    NMEM_DECREASE = 2,          // No MEMory DECREASE (error, check errc global)
+    ERRMEM_DECREASE = 2,          // ERRor MEMory DECREASE (error, check errc global)
 } MEM;
 
 struct s_dynamicArray

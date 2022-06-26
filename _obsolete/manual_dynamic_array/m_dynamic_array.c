@@ -140,7 +140,7 @@ MEM m_memoryDecrease(m_dynamicArray *a)
         else
         {
             errcset(EMEM_DREALLOC);
-            return NMEM_DECREASE;
+            return ERRMEM_DECREASE;
         }
     }
     return MEM_MS_REACHED;

@@ -15,8 +15,8 @@ touch build.sh
 touch memcheck.sh
 
 # build.sh
-TOP="#!/bin/bash\n# remove old executable\nrm prg.out &> /dev/null\n# build\ngcc -Wall "
-BOTTOM=" -o prg.out"
+TOP='#!/bin/bash\n# remove old executable\nrm prg.out &> /dev/null\n# build\ngcc -Wall '
+BOTTOM=' -o prg.out'
 FILES=$(cat $1)
 
 printf "$TOP" > build.sh
@@ -26,7 +26,7 @@ done
 printf "$BOTTOM" >> build.sh
 
 # memcheck.sh
-printf "#!/bin/bash\n# new file to save test results in\ntouch vmemtest.log\n# run memcheck tests\nvalgrind --log-file=\"vmemtest.log\" --leak-check=yes ./prg.out" > memcheck.sh
+printf '#!/bin/bash\n# new file to save test results in\ntouch vmemtest.log\n# run memcheck tests\nif [ -z "$1" ]; then\nvalgrind --log-file="vmemtest.log" --leak-check=yes ./prg.out\nelif [ "$1" == "-s" ]; then\nvalgrind --show-error-list=yes --log-file="vmemtest.log" --leak-check=yes ./prg.out\nfi' > memcheck.sh
 
 # add exec privileges
 chmod u+x build.sh

@@ -100,11 +100,10 @@ dim_t sda_insert(sdarray *a, voidp_t item)
     }
     // memory increase
     if (a->used == a->size)
-    { // index < size, is a guard
+    {   // index < size, is a guard
         // when array is full on insert, double the size
         a->size *= 2;
-        voidp_t *temp;
-        temp = (voidp_t *)realloc(a->array, sizeof(voidp_t) * a->size);
+        voidp_t *temp = (voidp_t *)realloc(a->array, sizeof(voidp_t) * a->size);
         if (temp != NULL)
         {
             a->array = temp;
@@ -128,10 +127,10 @@ voidp_t sda_remove_last(sdarray *a)
         return NULL;
     }
     a->used -= 1;
+    voidp_t data = a->array[a->used];
     MEM m = sda_memory_decrease(a);
-    if (m != NMEM_DECREASE)
+    if (m != ERRMEM_DECREASE)
     {
-        voidp_t data = a->array[a->used];
         return data;
     }
     else
@@ -155,14 +154,14 @@ voidp_t sda_remove_at(sdarray *a, int index)
     }
     a->used -= 1;
     MEM m = sda_memory_decrease(a);
-    if (m != NMEM_DECREASE)
+    if (m != ERRMEM_DECREASE)
     {
         return data;
     }
     else
     {
         a->used += 1;             // rollback
-        a->array[a->used] = data; // rollback
+        a->array[a->used] = data; // "rollback"
         return NULL;
     }
 }
@@ -193,7 +192,7 @@ bool sda_is_empty(sdarray *a)
     return a->used == 0;
 }
 
-// memory check and increase is done in arrayInsert function
+// memory check + increase is done in arrayInsert function
 static MEM sda_memory_decrease(sdarray *a)
 {
     double ratio = (double)a->used / (double)a->size;
@@ -201,8 +200,7 @@ static MEM sda_memory_decrease(sdarray *a)
     if (ratio <= QUARTER && sda_size(a) != 1)
     {
         a->size /= 2;
-        voidp_t *temp;
-        temp = (voidp_t *)realloc(a->array, sizeof(voidp_t) * a->size);
+        voidp_t *temp = (voidp_t *)realloc(a->array, sizeof(voidp_t) * a->size);
         if (temp != NULL)
         {
             a->array = temp;
@@ -211,7 +209,7 @@ static MEM sda_memory_decrease(sdarray *a)
         else
         {
             errcset(EMEM_DREALLOC);
-            return NMEM_DECREASE;
+            return ERRMEM_DECREASE;
         }
     }
     return MEM_MS_REACHED_NO_NEED;

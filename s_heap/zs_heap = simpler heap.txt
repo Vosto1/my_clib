@@ -1,6 +1,0 @@
-remove some functionality from the original heap
-only keep:
-peek (_min)
-extract min
-insert
-(+ freeHeap and other utilities ofc)

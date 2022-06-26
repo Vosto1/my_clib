@@ -1,0 +1,51 @@
+==16516== Memcheck, a memory error detector
+==16516== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==16516== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+==16516== Command: ./prg.out
+==16516== Parent PID: 16513
+==16516== 
+==16516== Invalid read of size 8
+==16516==    at 0x1098B1: da_remove_at (in /home/vosto/Downloads/my_clib/s_heap/prg.out)
+==16516==    by 0x109EDF: sh_extract_min (in /home/vosto/Downloads/my_clib/s_heap/prg.out)
+==16516==    by 0x10A9B6: compute_1_to_n_sequences_of_operations (in /home/vosto/Downloads/my_clib/s_heap/prg.out)
+==16516==    by 0x109C1A: main (in /home/vosto/Downloads/my_clib/s_heap/prg.out)
+==16516==  Address 0x4b79888 is 0 bytes after a block of size 8 alloc'd
+==16516==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==16516==    by 0x1093F9: da_init (in /home/vosto/Downloads/my_clib/s_heap/prg.out)
+==16516==    by 0x109D18: sh_init (in /home/vosto/Downloads/my_clib/s_heap/prg.out)
+==16516==    by 0x10A805: compute_1_to_n_sequences_of_operations (in /home/vosto/Downloads/my_clib/s_heap/prg.out)
+==16516==    by 0x109C1A: main (in /home/vosto/Downloads/my_clib/s_heap/prg.out)
+==16516== 
+==16516== Invalid read of size 8
+==16516==    at 0x1098B1: da_remove_at (in /home/vosto/Downloads/my_clib/s_heap/prg.out)
+==16516==    by 0x109EDF: sh_extract_min (in /home/vosto/Downloads/my_clib/s_heap/prg.out)
+==16516==    by 0x10AC13: heap_integrity_test (in /home/vosto/Downloads/my_clib/s_heap/prg.out)
+==16516==    by 0x109C29: main (in /home/vosto/Downloads/my_clib/s_heap/prg.out)
+==16516==  Address 0x5c80080 is 0 bytes after a block of size 1,280 alloc'd
+==16516==    at 0x484DCD3: realloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==16516==    by 0x1096A3: da_insert (in /home/vosto/Downloads/my_clib/s_heap/prg.out)
+==16516==    by 0x109DE9: sh_insert (in /home/vosto/Downloads/my_clib/s_heap/prg.out)
+==16516==    by 0x10ABB9: heap_integrity_test (in /home/vosto/Downloads/my_clib/s_heap/prg.out)
+==16516==    by 0x109C29: main (in /home/vosto/Downloads/my_clib/s_heap/prg.out)
+==16516== 
+==16516== 
+==16516== HEAP SUMMARY:
+==16516==     in use at exit: 8 bytes in 1 blocks
+==16516==   total heap usage: 2,102,028 allocs, 2,102,027 frees, 84,074,504 bytes allocated
+==16516== 
+==16516== 8 bytes in 1 blocks are definitely lost in loss record 1 of 1
+==16516==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==16516==    by 0x1093F9: da_init (in /home/vosto/Downloads/my_clib/s_heap/prg.out)
+==16516==    by 0x109D18: sh_init (in /home/vosto/Downloads/my_clib/s_heap/prg.out)
+==16516==    by 0x10B705: test_sequence (in /home/vosto/Downloads/my_clib/s_heap/prg.out)
+==16516==    by 0x109BFC: main (in /home/vosto/Downloads/my_clib/s_heap/prg.out)
+==16516== 
+==16516== LEAK SUMMARY:
+==16516==    definitely lost: 8 bytes in 1 blocks
+==16516==    indirectly lost: 0 bytes in 0 blocks
+==16516==      possibly lost: 0 bytes in 0 blocks
+==16516==    still reachable: 0 bytes in 0 blocks
+==16516==         suppressed: 0 bytes in 0 blocks
+==16516== 
+==16516== For lists of detected and suppressed errors, rerun with: -s
+==16516== ERROR SUMMARY: 22 errors from 3 contexts (suppressed: 0 from 0)
