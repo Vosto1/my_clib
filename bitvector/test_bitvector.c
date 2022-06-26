@@ -11,13 +11,9 @@ void auto_tests(int tests, int lengthRange)
     // 5 loop on this algorithm thousands of times.
 
     bitvector bv = bv_create_empty();
-    error_handler();
     bv_init(&bv);
     error_handler();
-    bitvector out = bv_create_empty();
-    error_handler();
-    bv_init(&out);
-    error_handler();
+    bitvector out = bv_create_empty(); // this is initialized in bits2bools
     binary bin;
     bin.amountOfBytes = 0;
     bin.residualBits = 0;
@@ -37,9 +33,9 @@ void auto_tests(int tests, int lengthRange)
     testStart = now();
     for (int k = 0; k < tests; k++)
     {
-        int length = rand() % lengthRange;
+        int length = (rand() % lengthRange) + 1;
         start = now();
-        // create bitvector with 0-lengthRange bits
+        // create bitvector with 1-lengthRange bits
         for (int i = 0; i < length; i++)
         {
             j = rand() % 2;
@@ -70,6 +66,7 @@ void auto_tests(int tests, int lengthRange)
             b2 = fromFile.bytes[x];
             assert(b1 == b2);
         }
+        bv_delete(&out); // out is initialized again in bits2bools below
         assert(bits2bools(&fromFile, &out) != false);
         
         // check both bvs are equal (bv read from file and original)
@@ -91,6 +88,8 @@ void auto_tests(int tests, int lengthRange)
         boolsWrittenAndRead += length;
         avg += testTime;
         avglen += length;
+        free(bin.bytes); // free binaries
+        free(fromFile.bytes); // free binaries
     }
     testEnd = now();
     teststotalTime = diff(testStart, testEnd);
@@ -145,13 +144,16 @@ void test_sequence()
 
     printf("converted from:\n");
     printbitvector(&bv);
+    sda_free(&bv); // free
     printf("convertion back, result:\n");
     printbitvector(&out);
+    sda_free(&out); // free
 
     printf("written bits:\n");
     printbinary(&b);
     assert(write_binary_to_file(&b, "./test2.txt") != 0);
     error_handler();
+    free(b.bytes); // free
     binary read;
     assert(read_binary_from_file("./test2.txt", &read) != 0);
     printf("read bits:\n");
@@ -159,6 +161,8 @@ void test_sequence()
 
     bitvector readbv;
     assert(bits2bools(&read, &readbv) != false);
+    free(read.bytes); // free
 
     printbitvector(&readbv);
+    sda_free(&readbv); // free
 }

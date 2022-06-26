@@ -1,3 +1,4 @@
+#include <assert.h>
 #include "bitvector.h"
 
 static unsigned int bytes_to_bits(unsigned int bytes);
@@ -73,7 +74,9 @@ bool *bv_at(bitvector *bv, int index)
 // I need to have a look at clear and delete, they are leaky!
 dim_t bv_clear(bitvector *bv)
 {
-    return sda_clear(bv);
+    dim_t size = bv->used;
+    while(bv_remove_last(bv));
+    return size;
 }
 
 void bv_delete(bitvector *bv)
@@ -194,9 +197,13 @@ dim_t write_binary_to_file(binary *b, char *file)
     dim_t fileSize = byteSizeResidual + byteSizeData;
 
     if (write_file(file, (void *)buffer, fileSize) == fileSize)
+    {
+        free(buffer);
         return fileSize;
+    }
     else
     {
+        free(buffer);
         errcset(EWRITE_BINARY);
         return 0;
     }
@@ -231,6 +238,7 @@ dim_t read_binary_from_file(char *file, binary *b)
         temp = byteBuffer[i]; // extract byte from read bytes
         b->bytes[j] = temp;   // set extracted byte in data
     }
+    free(fileContents); // free memory allocated by file reading utility
     b->amountOfBytes = byteSizeData;
     b->residualBits = residualBits;
     return byteSizeData;
