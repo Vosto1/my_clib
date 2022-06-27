@@ -11,6 +11,7 @@
 #rm cdepscan.sh &> /dev/null
 #rm memcheck.sh &> /dev/null
 #rm build.sh &> /dev/null
+#rm manualcomplcdeps.sh
 
 # files
 #rm vmemtest.log &> /dev/null

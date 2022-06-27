@@ -1,1 +1,0 @@
-'#!/bin/bash\n\n# remove all scripts and testing files from the directory\n\n# scripts\nrm makeutils.sh &> /dev/null\nrm cdepscan.sh &> /dev/null\nrm memcheck.sh &> /dev/null\nrm build.sh &> /dev/null\n\n# files\nrm vmemtest.log &> /dev/null\nrm filesc.txt &> /dev/null\nrm prg.out &> /dev/null\n\n# self destruct\nrm cleandir.sh &> /dev/null\n\nexit 0\n'

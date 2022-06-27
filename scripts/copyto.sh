@@ -7,11 +7,6 @@ if [ -z "$1"  ]; then
 	exit -1
 fi
 
-# create the dangerous script
-#touch cleandir.sh
-#printf '#!/bin/bash\n\n# remove all scripts and testing files from the directory\n\n# scripts\nrm makeutils.sh &> /dev/null\nrm cdepscan.sh &> /dev/null\nrm memcheck.sh &> /dev/null\nrm build.sh &> /dev/null\n\n# files\nrm vmemtest.log &> /dev/null\nrm filesc.txt &> /dev/null\nrm prg.out &> /dev/null\n\n# self destruct\nrm cleandir.sh &> /dev/null\n\nexit 0\n' > cleandir.sh
-
-
 # === copy and arm cleandir ===
 # ignore lines which begin with "# " or "#!"
 # and uncomment lines which begins with only "#"
@@ -35,7 +30,7 @@ done < "$cldir"
 chmod u+x cleandir.sh
 
 
-(cp "./cdepscan.sh" $1 && cp "./makeutils.sh" $1 && mv "./cleandir.sh" $1) || printf "copy error! The script shouldn't be moved from its original position\n" && exit -1
+(cp "./cdepscan.sh" $1 && cp "./makeutils.sh" $1 && cp "./manualcomplcdeps.sh" $1 && mv "./cleandir.sh" $1) || printf "copy error! The script shouldn't be moved from its original position\n" && exit -1
 
 # exit normally
 exit 0

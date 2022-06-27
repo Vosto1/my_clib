@@ -17,33 +17,36 @@ fi
 rm filesc.txt &> /dev/null
 touch filesc.txt
 
-
-# replace space with newline
-cfiles="${cfiles//' '/"\n"}"
+# remove spaces
+cfiles="${cfiles//' '/""}"
 
 # find all included .h files in file
 for file in $hfiles; do
     includes=$(cat $file | grep -e '^#include ".*\.h"$')
-    # remove "#include" and add a newline between files
-    includes="${includes//\#include /""}"
-    # add to deps variable one include at a time forcing it to become an array of strings
-    for include in $includes; do
-        dependencies="$dependencies\n$include"
-    done
+    # add to dependencies
+    dependencies="$dependencies$includes"
 done
 
+# trim .h files
+# remove "#include"
+dependencies="${dependencies//'#include'/""}"
 # remove quotes
 dependencies="${dependencies//'"'/""}"
-# replace .h with .c
+# replace ".h" with ".c"
 dependencies="${dependencies//'.h'/".c"}"
-# remove leading newline
-dependencies="${dependencies/'\n'/""}"
+
+# trim final
+dependencies="$dependencies$cfiles"
+# remove all newlines, spaces, tabs etc
+dependencies="${dependencies//[$'\t\r\n ']}"
+# add newline at the end of each file
+dependencies="${dependencies//'.c'/".c\\n"}"
 
 # remove duplicates
-rmduplicates=$(printf "$dependencies\n$cfiles\n" | sort | uniq)
+dependencies=$(printf $dependencies | sort | uniq)
 
 # merge included .c files and the .c files from this directory and write to file
-printf "$rmduplicates" > filesc.txt
+printf "$dependencies\n" > filesc.txt
 # exit normally
 printf "directory scanned\n"
 exit 0
