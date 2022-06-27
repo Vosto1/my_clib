@@ -1,5 +1,18 @@
 #include "test.h"
 
+// userdefined function needed for the dyn-array
+static int compareItems(const void *i1, const void *i2);
+
+/*static int _max(int x, int y);
+static double ratio(int used, int size);
+static void print_status(stats stat);*/
+static void print_results(test_result res);
+static Item *createItem(int value);
+static void printData(darray *a);
+static void insert_n(darray *a, int n);
+static void remove_all(darray *a);
+
+
 static int compareItems(const void *i1, const void *i2)
 {
     Item *item1 = (Item *)i1;
@@ -7,7 +20,7 @@ static int compareItems(const void *i1, const void *i2)
     return item1->value - item2->value;
 }
 
-static int _max(int x, int y)
+/*static int _max(int x, int y)
 {
     return x > y ? x : y;
 }
@@ -15,12 +28,6 @@ static int _max(int x, int y)
 static double ratio(int used, int size)
 {
     return (double)used / (double)size;
-}
-
-static void print_results(test_result res)
-{
-    printf("computed %d %s operations during %f seconds.\n", res.operation_amount, res.operation, res.s);
-    // write stats to file (in some good format, for desmos or wolfram for example)
 }
 
 static void print_status(stats stat)
@@ -32,6 +39,12 @@ static void print_status(stats stat)
     printf("used indecies: %d\n", stat.used);
     printf("used vs size ratio: %f\n", stat.ratio);
     printf("-------------------------\n\n");
+}*/
+
+static void print_results(test_result res)
+{
+    printf("computed %d %s operations during %f seconds.\n", res.operation_amount, res.operation, res.s);
+    // write stats to file (in some good format, for desmos or wolfram for example)
 }
 
 static Item *createItem(int value)
@@ -49,7 +62,7 @@ static void printData(darray *a)
         item = (Item *)a->array[i];
         printf("value at %d: %d\n", i, item->value);
     }
-    printf("used: %d\nsize: %d\n\n", a->used, a->size);
+    printf("used: %lld\nsize: %lld\n\n", a->used, a->size);
 }
 
 static void insert_n(darray *a, int n)
@@ -85,10 +98,8 @@ void auto_tests(int n, int mod)
     assert(a.size == 10);
     assert(a.used == 0);
 
-    Item item;
     Item *d;
     srand(time(0));
-    stats stat;
     test_result test_r;
     ticks start;
     ticks end;
@@ -252,7 +263,6 @@ void test_sequence()
     assert(da_insert(&a, (void *)itemptr) != 0);
 
     printData(&a);
-    printf("%d %d\n\n", a.used, a.size);
 
     itemptr = createItem(5);
     assert(da_insert(&a, (void *)itemptr) != 0);

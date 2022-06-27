@@ -157,7 +157,7 @@ sheap sh_build_min_heap(voidp_t *unorderedList, dim_t size, int (*compare)(cvoid
 }
 
 /*test if there are any heap violations*/
-bool s_test_heap_integrity(sheap *h)
+bool sh_test_heap_integrity(sheap *h)
 {
     for (int i = 0; i < sh_size(h); i++)
     {

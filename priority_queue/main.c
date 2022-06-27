@@ -5,7 +5,7 @@
 
 int main(void)
 {
-    if (integrity_check(300))
+    if (integrity_check(100))
         return PASSED;
     else
         return NOT_PASSED;

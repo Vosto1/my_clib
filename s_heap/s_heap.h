@@ -130,7 +130,7 @@ sheap sh_build_min_heap(voidp_t *unorderedList, dim_t size, int (*compare)(cvoid
  * @return true if test passed
  * @return false if test not passed
  */
-bool s_test_heap_integrity(sheap *h);
+bool sh_test_heap_integrity(sheap *h);
 #endif
 
 #endif

@@ -15,7 +15,7 @@ touch build.sh
 touch memcheck.sh
 
 # build.sh
-TOP='#!/bin/bash\n# remove old executable\nrm prg.out &> /dev/null\n# build\ngcc -Wall '
+TOP='#!/bin/bash\n# remove old executable\nrm prg.out &> /dev/null\n# build\ngcc -Wall -g '
 BOTTOM=' -o prg.out'
 FILES=$(cat $1)
 

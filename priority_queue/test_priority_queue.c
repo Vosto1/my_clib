@@ -47,7 +47,7 @@ void heapPrintTree(sheap *h)
             if (y > x)
             {
                 Item *item = (Item *)h->items.array[x];
-                printf("[k%f|%c]", item->p, item->e);
+                printf("[k%d|%c]", item->p, item->e);
             }
             else
                 printf("----");
@@ -66,7 +66,6 @@ bool integrity_check(int n)
     Item *out;
     Item *min;
     int result = 0; // must be initialized to 0
-    bool operation;
     ticks start;
     ticks end;
 
@@ -126,7 +125,7 @@ bool integrity_check(int n)
                 // inc peeks
                 pcount++;
             }
-            if (!s_test_heap_integrity(&pq.h))
+            if (!sh_test_heap_integrity(&pq.h))
             {
                 system("clear");
                 printf("priorityqueue: heap integrity broken\n");

@@ -1,9 +1,0 @@
-{
-    "files.associations": {
-        "dynamic_array.h": "c",
-        "heap.h": "c",
-        "error.h": "c",
-        "bitvector.h": "c",
-        "test_bitvector.h": "c"
-    }
-}

@@ -156,7 +156,7 @@ bool heap_integrity_test(int n)
                     delcount++;
                 }
             }
-            if (!s_test_heap_integrity(&h))
+            if (!sh_test_heap_integrity(&h))
             {
                 system("clear");
                 printf("Heap integrity broken\n");
@@ -208,7 +208,7 @@ void test_sequence()
     sh_insert(&h, item4);
     sh_insert(&h, item5);
 
-    assert(s_test_heap_integrity(&h));
+    assert(sh_test_heap_integrity(&h));
 
     printf("print 1\n");
     heapPrintTree(&h);
@@ -224,7 +224,7 @@ void test_sequence()
     sh_insert(&h, item8);
     sh_insert(&h, item9);
 
-    assert(s_test_heap_integrity(&h));
+    assert(sh_test_heap_integrity(&h));
 
     printf("print 2\n");
     heapPrintTree(&h);
@@ -294,7 +294,7 @@ void test_sequence()
     printf("build min sheap\n");
     heapPrintTree(&h);
 
-    assert(s_test_heap_integrity(&h));
+    assert(sh_test_heap_integrity(&h));
 
     sh_free(&h);
     error_handler();

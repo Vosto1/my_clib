@@ -172,7 +172,7 @@ voidp_t da_remove_at(darray *a, int index)
         return NULL;
     }
     voidp_t *data = a->array[index];
-    for (int i = index; i < a->used; i++)
+    for (int i = index; i < a->used - 1; i++)
     {
         a->array[i] = a->array[i + 1];
     }

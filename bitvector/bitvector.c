@@ -70,12 +70,11 @@ bool *bv_at(bitvector *bv, int index)
         return (bool *)bv->array[index];
 }
 
-
-// I need to have a look at clear and delete, they are leaky!
 dim_t bv_clear(bitvector *bv)
 {
     dim_t size = bv->used;
-    while(bv_remove_last(bv));
+    for (dim_t i = 0; i < size; i++)
+        assert(bv_remove_last(bv));
     return size;
 }
 
@@ -133,18 +132,17 @@ unsigned int bools2bits(bitvector *bv, binary *out)
 // converts an array of bytes to a bitvector
 bool bits2bools(binary *b, bitvector *out)
 {
+    if (out == NULL)
+    {
+        errcset(ENULL_ARG);
+        return false;
+    }
+    
     if (b->bytes == NULL)
     {
         errcset(EARR_EMPTY);
         return false;
     }
-    // initialize -->
-    bitvector bv = bv_create_empty();
-    if (bv_init(&bv) == 0)
-    {
-        return false;
-    }
-    // <--
 
     for (int i = 0; i < b->amountOfBytes; i++)
     {                           // for each byte
@@ -152,16 +150,15 @@ bool bits2bools(binary *b, bitvector *out)
         for (int j = 0; j < bytes_to_bits(sizeof(byte)); j++)
         {                         // for each bit
             if (tmp & (1 << j))   // if there is a 1 at position j
-                bv_add(&bv, true); // add true
+                bv_add(out, true); // add true
             else
-                bv_add(&bv, false); // otherwise there was a 0, add false
+                bv_add(out, false); // otherwise there was a 0, add false
         }
     }
 
     for (int k = 0; k < b->residualBits; k++)
-        bv_remove_last(&bv);
+        bv_remove_last(out);
 
-    *out = bv;
     return true;
 }
 
@@ -182,13 +179,16 @@ dim_t write_binary_to_file(binary *b, char *file)
     int i = 0;
     int j = 0;
     while (i < byteSizeResidual)
-    { // write residual bits to buffer
+    {
+        // write residual bits to buffer
         tmp = res[i];
         buffer[i] = tmp;
         i++;
     }
+    
     while (j < byteSizeData)
-    { // write data to buffer
+    {
+        // write data to buffer
         tmp = b->bytes[j];
         buffer[i] = tmp;
         i++;
