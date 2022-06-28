@@ -6,7 +6,7 @@
 #include <stdbool.h>
 #include <assert.h>
 #include <stdio.h>
-#include "../dynamic_array/dynamic_array.h"
+#include "../dynamic_array/darray.h"
 #include "../utils/timer.h"
 #include "heap.h"
 
@@ -20,13 +20,6 @@ typedef struct
 } Item;
 
 typedef unsigned long long dim_t;
-
-// user defined functions needed for the heap
-static int compare(const void *x, const void *y);
-static void decrementKey(void *base, void **out);
-static void *setKey(void *data, void *key);
-static void minKey(void *base, void **out);
-static void heapPrintTree(heap *h);
 
 typedef enum Test
 {

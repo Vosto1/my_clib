@@ -1,4 +1,4 @@
-#include "test_priority_queue.h"
+#include "test.h"
 
 #define PASSED 0
 #define NOT_PASSED -1

@@ -295,7 +295,7 @@ static int min_heapify_down(heap *h, int index)
     if (smallest != index)
     {
         swap(&(h->items), index, smallest);
-        min_heapify_down(h, smallest);
+        return min_heapify_down(h, smallest);
     }
     else
         return smallest; // return the last index
@@ -312,7 +312,7 @@ static int min_heapify_up(heap *h, int index)
     if (smallest != index)
     {
         swap(&(h->items), index, smallest);
-        min_heapify_up(h, smallest);
+        return min_heapify_up(h, smallest);
     }
     else
         return smallest; // return the last index

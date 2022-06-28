@@ -1,8 +1,7 @@
 #!/bin/bash
 
-if [ "$#" -ne 1 ]; then
+if [ $# -ne 1 ]; then
     printf "usage: ./makeutils.sh [file]\n"
-    printf "[file]: a file with all *.c file dependencies\n"
     exit -1
 fi
 
@@ -15,18 +14,18 @@ touch build.sh
 touch memcheck.sh
 
 # build.sh
-TOP='#!/bin/bash\n# remove old executable\nrm prg.out &> /dev/null\n# build\ngcc -Wall -g '
+TOP='#!/bin/bash\n# make it easier to read\nclear\n# remove old executable\nrm prg.out &> /dev/null\n# build\ngcc -Wall -g '
 BOTTOM=' -o prg.out'
 FILES=$(cat $1)
 
 printf "$TOP" > build.sh
 for FILE in $FILES; do
-    printf "$FILE " >> build.sh
+    printf '%s ' "$FILE" >> build.sh
 done
 printf "$BOTTOM" >> build.sh
 
 # memcheck.sh
-printf '#!/bin/bash\n# new file to save test results in\ntouch vmemtest.log\n# run memcheck tests\nif [ -z "$1" ]; then\nvalgrind --log-file="vmemtest.log" --leak-check=yes ./prg.out\nelif [ "$1" == "-s" ]; then\nvalgrind --show-error-list=yes --log-file="vmemtest.log" --leak-check=yes ./prg.out\nfi' > memcheck.sh
+printf '#!/bin/bash\n# make it easier to read\nclear\n# new file to save test results in\ntouch vmemtest.log\n# run memcheck tests\nif [ -z "$1" ]; then\nvalgrind --log-file="vmemtest.log" --leak-check=yes ./prg.out\nelif [ "$1" == "-p" ]; then\nvalgrind --log-file="vmemtest.log" --leak-check=yes ./prg.out\nclear\ncat vmemtest.log\nelif [ "$1" == "-pe" ]; then\nvalgrind --show-error-list=yes --log-file="vmemtest.log" --leak-check=yes ./prg.out\nclear\ncat vmemtest.log\nfi\n\n' > memcheck.sh
 
 # add exec privileges
 chmod u+x build.sh

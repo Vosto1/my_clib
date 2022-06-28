@@ -22,16 +22,16 @@ static bstree new_node(cvoidp_t element)
 
 // compare functions
 
-static bool is_smaller(cvoidp_t element1, cvoidp_t element2, int (*compare)(cvoidp_t, cvoidp_t));
+//static bool is_smaller(cvoidp_t element1, cvoidp_t element2, int (*compare)(cvoidp_t, cvoidp_t));
 static bool is_bigger(cvoidp_t element1, cvoidp_t element2, int (*compare)(cvoidp_t, cvoidp_t));
 static bool is_equal(cvoidp_t element1, cvoidp_t element2, int (*compare)(cvoidp_t, cvoidp_t));
 static bool left_isnull(const bstree bst);
 static bool right_isnull(const bstree bst);
 
-static bool is_smaller(cvoidp_t element1, cvoidp_t element2, int (*compare)(cvoidp_t, cvoidp_t))
+/*static bool is_smaller(cvoidp_t element1, cvoidp_t element2, int (*compare)(cvoidp_t, cvoidp_t))
 {
     return (*compare)(element1, element2) < 0;
-}
+}*/
 
 static bool is_bigger(cvoidp_t element1, cvoidp_t element2, int (*compare)(cvoidp_t, cvoidp_t))
 {
@@ -98,16 +98,16 @@ void bst_insert(bstree *tree, voidp_t element, int (*compare)(cvoidp_t, cvoidp_t
 
 static bstree *find_smallest_right(bstree *bst, int (*compare)(cvoidp_t, cvoidp_t));
 static bstree *find_largest_left(bstree *bst, int (*compare)(cvoidp_t, cvoidp_t));
+static voidp_t rm_element_occurance(bstree rm);
 static voidp_t rm_with_no_children(bstree *bst);
 static voidp_t rm_with_right_child(bstree *bst);
 static voidp_t rm_with_left_child(bstree *bst);
 static voidp_t rm_with_two_children(bstree *bst, int (*compare)(cvoidp_t, cvoidp_t));
-static voidp_t rm_element_occurance(bstree rm);
-static bstree remove_node(bstree *tree, bstree rm, int (*compare)(cvoidp_t, cvoidp_t));
 static bstree rm_node_with_no_children(bstree *bst);
 static bstree rm_node_with_right_child(bstree *bst);
 static bstree rm_node_with_left_child(bstree *bst);
 static bstree rm_node_with_two_children(bstree *bst, int (*compare)(cvoidp_t, cvoidp_t));
+static bstree remove_node(bstree *tree, bstree rm, int (*compare)(cvoidp_t, cvoidp_t));
 
 static bstree *find_smallest_right(bstree *bst, int (*compare)(cvoidp_t, cvoidp_t))
 {
@@ -154,10 +154,12 @@ static voidp_t rm_with_no_children(bstree *bst)
     if (rm->cont.next == NULL)
     { // if the last of its value
         if (rm->parent != NULL)
+        {
             if (rm->parent->right == rm)
                 rm->parent->right = NULL;
             else
                 rm->parent->left = NULL;
+        }
         *bst = NULL; // for good measure
         voidp_t e = (voidp_t)rm->cont.element;
         free(rm);
@@ -165,7 +167,7 @@ static voidp_t rm_with_no_children(bstree *bst)
         return e;
     }
     else
-        rm_element_occurance(rm);
+        return rm_element_occurance(rm);
 }
 
 static voidp_t rm_with_right_child(bstree *bst)
@@ -177,10 +179,12 @@ static voidp_t rm_with_right_child(bstree *bst)
     if (rm->cont.next == NULL)
     { // if the last of its value
         if (rm->parent != NULL)
+        {
             if (parent->right == rm)
                 parent->right = child;
             else
                 parent->left = child;
+        }
 
         child->parent = parent;
         (*bst) = child; // for good measure
@@ -189,7 +193,7 @@ static voidp_t rm_with_right_child(bstree *bst)
         return e;
     }
     else
-        rm_element_occurance(rm);
+        return rm_element_occurance(rm);
 }
 
 static voidp_t rm_with_left_child(bstree *bst)
@@ -201,10 +205,12 @@ static voidp_t rm_with_left_child(bstree *bst)
     if (rm->cont.next == NULL)
     { // if the last of its value
         if (rm->parent != NULL)
+        {
             if (parent->right == rm)
                 parent->right = child;
             else
                 parent->left = child;
+        }
 
         child->parent = parent;
         (*bst) = child; // for good measure
@@ -213,7 +219,7 @@ static voidp_t rm_with_left_child(bstree *bst)
         return e;
     }
     else
-        rm_element_occurance(rm);
+        return rm_element_occurance(rm);
 }
 
 static voidp_t rm_with_two_children(bstree *bst, int (*compare)(cvoidp_t, cvoidp_t))
@@ -246,10 +252,12 @@ static voidp_t rm_with_two_children(bstree *bst, int (*compare)(cvoidp_t, cvoidp
             rchild->parent = node;
 
         if (parent != NULL)
+        {
             if (parent->right == rm)
                 parent->right = node;
             else
                 parent->left = node;
+        }
 
         node->left = lchild;
         node->right = rchild;
@@ -261,7 +269,7 @@ static voidp_t rm_with_two_children(bstree *bst, int (*compare)(cvoidp_t, cvoidp
         return e;
     }
     else
-        rm_element_occurance(rm);
+        return rm_element_occurance(rm);
 }
 
 static bstree rm_node_with_no_children(bstree *bst)
@@ -269,10 +277,12 @@ static bstree rm_node_with_no_children(bstree *bst)
     bstree rm = *bst;
 
     if (rm->parent != NULL)
+    {
         if (rm->parent->right == rm)
             rm->parent->right = NULL;
         else
             rm->parent->left = NULL;
+    }
     *bst = NULL; // for good measure
     return rm;
 }
@@ -284,10 +294,12 @@ static bstree rm_node_with_right_child(bstree *bst)
     bstree parent = rm->parent;
 
     if (rm->parent != NULL)
+    {
         if (parent->right == rm)
             parent->right = child;
         else
             parent->left = child;
+    }
 
     child->parent = parent;
     (*bst) = child; // for good measure
@@ -301,10 +313,12 @@ static bstree rm_node_with_left_child(bstree *bst)
     bstree parent = rm->parent;
 
     if (rm->parent != NULL)
+    {
         if (parent->right == rm)
             parent->right = child;
         else
             parent->left = child;
+    }
 
     child->parent = parent;
     (*bst) = child; // for good measure
@@ -340,10 +354,12 @@ static bstree rm_node_with_two_children(bstree *bst, int (*compare)(cvoidp_t, cv
         rchild->parent = node;
 
     if (parent != NULL)
+    {
         if (parent->right == rm)
             parent->right = node;
         else
             parent->left = node;
+    }
 
     node->left = lchild;
     node->right = rchild;

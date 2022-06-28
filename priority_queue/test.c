@@ -1,4 +1,4 @@
-#include "test_priority_queue.h"
+#include "test.h"
 
 typedef int priority;
 typedef char element;

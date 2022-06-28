@@ -8,10 +8,10 @@ int main(void)
     ticks start = now();
     for (int i = 0; i < tests; i++)
     {
-        operations += auto_tests(1000, 100);
+        operations += auto_tests(100, 10);
     }
     ticks end = now();
     seconds secs = diff(start, end);
-    printf("Computed %d operations in %d tests during %f seconds.\n", operations, tests, secs);
+    printf("Computed %lld operations in %d tests during %f seconds.\n", operations, tests, secs);
     return 0;
 }

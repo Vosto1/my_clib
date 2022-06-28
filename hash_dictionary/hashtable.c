@@ -105,6 +105,9 @@ dim_t ht_trim(hashtable *ht)
         ht_insert(ht, e);
     }
 
+    // free sdarray
+    sda_destroy(&a);
+
     return ht->size;
 }
 
@@ -286,6 +289,9 @@ static dim_t linear_probe(hashtable *ht, voidp_t element, int* collisions)
         voidp_t e = sda_remove_last(&a);
         ht_insert(ht, e);
     }
+
+    // free sdarray
+    sda_destroy(&a);
 
     // insert the element that we wanted to add from the beginning
     return ht_insert(ht, element);

@@ -1,5 +1,14 @@
 #include "test.h"
 
+// user defined functions needed for the heap
+static int compare(const void *x, const void *y);
+static void *setKey(void *data, void *key);
+static void minKey(void *base, void **out);
+static void decrementKey(void *base, void **out);
+
+// debug print
+static void heapPrintTree(heap *h);
+
 static int compare(const void *x, const void *y)
 {
     Item *item0 = (Item *)x;
@@ -117,7 +126,7 @@ void compute_1_to_n_sequences_of_operations(long n, Test type)
                 assert(h_insert(&h, item) == h_size(&h));
             }
             end = now();
-            printf("Computed %d insertion operations during %f seconds.\n", j, diff(start, end));
+            printf("Computed %ld insertion operations during %f seconds.\n", j, diff(start, end));
             j *= 2;
             remove_all(&h);
         }
@@ -135,7 +144,7 @@ void compute_1_to_n_sequences_of_operations(long n, Test type)
                 free(item);
             }
             end = now();
-            printf("Computed %d deletion operations during %f seconds.\n", j, diff(start, end));
+            printf("Computed %ld deletion operations during %f seconds.\n", j, diff(start, end));
             j *= 2;
         }
         break;
@@ -218,10 +227,8 @@ void test_sequence()
     heap h = h_create_empty();
     assert(h_init(&h, 10, &compare, &setKey, &minKey) == 10);
     error_handler();
-    ticks programStart = now();
-    ticks start;
-    ticks end;
     Item *rm;
+    Item *tmp;
 
     Item *item0 = createItem(97);
     Item *item1 = createItem(82);
@@ -247,18 +254,21 @@ void test_sequence()
     heapPrintTree(&h);
 
     assert(compare(h_min(&h), item5) == 0);
-    int i = h_decrease_key(&h, item3, createItem(1));
+    tmp = createItem(1);
+    int i = h_decrease_key(&h, item3, tmp);
+    free(tmp);
     assert(i != -1);
     assert(compare(h.items.array[i], item3) == 0);
     error_handler();
 
     // decrease key of item3 to 1 but still same element as item3
-    Item *tmp = createItem(1);
+    tmp = createItem(1);
     tmp->key = 1;
     tmp->element = item3->element;
     rm = h_extract_min(&h);
     assert(compare(rm, tmp) == 0);
     free(rm);
+    free(tmp);
 
     rm = h_remove(&h, item2);
     assert(compare(rm, item2) == 0);
@@ -279,8 +289,9 @@ void test_sequence()
     assert(compare(h_min(&h), item8) == 0);
     rm = h_extract_min(&h);
     assert(compare(rm, item8) == 0);
+    Item comp = *item8; // make copy
     free(rm);
-    rm = h_remove(&h, item8);
+    rm = h_remove(&h, &comp);
     assert(rm == NULL);
     assert(errc == EH_DATA_DOESNT_EXIST);
     errcreset();
@@ -323,9 +334,8 @@ void test_sequence()
 
     h_free(&h);
     error_handler();
-
+    
     h = h_create_empty();
-    assert(h_init(&h, 1, &compare, &setKey, &minKey) == 1);
     error_handler();
 
     item0 = createItem(97);

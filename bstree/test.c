@@ -221,7 +221,6 @@ void auto_tests(int n, int mod)
     bstree tree = bst_create_empty();
     voidp_t element, rm;
     int nexttests, type, r1, count;
-    bool (*integrity)(const bstree tree);
     int (*comp)(cvoidp_t, cvoidp_t);
     comp = &compare;
 
@@ -406,10 +405,13 @@ void test_sequence()
     errcinit();
     voidp_t rm;
     item *c = vcreate(99);
+    free(c);
+    c = NULL;
     bstree bt = bst_create_empty();
     assert(bst_is_empty(bt));
     assert(bst_find(bt, (voidp_t)c, &compare) == NULL);
-    bst_remove(&bt, (voidp_t)c, &compare);
+    rm = bst_remove(&bt, (voidp_t)c, &compare);
+    assert(rm == NULL);
     assert(bst_depth(bt) == 0 && bst_mindepth(bt) == 0);
     bst_balance(&bt, &compare);
 
@@ -668,6 +670,9 @@ void test_sequence()
         assert(*comp == inorder[i]);
     }
 
+    // free alloc'd memory
+    free(arr3);
+
     size = bst_toarray_postorder(toarr, (voidp_t)&arr3);
     assert(size == SIZE3);
     print_array(arr3, size);
@@ -678,6 +683,9 @@ void test_sequence()
         assert(*comp == postorder[i]);
     }
 
+    // free alloc'd memory
+    free(arr3);
+
     size = bst_toarray_preorder(toarr, (voidp_t)&arr3);
     assert(size == SIZE3);
     print_array(arr3, size);
@@ -687,6 +695,10 @@ void test_sequence()
         comp = arr3[i];
         assert(*comp == preorder[i]);
     }
+
+    // free alloc'd memory
+    free(arr3);
+    bst_free(&toarr);
 
     // test adding multiple items with the same value
     bt = bst_create_empty();
@@ -717,7 +729,7 @@ void test_sequence()
     bst_balance(&bt, compare);
     int d = bst_depth(bt);
     int md = bst_mindepth(bt);
-    int nc = bst_node_count(bt);
+    //int nc = bst_node_count(bt);
     assert(d == md);
     assert(bst_find(bt, v1, compare));
     assert(bst_find(bt, v5, compare));

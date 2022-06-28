@@ -175,10 +175,13 @@ unsigned int auto_tests(int tests, int mod)
         assert(ht.entries[h] != UNUSED);
     }
 
+    // free sdarray
+    sda_destroy(&a);
+
 
     prgEnd = now();
     seconds programTime = diff(prgStart, prgEnd);
-    printf("Test completed, computed %lld operations during %fs\n", operations, programTime);
+    printf("Test completed, computed %d operations during %fs\n", operations, programTime);
     ht_free(&ht);
     return operations;
 }
