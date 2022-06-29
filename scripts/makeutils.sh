@@ -32,4 +32,5 @@ chmod u+x build.sh
 chmod u+x memcheck.sh
 
 # exit normally
+printf "build.sh and memcheck.sh created\n"
 exit 0

@@ -13,10 +13,12 @@
 #rm build.sh &> /dev/null
 #rm manualcomplcdeps.sh &> /dev/null
 #rm addstr2cdeps.sh &> /dev/null
+#rm rmstrcdeps.sh &> /dev/null
 
 # files
 #rm vmemtest.log &> /dev/null
 #rm filesc.txt &> /dev/null
+#rm filesc.txt.bak &> /dev/null
 #rm prg.out &> /dev/null
 
 # self destruct
