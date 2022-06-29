@@ -98,7 +98,7 @@ ErrorCode1 freeMatrix(Matrix *mtrx)
 	free((*mtrx)->matrix);
 	(*mtrx)->matrix = NULL;
 	free((*mtrx));
-	mtrx = NULL;
+	*mtrx = NULL;
 	return SUCCESS1;
 }
 
@@ -260,13 +260,19 @@ ErrorCode1 getDeterminant(Matrix *mtrx, Data *pdet)
 	assert(ht_init(&ht, htablesize, &myhash, &is_equal) == htablesize);
 	*pdet = determinantDivideAndConquer(mtrx, &ht);
 	printf("initial hashtable size: %lld\n", htablesize);
+	entry *ent;
+	Matrix m;
 	for (int i = 0; i < ht_size(&ht); i++)
+	{
 		if (ht.entries[i] != UNUSED)
 		{
-			entry *ent = (entry *)ht.entries[i];
-			free(ent->m);
+			ent = (entry *)ht.entries[i];
+			m = ent->m;
+			free(ht_delete(&ht, ent));
+			freeMatrix(&m);
+			m = NULL;
 		}
-
+	}
 	ht_free(&ht);
 	return SUCCESS1;
 }
@@ -282,6 +288,7 @@ static Data determinantDivideAndConquer(Matrix *mtrx, hashtable *ht)
 	entry *res;
 	if ((res = (entry *)ht_lookup(ht, e)) != NULL)
 	{
+		freeMatrix(mtrx);
 		free(e);
 		return res->determinant;
 	}
@@ -293,6 +300,10 @@ static Data determinantDivideAndConquer(Matrix *mtrx, hashtable *ht)
 	for (int factorColumnNumber = 0; factorColumnNumber < (*mtrx)->columns; factorColumnNumber++)
 	{ // iterate through the top column/row. See method 3.1 Chapter "Determinants" in "Grundl�ggande linj�r algebra" by Hillevi Gavel.
 		factor = (*mtrx)->matrix[INDEX(factorColumnNumber, factorRowNumber, (*mtrx)->columns)];
+		if (factor == 0)
+		{
+			return 0; // zero factor law
+		}
 		int evenOrOddColumn = factorColumnNumber; // odd columns are negative. See Chapter "Determinants" in "Grundl�ggande linj�r algebra" by Hillevi Gavel. (Why even or odd: page 101).
 		if ((*mtrx)->rows == 2 && (*mtrx)->columns == 2 && factorColumnNumber == 1 && factorRowNumber == 0)
 		{
@@ -334,13 +345,16 @@ static Data determinantDivideAndConquer(Matrix *mtrx, hashtable *ht)
 		{																// is the column number even or odd?
 			Data ret = determinantDivideAndConquer(&smallerMatrix, ht); // determinant of smallerMatrix
 
-			// instead of freeing it here, I use memoization to speed up calculations and free them from the hashtable later
-			e = (entry *)malloc(sizeof(entry));
-			if (e == NULL)
-				exit(-300);
-			e->determinant = ret;
-			e->m = smallerMatrix;
-			ht_insert(ht, e);
+			if (smallerMatrix != NULL) 
+			{
+				// instead of freeing it here, I use memoization to speed up calculations and free them from the hashtable later
+				e = (entry *)malloc(sizeof(entry));
+				if (e == NULL)
+					exit(-300);
+				e->determinant = ret;
+				e->m = smallerMatrix;
+				ht_insert(ht, e);
+			}
 			// freeMatrix(&smallerMatrix); // The function is not destructive to the original matrix. Only smallerMatrix is freed i.e. the matrices made in this function.
 			result += factor * ret;
 		}
@@ -348,13 +362,16 @@ static Data determinantDivideAndConquer(Matrix *mtrx, hashtable *ht)
 		{
 			Data ret = determinantDivideAndConquer(&smallerMatrix, ht); // determinant of smallerMatrix
 
-			// instead of freeing it here, I use memoization to speed up calculations and free them from the hashtable later
-			e = (entry *)malloc(sizeof(entry));
-			if (e == NULL)
-				exit(-300);
-			e->determinant = ret;
-			e->m = smallerMatrix;
-			ht_insert(ht, e);
+			if (smallerMatrix != NULL)
+			{
+				// instead of freeing it here, I use memoization to speed up calculations and free them from the hashtable later
+				e = (entry *)malloc(sizeof(entry));
+				if (e == NULL)
+					exit(-300);
+				e->determinant = ret;
+				e->m = smallerMatrix;
+				ht_insert(ht, e);
+			}
 			// freeMatrix(&smallerMatrix); // The function is not destructive to the original matrix. Only smallerMatrix is freed i.e. the matrices made in this function.
 			result += -1 * factor * ret; // odd columns are negative. See Chapter "Determinants" in "Grundl�ggande linj�r algebra" by Hillevi Gavel. (Why even or odd: page 101).
 		}
@@ -384,12 +401,10 @@ ErrorCode1 getCofactorMatrix(Matrix *mtrx, Matrix *resultMatrix)
 		return ERR_NON_SQUARE_MATRIX;
 
 	Data result = 0;
-	Data factor;
 	for (int factorColumnNumber = 0; factorColumnNumber < (*mtrx)->columns; factorColumnNumber++)
 	{
 		for (int factorRowNumber = 0; factorRowNumber < (*mtrx)->rows; factorRowNumber++)
 		{
-			factor = (*mtrx)->matrix[INDEX(factorColumnNumber, factorRowNumber, (*mtrx)->columns)];
 			// result += determinantDivideAndConquer(mtrx);
 			// Divide and Conquer. Get the values that will be used to make a new smaller matrix.
 			List list = createEmptyList();
@@ -444,11 +459,9 @@ ErrorCode1 getMinors(Matrix *mtrx, Matrix *resultMatrix)
 		return ERR_NON_SQUARE_MATRIX;
 
 	Data result = 0;
-	Data factor;
 	int factorRowNumber = 0;
 	for (int factorColumnNumber = 0; factorColumnNumber < (*mtrx)->columns; factorColumnNumber++)
 	{
-		factor = (*mtrx)->matrix[INDEX(factorColumnNumber, factorRowNumber, (*mtrx)->columns)];
 		// Divide and Conquer. Get the values that will be used to make a new smaller matrix.
 		List list = createEmptyList();
 		for (int row = 0; row < (*mtrx)->rows; row++)

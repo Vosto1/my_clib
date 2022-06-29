@@ -149,7 +149,7 @@ int search(const List list, const Data data)
         {
             return 0;
         }
-        search(list->next, data);
+        return search(list->next, data);
     }
     else
     {
@@ -191,7 +191,7 @@ void clearList(List *list)
   Vid anropet kan man ange stdout som argument 2 for att skriva ut p� skarmen.
   Anvanda fprintf for att skriva ut.
   Den har typen av utskriftfunktion blir mer generell da man kan valja att skriva ut till skarmen eller till fil.*/
-void printList(const List list, FILE *textfile)
+/*void printList(const List list, FILE *textfile)
 {
     if (list != NULL)
     {
@@ -203,7 +203,7 @@ void printList(const List list, FILE *textfile)
         fprintf(textfile, "%d", list->data);
         printList(list->next, textfile);
     }
-}
+}*/
 
 /*Returnera forsta datat i listan
   Precondition: listan ar inte tom (testa med assert)*/
@@ -212,6 +212,7 @@ Data getFirstElement(const List list)
     assert(!isEmpty(list)); // kommentera f�r att menyn ska fungera
     if (list != NULL)
         return list->data; // Ersatt med ratt returvarde
+    return -1; // cant happen due to assert
 }
 
 /*Returnera sista datat i listan
@@ -227,6 +228,7 @@ Data getLastElement(const List list)
         }
         return getLastElement(list->next); // Ersatt med ratt returvarde
     }
+    return -1; // cant happen due to assert
 }
 
 Data getSumOfListData(List list)

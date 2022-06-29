@@ -2,7 +2,7 @@
 #include "test2.h"
 
 #define START_INDEX 2
-#define NEW_ALGO_MAX 15
+#define NEW_ALGO_MAX 12
 #define OLD_ALGO_MAX 11
 
 #define DET_SPACES 30

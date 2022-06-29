@@ -57,7 +57,7 @@ int numberOfNodesInList(const List list);
 void clearList(List *list);
 
 // Skriv ut listan
-void printList(const List list, FILE *textfile);
+//void printList(const List list, FILE *textfile);
 
 // returnera forsta datat i listan
 Data getFirstElement(const List list);
