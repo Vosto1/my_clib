@@ -1,3 +1,4 @@
+// https://qr.ae/pGVxEb (quora answer)
 #define typeof(expr) (_Generic((expr), char                      \
                                : "char", unsigned char           \
                                : "unsigned char", signed char    \

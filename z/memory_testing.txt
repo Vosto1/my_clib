@@ -2,7 +2,7 @@ I need to use valgrind to test for memory leaks
 needs testing:
 - dstring
 - ll
-- matrix
+- matrix (pain)
 no leaks:
 + sdarray is tested!
 + bitvector is tested!
