@@ -1,28 +1,30 @@
 #ifndef COUNTER_H
 #define COUNTER_H
-// thread unsafe
+// thread safe
 
 typedef unsigned int uint;
 
+struct _cntr
+{
+    uint count;
+};
+
+typedef struct _cntr counter;
 
 /**
  * @brief increment counter
  *
  */
-void increment();
+void increment(counter *c);
 /**
  * @brief reset counter
  *
  */
-void reset();
+void reset(counter *c);
 /**
  * @brief get counter value
  *
  */
-uint count();
-
-#define INC increment()
-#define RST reset()
-#define CNT count()
+uint count(counter c);
 
 #endif

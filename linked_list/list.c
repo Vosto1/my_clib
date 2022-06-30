@@ -6,7 +6,7 @@
   Allokerar minne for en ny nod
   om allokeringen lyckades initieras data samt pekare (pekare initieras till NULL).
   Den nya noden (eller NULL) returneras.*/
-static struct node *createListNode(const voidp_t data)
+static struct node *create_list_node(const voidp_t data)
 {
     // ll �r en node ptr
     ll tempNodeptr = (ll)malloc(sizeof(struct node));
@@ -40,7 +40,7 @@ bool ll_is_empty(const ll list)
 void ll_add_first(ll *list, const voidp_t data)
 {
     // skapa ny nod
-    ll temp = createListNode(data);
+    ll temp = create_list_node(data);
     if (temp != NULL)
     {
         if (*list == NULL)
@@ -65,7 +65,7 @@ void ll_add_last(ll *list, const voidp_t data)
         ll_add_first(list, data);
     else if ((*list)->next == NULL)
     {
-        ll temp = createListNode(data);
+        ll temp = create_list_node(data);
         if (temp != NULL)
         {
             (*list)->next = temp;

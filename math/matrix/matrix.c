@@ -179,7 +179,6 @@ ErrorCode1 makeMatrix(int rows, int columns, Matrix *mtrx)
 	Data *matrix = (Data *)malloc(rows * columns * sizeof(Data));
 	if (!matrix || !temp)
 		return ERR_MAKE_MATRIX;
-
 	else
 	{
 		(*mtrx) = temp;
@@ -241,6 +240,21 @@ static dim_t size(dim_t n)
 	return (dim_t)(COEFFICIENT_CONSTANT * powl(E, exponent));
 }
 
+static void print(hashtable* ht)
+{
+    for (int i = 0; i < ht_size(ht); i++)
+    {
+        if (ht->entries[i] != UNUSED)
+        {
+            entry* e = (entry*)ht->entries[i];
+            printf("index %d: USED\n", i);
+        }
+        else
+            printf("index %d: UNUSED\n", i);
+    }
+    printf("\n");
+}
+
 // if the matrix is smaller or equal to 4x4 then the naive version should be called (no memoization)
 // otherwise this (memoized) version should be called.
 ErrorCode1 getDeterminant(Matrix *mtrx, Data *pdet)
@@ -260,17 +274,31 @@ ErrorCode1 getDeterminant(Matrix *mtrx, Data *pdet)
 	assert(ht_init(&ht, htablesize, &myhash, &is_equal) == htablesize);
 	*pdet = determinantDivideAndConquer(mtrx, &ht);
 	printf("initial hashtable size: %lld\n", htablesize);
-	entry *ent;
+	entry *ent, *ent2;
 	Matrix m;
+	print(&ht);
 	for (int i = 0; i < ht_size(&ht); i++)
 	{
 		if (ht.entries[i] != UNUSED)
 		{
 			ent = (entry *)ht.entries[i];
 			m = ent->m;
-			free(ht_delete(&ht, ent));
+			printMatrix(m);
+		}
+	}
+	for (int i = 0; i < ht_size(&ht); i++)
+	{
+		if (ht.entries[i] != UNUSED)
+		{
+			ent = (entry *)ht.entries[i];
+			m = ent->m;
+			printMatrix(m);
+			ent2 = ht_delete(&ht, ent);
+			assert(ent == ent2);
 			freeMatrix(&m);
-			m = NULL;
+			free(ent);
+			//m = NULL; its done in freeMatrix
+			print(&ht);
 		}
 	}
 	ht_free(&ht);
@@ -308,10 +336,11 @@ static Data determinantDivideAndConquer(Matrix *mtrx, hashtable *ht)
 		if ((*mtrx)->rows == 2 && (*mtrx)->columns == 2 && factorColumnNumber == 1 && factorRowNumber == 0)
 		{
 			// we dont want to iterate through the 2x2 matrix. Its the base case.
+			// is this needed?
 			return 0;
 		}
 		if ((*mtrx)->rows == 2 && (*mtrx)->columns == 2)
-		{ // 2x2 matrix is the base case. See Chapter "Determinants" in "Grundl�ggande linj�r algebra" by Hillevi Gavel (page 95)
+		{ 	// 2x2 matrix is the base case. See Chapter "Determinants" in "Grundl�ggande linj�r algebra" by Hillevi Gavel (page 95)
 			// cross multiplication, kind of. Base case. See Chapter "Determinants" in "Grundl�ggande linj�r algebra" by Hillevi Gavel.
 			Data positiveValue = (*mtrx)->matrix[INDEX(0, 0, (*mtrx)->columns)] * (*mtrx)->matrix[INDEX(1, 1, (*mtrx)->columns)];
 			Data negativeValue = (*mtrx)->matrix[INDEX(1, 0, (*mtrx)->columns)] * (*mtrx)->matrix[INDEX(0, 1, (*mtrx)->columns)];
@@ -345,9 +374,8 @@ static Data determinantDivideAndConquer(Matrix *mtrx, hashtable *ht)
 		{																// is the column number even or odd?
 			Data ret = determinantDivideAndConquer(&smallerMatrix, ht); // determinant of smallerMatrix
 
-			if (smallerMatrix != NULL) 
+			if (smallerMatrix != NULL)
 			{
-				// instead of freeing it here, I use memoization to speed up calculations and free them from the hashtable later
 				e = (entry *)malloc(sizeof(entry));
 				if (e == NULL)
 					exit(-300);
@@ -355,6 +383,7 @@ static Data determinantDivideAndConquer(Matrix *mtrx, hashtable *ht)
 				e->m = smallerMatrix;
 				ht_insert(ht, e);
 			}
+			// instead of freeing it here, I use memoization to speed up calculations and free them from the hashtable later
 			// freeMatrix(&smallerMatrix); // The function is not destructive to the original matrix. Only smallerMatrix is freed i.e. the matrices made in this function.
 			result += factor * ret;
 		}
@@ -364,7 +393,6 @@ static Data determinantDivideAndConquer(Matrix *mtrx, hashtable *ht)
 
 			if (smallerMatrix != NULL)
 			{
-				// instead of freeing it here, I use memoization to speed up calculations and free them from the hashtable later
 				e = (entry *)malloc(sizeof(entry));
 				if (e == NULL)
 					exit(-300);
@@ -372,6 +400,7 @@ static Data determinantDivideAndConquer(Matrix *mtrx, hashtable *ht)
 				e->m = smallerMatrix;
 				ht_insert(ht, e);
 			}
+			// instead of freeing it here, I use memoization to speed up calculations and free them from the hashtable later
 			// freeMatrix(&smallerMatrix); // The function is not destructive to the original matrix. Only smallerMatrix is freed i.e. the matrices made in this function.
 			result += -1 * factor * ret; // odd columns are negative. See Chapter "Determinants" in "Grundl�ggande linj�r algebra" by Hillevi Gavel. (Why even or odd: page 101).
 		}

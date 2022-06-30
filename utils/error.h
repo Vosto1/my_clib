@@ -1,5 +1,6 @@
 #ifndef _ERROR_H
 #define _ERROR_H
+// thread unsafe
 
 #include "stdio.h"
 #include "stdlib.h"

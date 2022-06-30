@@ -7,8 +7,8 @@ HASH hash( void * data, int byteSize )
     UCHAR * pd = (UCHAR *) data;
     for( int n = 0; n < byteSize; ++n )
     {
-        hv = hv << 4;
-        hv += pd[ n ];
+        hv = hv << 1;
+        hv += pd[n];
     }
     return hv;
 }

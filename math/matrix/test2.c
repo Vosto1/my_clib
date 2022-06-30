@@ -2,8 +2,8 @@
 #include "test2.h"
 
 #define START_INDEX 2
-#define NEW_ALGO_MAX 12
-#define OLD_ALGO_MAX 11
+#define NEW_ALGO_MAX 3
+#define OLD_ALGO_MAX 9
 
 #define DET_SPACES 30
 
@@ -35,6 +35,7 @@ void comparison(int dim) // dim == matrix dimensions
     double determinant;
     double percent;
     Matrix matrixrand;
+
     errorHandler1(makeMatrix(dim, dim, &matrixrand));
     errorHandler1(initializeMatrixRandomNumbers(matrixrand, rand() % 100 + 2, 1));
     start = now();
@@ -98,13 +99,15 @@ void test2()
 {
     srand(time(NULL));
     // i == matrix dimension to test with
-    int i;
+    
+    testloop(5);
+    //int i;
 
-    print_test_header1();
+    /*print_test_header1();
     for (i = START_INDEX; i < NEW_ALGO_MAX; i++)
-        testloop(i);
+        testloop(i);*/
 
-    print_test_header2();
+    /*print_test_header2();
     for (i = START_INDEX; i <= OLD_ALGO_MAX; i++)
-        comparison(i);
+        comparison(i);*/
 }
