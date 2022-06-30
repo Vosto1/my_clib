@@ -33,9 +33,9 @@ printf "#include \"$1\"\n\n" > $cfile
 # create function definitions
 i=0
 while [ $i -lt ${#fnarray[@]} ]; do
-    #func="${fnarray[i]//';'/""}"
-    #func="${func//'\n'/" "}"
-    printf '%s\n' $fnarray[$i] >> $cfile
+    func=${fnarray[$i]}
+    func=${fnarray[i]//';'/""}
+    printf '%s\n' "$func" >> $cfile
     printf "{\n\n}\n\n" >> $cfile
     ((i=$i+1))
 done
