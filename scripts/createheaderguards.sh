@@ -38,7 +38,7 @@ function non_recursive
 function run
 {
     if [ -z "$hfiles" ]; then
-        printf "the script must be used in a directory with header (.h) files or used recursive!\n"
+        printf "the script must be used in a directory with header (.h) files!\n"
         exit -2
     fi
     guardregex='.*#ifndef.*#define.*#endif.*'
@@ -94,7 +94,7 @@ if [ -n "$1" ] && [ $# -eq 1 ]; then
     ;;
     *)
      # option not recognized
-    printf "option not recognized ./createheaderguards --help for option info\n"
+    printf "option not recognized ./createcguards --help for option info\n"
     exit -1
     ;;
     esac
@@ -106,6 +106,6 @@ elif [ -z "$1" ]; then
     exit 0
 else
     # option not recognized
-    printf "usage: ./createheaderguards [option]\n"
+    printf "usage: ./createcguards [option]\n"
     exit -1
 fi
