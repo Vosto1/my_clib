@@ -37,6 +37,19 @@ vec2 v2div(vec2 v, double d)
     return v2smul(v, 1.0f / d);
 }
 
+vec2 homogenize2d(vec3 h)
+{
+    vec2 v;
+    if (h.z == 0)
+    {
+        fprintf(stderr, "homogenize2d div0\n");
+        v.x = v.y = __DBL_MAX__; // "infinity"
+    }
+    v.x = h.x / h.z;
+    v.y = h.y / h.z;
+    return v;
+}
+
 double v2len(vec2 v)
 {
     sqrt(v.x * v.x + v.y * v.y);

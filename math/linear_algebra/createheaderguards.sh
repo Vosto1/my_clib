@@ -1,42 +1,39 @@
 #!/bin/bash
 
+function getfiles_recursive
+{
+    FILES=$(find "$(pwd)" -regextype sed -regex $1)
+}
+
+function getfiles_non_recursive
+{
+    FILES=$(ls | grep -e $1)
+}
+
 function rmbackups
 {
-    backups=$(find "$(pwd)" -regextype sed -regex ".*/.*\.h.bak$")
+    backups=$FILES
     for backup in $backups; do
         rm $backup
         printf "removed backup $(basename $backup) at $(dirname $backup)\n"
     done
 }
 
-function restore
+function restore_backups
 {
-    backups=$(find "$(pwd)" -regextype sed -regex ".*/.*\.h.bak$")
+    backups=$FILES
     for backup in $backups; do
-        # remove .bak
+        # remove .bak from the name
         orig="${backup//'.bak'/""}"
         # revert
-        mv $backup $orig
+        cp $backup $orig
         printf "restored file $(basename $orig) at $(dirname $orig)\n"
-    done
-}
-
-function recursive
-{
-    hfiles=$(find "$(pwd)" -regextype sed -regex ".*/.*\.h$")
-}
-
-function non_recursive
-{
-    hfilenames=$(ls | grep -e '\.h$')
-    # add full path
-    for hfilename in $hfilenames; do
-        hfiles="$hfiles$(realpath $hfilename) "
     done
 }
 
 function run
 {
+    hfiles=$FILES
     if [ -z "$hfiles" ]; then
         printf "the script must be used in a directory with header (.h) files or used recursive!\n"
         exit -2
@@ -73,23 +70,33 @@ if [ -n "$1" ] && [ $# -eq 1 ]; then
     case "$1" in
     "-r")
     # recursive create h-file guards (all dir below)
-    recursive
+    getfiles_recursive ".*/.*\.h$"
     run
-    exit 0
+    ;;
+    "-rbr")
+    # remove backups recursive
+    getfiles_recursive ".*/.*\.h.bak$"
+    rmbackups
     ;;
     "-rb")
     # remove backups
+    getfiles_non_recursive "\.h.bak$"
     rmbackups
-    exit 0
+    ;;
+    "-ur")
+    # restore using backups recursive (undo)
+    getfiles_recursive ".*/.*\.h.bak$"
+    restore_backups
+    rmbackups
     ;;
     "-u")
     # restore using backups (undo)
-    restore
+    getfiles_non_recursive "\.h.bak$"
+    restore_backups
     rmbackups
-    exit 0
     ;;
     "--help")
-    printf -- "\"-r\" : recursive create h-file guards (all dir below)\n\"-rb\": remove backups\n\"-u\" : undo and restore from backups\nno option: non-recursive create h-file guards (only current dir)\n"
+    printf -- "./createheaderguards [option]:\n\"-r\"  : recursive create h-file guards (all dir below)\n\"-rb\" : remove backups\n\"-rbr\": remove backups recursive\n\"-u\"  : undo and restore from backups\n\"-ur\" : undo and restore from backups recursive\nno option: non-recursive create h-file guards (only current dir)\n"
     exit 0
     ;;
     *)
@@ -98,10 +105,16 @@ if [ -n "$1" ] && [ $# -eq 1 ]; then
     exit -1
     ;;
     esac
+    exit 0
 # no arguments (run default)
 elif [ -z "$1" ]; then
     # non-recursive create h-file guards
-    non_recursive
+    getfiles_non_recursive "\.h$"
+    hfilenames=$FILES
+    # add full path
+    for hfilename in $hfilenames; do
+        hfiles="$hfiles$(realpath $hfilename) "
+    done
     run
     exit 0
 else
