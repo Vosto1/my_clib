@@ -73,5 +73,5 @@ dim_t write_text_file(char *filepath, char **string, dim_t size)
 }
 
 // future functions
-// size_t appendTextFile(); // append to the end of the file
+// size_t append_file(); // append to the end of the file
 // size_t readBytesFile(int amountBytes, int offset); // read a specified amount of bytes from file (from offset to amountBytes)
