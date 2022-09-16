@@ -35,7 +35,7 @@ void bst_insert(bstree *tree, voidp_t element, int (*compare)(cvoidp_t, cvoidp_t
 voidp_t bst_remove(bstree *tree, voidp_t element, int (*compare)(cvoidp_t, cvoidp_t));
 bool bst_is_empty(const bstree tree);
 
-void bst_merge(bstree *bst1, bstree *bst2, int (*compare)(cvoidp_t, cvoidp_t));
+bstree bst_merge(bstree *bst1, bstree *bst2, int (*compare)(cvoidp_t, cvoidp_t));
 
 dim_t bst_toarray_preorder(const bstree tree, voidp_t **array);
 dim_t bst_toarray_inorder(const bstree tree, voidp_t **array);

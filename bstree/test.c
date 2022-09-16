@@ -213,6 +213,7 @@ static bool bstree_test_suit(const bstree tree)
 // auto tests
 #define TYPES_MOD 6 // types + 1 to get 0-->amount_types with modulu
 #define MOD_MERGE 100
+#define MIN_TESTS 1
 
 void auto_tests(int n, int mod)
 {
@@ -231,8 +232,7 @@ void auto_tests(int n, int mod)
 
     for (int i = 0; i < n; i++)
     {
-        nexttests = rand() % mod;
-
+        nexttests = rand() % mod + MIN_TESTS;
         // test sequence start
         start = now();
         for (int j = 0; j < nexttests; j++)
@@ -257,8 +257,8 @@ void auto_tests(int n, int mod)
                     free(rm);
                     element = NULL;
                     rm = NULL;
-                    deletion++;
                 }
+                deletion++;
                 break;
             case 2: // merge
                 r1 = rand() % MOD_MERGE;
@@ -271,12 +271,12 @@ void auto_tests(int n, int mod)
                 }
                 int count1 = bst_count(temp);
                 int count2 = bst_count(tree);
-                bst_merge(&tree, &temp, comp);
+                tree = bst_merge(&tree, &temp, comp);
                 assert((count1 + count2) == bst_count(tree));
                 temp = NULL;
                 merge++;
                 break;
-            case 3: // to array (working)
+            case 3: // to array
                 if (tree != NULL)
                 {
                     count = bst_count(tree);
@@ -291,10 +291,10 @@ void auto_tests(int n, int mod)
                         assert(*v1 <= *v2); // inorder so they can be smaller or equal <=
                     }
                     free(arr);
-                    to_array++;
                 }
+                to_array++;
                 break;
-            case 4: // find (working)
+            case 4: // find
                 if (tree != NULL)
                 {
                     element = randomElement(tree);
@@ -302,7 +302,7 @@ void auto_tests(int n, int mod)
                 }
                 find++;
                 break;
-            case 5: // balance (working)
+            case 5: // balance
                 bst_balance(&tree, comp);
                 assert(bst_depth(tree) == bst_mindepth(tree));
                 balance++;
@@ -584,7 +584,7 @@ void test_sequence()
     // merge non-empty with empty
     bstree t = bst_create_empty();
     initializeTree(&bt);
-    bst_merge(&bt, &t, &compare);
+    bt = bst_merge(&bt, &t, &compare);
     print_inorder("merge non-empty with empty", bt);
     assert(bstree_test_suit(bt));
     bst_free(&bt);
@@ -594,7 +594,7 @@ void test_sequence()
     bt = bst_create_empty();
     t = bst_create_empty();
     initializeTree(&t);
-    bst_merge(&bt, &t, &compare);
+    bt = bst_merge(&bt, &t, &compare);
 
     print_inorder("merge empty with non-empty", bt);
     assert(bstree_test_suit(bt));
@@ -606,7 +606,7 @@ void test_sequence()
     t = bst_create_empty();
     initializeTree1(&t);
     initializeTree2(&bt);
-    bst_merge(&t, &bt, &compare);
+    t = bst_merge(&t, &bt, &compare);
 
     print_inorder("merge non-empty with non-empty", t);
     assert(bstree_test_suit(bt));

@@ -55,6 +55,7 @@ static bool right_isnull(const bstree bst)
 
 bstree bst_create_empty(void)
 {
+    //srand(time(NULL)); // messes with the users rand use (ask user to use srand on their own instead)
     return NULL;
 }
 
@@ -160,7 +161,7 @@ static voidp_t rm_with_no_children(bstree *bst)
             else
                 rm->parent->left = NULL;
         }
-        *bst = NULL; // for good measure
+        *bst = NULL;
         voidp_t e = (voidp_t)rm->cont.element;
         free(rm);
         rm = NULL;
@@ -187,7 +188,7 @@ static voidp_t rm_with_right_child(bstree *bst)
         }
 
         child->parent = parent;
-        (*bst) = child; // for good measure
+        (*bst) = child;
         voidp_t e = (voidp_t)rm->cont.element;
         free(rm);
         return e;
@@ -213,7 +214,7 @@ static voidp_t rm_with_left_child(bstree *bst)
         }
 
         child->parent = parent;
-        (*bst) = child; // for good measure
+        (*bst) = child;
         voidp_t e = (voidp_t)rm->cont.element;
         free(rm);
         return e;
@@ -237,7 +238,7 @@ static voidp_t rm_with_two_children(bstree *bst, int (*compare)(cvoidp_t, cvoidp
         repl = find_largest_left(bst, compare);
     }
 
-    // remove node to replace with, and then replace with node to remove with that
+    // remove node-to-replace-with from tree, and then replace node-to-remove with that node
     if (rm->cont.next == NULL)
     { // if the last of its value
         bstree node = remove_node(bst, *repl, compare);
@@ -283,7 +284,7 @@ static bstree rm_node_with_no_children(bstree *bst)
         else
             rm->parent->left = NULL;
     }
-    *bst = NULL; // for good measure
+    *bst = NULL;
     return rm;
 }
 
@@ -302,7 +303,7 @@ static bstree rm_node_with_right_child(bstree *bst)
     }
 
     child->parent = parent;
-    (*bst) = child; // for good measure
+    (*bst) = child;
     return rm;
 }
 
@@ -321,7 +322,7 @@ static bstree rm_node_with_left_child(bstree *bst)
     }
 
     child->parent = parent;
-    (*bst) = child; // for good measure
+    (*bst) = child;
     return rm;
 }
 
@@ -483,17 +484,26 @@ static void free_container_structs(datacontainer *cont)
     }
 }
 
-void bst_merge(bstree *bst1, bstree *bst2, int (*compare)(cvoidp_t, cvoidp_t))
+bstree bst_merge(bstree *bst1, bstree *bst2, int (*compare)(cvoidp_t, cvoidp_t))
 {
-    if ((*bst2) == NULL)
-        return;
-    voidp_t *array;
-    dim_t size = writeSortedToArray(*bst2, &array);
-    insertFromSortedArray(bst1, array, 0, size - 1, compare);
-    // free array
-    free(array);
-    // free nodes only of bst2
-    bst_destroy(bst2);
+    if ((*bst2) != NULL)
+    {
+        voidp_t *array;
+        dim_t size = writeSortedToArray(*bst2, &array);
+        insertFromSortedArray(bst1, array, 0, size - 1, compare);
+        // free array
+        free(array);
+        // free nodes only of bst2
+        bst_destroy(bst2);
+    }
+
+    // fake that a new tree has been made.
+    bstree bst3 = *bst1;
+    *bst1 = NULL;
+    return bst3;
+    // Q: why fake it?
+    // A: to avoid the possibility of the user accidentally using a NULL pointer,
+    //    and because we dont want to actually create a new tree (optimization).
 }
 
 static void preorder(const bstree tree, cvoidp_t *a, int *index)
