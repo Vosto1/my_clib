@@ -13,10 +13,7 @@
 
 #include "../dynamic_array/darray.h"
 #include "../utils/error.h"
-
-typedef void *voidp_t;
-typedef const void *cvoidp_t;
-typedef unsigned long long dim_t;
+#include "../datatype.h"
 
 /**
  * The heap stores pointers to the data as void* pointers.
@@ -43,7 +40,7 @@ typedef unsigned long long dim_t;
  * - create a smallest key (minKey)
  * It should take an in variable "base" and an out variable "out".
  * From the base (which will be the currently smallest key in the heap)
- * the function should calculate an guaranteed smallest key in the heap
+ * the function should calculate a guaranteed smallest key in the heap
  * (as long as the heap is not modified after).
  * Example: new key = base.key - 1. That will be the smallest
  * new key. The key should then be assigned to the out variable "out".

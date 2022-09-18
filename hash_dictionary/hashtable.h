@@ -15,12 +15,9 @@
 #include <stdlib.h>
 #include "../utils/error.h"
 #include "../s_dynamic_array/sdarray.h"
+#include "../datatype.h"
 
 #define UNUSED NULL
-
-typedef void *voidp_t;
-typedef const void *cvoidp_t;
-typedef unsigned long long dim_t; // dimension/size (same as size_t)
 
 typedef struct htabl hashtable;
 struct htabl

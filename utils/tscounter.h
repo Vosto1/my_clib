@@ -2,14 +2,17 @@
 #define COUNTER_H
 // thread safe
 
-typedef unsigned int uint;
+#include "../datatype.h"
+
+typedef struct _cntr counter;
 
 struct _cntr
 {
     uint count;
+    void (*INC)(counter*);
+    void (*RST)(counter*);
+    uint (*CNT)(counter);
 };
-
-typedef struct _cntr counter;
 
 /**
  * @brief increment counter
@@ -26,5 +29,10 @@ void reset(counter *c);
  *
  */
 uint count(counter c);
+/**
+ * @brief get a new initialized counter
+ * 
+ */
+counter new_counter();
 
 #endif

@@ -2,20 +2,22 @@
 #define _ERROR_H
 // thread safe
 
-#include "stdio.h"
-#include "stdlib.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include "print_color.h"
 
 #define NO_ERROR 0
-#define NO_ERROR_MSG "no error\n"
+#define NO_ERROR_MSG "no error"
+#define ERROR_MESSAGE_MAX_LENGTH 1024
 
 typedef unsigned int errorcode;
-typedef char* errorstring;
+typedef char message;
 
 struct err {
     errorcode errc;
-    errorstring errstr;
-    errorstring (*geterror)(errorcode e);
+    message errstr[ERROR_MESSAGE_MAX_LENGTH];
+    message* (*geterror)(errorcode e);
 };
 
 typedef struct err error;
@@ -35,6 +37,6 @@ void errreset(error* e);
 /**
  * Initialize error struct
  */
-void errinit(errorstring (*geterror)(errorcode e));
+error errinit(message* (*geterror)(errorcode e));
 
 #endif

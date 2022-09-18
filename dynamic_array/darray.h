@@ -16,6 +16,7 @@
 #include <stdbool.h>
 #include <math.h>
 #include "../utils/error.h"
+#include "../datatype.h"
 
 #define QUARTER 0.25
 
@@ -32,15 +33,11 @@
  * 0 when they are equal.
  */
 
-typedef void *voidp_t;
-typedef const void *cvoidp_t;
-typedef unsigned long long dim_t;
-
 typedef enum
 {                               // decrease memory results
     MEM_HALVED = 0,             // memory halved
     MEM_MS_REACHED_NO_NEED = 1, // MEMory Min Size REACHED or no need
-    ERRMEM_DECREASE = 2,          // No MEMory DECREASE (error, check errc global)
+    ERRMEM_DECREASE = 2,        // No MEMory DECREASE (error, check errc global)
 } MEM;
 
 struct dynamicArray

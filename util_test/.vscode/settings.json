@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "stdlib.h": "c",
+        "error.h": "c",
+        "list.h": "c",
+        "s_dynamic_array.h": "c",
+        "datatype.h": "c",
+        "stdbool.h": "c"
+    }
+}

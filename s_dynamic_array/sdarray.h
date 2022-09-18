@@ -16,6 +16,7 @@
 #include <stdbool.h>
 #include <math.h>
 #include "../utils/error.h"
+#include "../datatype.h"
 
 #define QUARTER 0.25
 
@@ -33,10 +34,6 @@
  * Hence the s_dynamic array doesnt need a comparison function (which is the advantage)
  * and only has the main functionality: insert, remove and merge.
  */
-
-typedef void *voidp_t;
-typedef const void *cvoidp_t;
-typedef unsigned long long dim_t;
 
 typedef enum
 {                               // decrease memory results

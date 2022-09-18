@@ -2,8 +2,7 @@
 #define COUNTER_H
 // thread unsafe
 
-typedef unsigned int uint;
-
+#include "../datatype.h"
 
 /**
  * @brief increment counter

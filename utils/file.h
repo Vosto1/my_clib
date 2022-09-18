@@ -7,10 +7,10 @@ write/read files
 #include <stdio.h>
 #include <stdlib.h>
 #include "error.h"
+#include "../datatype.h"
 
-#define BYTE sizeof(unsigned char)
+#define BYTE sizeof(byte)
 #define ELEMENT_SIZE 1
-typedef unsigned long long dim_t;
 
 /**
  * read contents of a file (binary)

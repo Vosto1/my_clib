@@ -10,6 +10,7 @@
 #include "../dynamic_array/darray.h"
 #include "../utils/timer.h"
 #include "s_heap.h"
+#include "../datatype.h"
 
 typedef char Element;
 typedef double Key;
@@ -19,8 +20,6 @@ typedef struct
     Key key;
     Element element;
 } Item;
-
-typedef unsigned long long dim_t;
 
 typedef enum Test
 {

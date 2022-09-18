@@ -1,11 +1,5 @@
 #include "tscounter.h"
 
-counter new_counter()
-{
-    counter c;
-    c.count = 0;
-    return c;
-}
 
 void increment(counter *c)
 {
@@ -20,4 +14,14 @@ void reset(counter *c)
 uint count(counter c)
 {
     return c.count;
+}
+
+counter new_counter()
+{
+    counter c;
+    c.count = 0;
+    c.CNT = count;
+    c.RST = reset;
+    c.INC = increment;
+    return c;
 }

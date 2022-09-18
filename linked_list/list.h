@@ -15,9 +15,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
-
-typedef void *voidp_t;
-typedef const void *cvoidp_t;
+#include "../datatype.h"
 
 /*doubly-linked list*/
 struct node

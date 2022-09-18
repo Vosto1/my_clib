@@ -13,10 +13,7 @@
 
 #include "../s_heap/s_heap.h"
 #include "../utils/error.h"
-
-typedef void *voidp_t;
-typedef const void *cvoidp_t;
-typedef unsigned long long dim_t;
+#include "../datatype.h"
 
 typedef struct
 {

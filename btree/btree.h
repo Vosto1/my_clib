@@ -18,9 +18,8 @@
 #include <stdbool.h>
 #include "../s_dynamic_array/sdarray.h"
 #include "../utils/error.h"
+#include "../datatype.h"
 
-typedef void *voidp_t;
-typedef const void *cvoidp_t;
 typedef struct treenode *btree;
 
 struct treenode

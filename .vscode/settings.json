@@ -1,8 +1,5 @@
 {
     "files.associations": {
-        "stdlib.h": "c",
-        "error.h": "c",
-        "list.h": "c",
-        "s_dynamic_array.h": "c"
+        "tserror.h": "c"
     }
 }

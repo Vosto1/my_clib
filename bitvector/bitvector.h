@@ -16,9 +16,8 @@
 #include "../utils/file.h"
 #include "../utils/error.h"
 #include "../s_dynamic_array/sdarray.h"
+#include "../datatype.h"
 
-typedef unsigned char byte;
-typedef unsigned long long dim_t;
 typedef sdarray bitvector;
 
 typedef struct
