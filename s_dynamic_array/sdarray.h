@@ -97,6 +97,13 @@ void sda_destroy(sdarray *a);
  */
 void sda_free(sdarray *a);
 /**
+ * @brief get item at index
+ * 
+ * @param a array to find item at index
+ * @return pointer to item at index or NULL if index out of bounds
+ */
+cvoidp_t sda_at(sdarray * a, dim_t index);
+/**
  * insert into the dynamic array
  *
  * @param a array to insert into

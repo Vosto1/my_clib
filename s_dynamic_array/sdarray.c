@@ -91,6 +91,18 @@ void sda_free(sdarray *a)
         errcset(EFREE_NULLPTR);
 }
 
+cvoidp_t sda_at(sdarray * a, dim_t index)
+{
+    if (sda_count(a) < index)
+    {
+        return a->array[index];
+    }
+    else
+    {
+        // error
+    }
+}
+
 dim_t sda_insert(sdarray *a, voidp_t item)
 {
     if (a == NULL || a->array == NULL)

@@ -28,7 +28,7 @@ void enqueue(Queue* queue, const Data data)
     assert(getFirstElement((*queue)) == data);
 }
 
-/* Precondition: kon Šr ej tom */
+/* Precondition: kon ï¿½r ej tom */
 void dequeue(Queue* queue)
 {
     assert(!isEmpty(*queue));
@@ -44,7 +44,7 @@ void dequeue(Queue* queue)
     //Tips: Att ta bort fran en ko implementerad som en lankad lista ar precis som att ta bort sist eller forst i en lankad lista.
 }
 
-/* Precondition: kon Šr ej tom */
+/* Precondition: kon ï¿½r ej tom */
 Data peekQueue(const Queue queue)
 {
     assert(!isEmpty(queue));
@@ -61,7 +61,7 @@ Data peekQueue(const Queue queue)
 
 
 /* Anvands for testning och felsokning
-   Tips: det kan vara bra att ocksa notera i utskriften vart borjan respektive slutet pŒ kon Šr */
+   Tips: det kan vara bra att ocksa notera i utskriften vart borjan respektive slutet pï¿½ kon ï¿½r */
 void printQueue(const Queue queue, FILE *textfile)
 {
     printf("back-->  ");
