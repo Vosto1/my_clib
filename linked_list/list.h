@@ -17,50 +17,42 @@
 #include <stdbool.h>
 #include "../datatype.h"
 
-/*doubly-linked list*/
-struct node
-{
-    voidp_t data;
-    struct node *next;
-    struct node *previous;
-};
-
-typedef struct node *ll;
+typedef struct head *ll;
 
 // returns an empty list
 ll ll_create_empty(void);
 
 // returns true if empty
-bool ll_is_empty(const ll list);
+bool ll_is_empty(const ll* head);
 
 // adds a new node first in the list
-void ll_add_first(ll *list, const voidp_t data);
+void ll_add_first(ll *head, cvoidp_t data);
 
 // adds a new node last in the list
-void ll_add_last(ll *list, const voidp_t data);
+void ll_add_last(ll *head, cvoidp_t data);
 
 // remove the node first in the list
-void ll_remove_first(ll *list);
+cvoidp_t ll_remove_first(ll *head);
 
 // remove the node last in the list
-void ll_remove_last(ll *list);
+cvoidp_t ll_remove_last(ll *head);
 
 // ta bort data ur listan (forsta forekomsten), returnera 0 om datat inte finns, annars 1
-bool ll_remove_element(ll *list, const voidp_t data);
+cvoidp_t ll_remove_element(ll *head, cvoidp_t data, int (*compare)(cvoidp_t, cvoidp_t));
 
 // Sok efter data i listan, returnera 1 om datat finns, annars 0.
-bool ll_search(const ll list, const voidp_t data);
+cvoidp_t ll_search(const ll* head, cvoidp_t data, int (*compare)(cvoidp_t, cvoidp_t));
 
 // returnera hur manga noder som finns i listan
-int ll_node_count(const ll list);
+int ll_node_count(const ll* head);
 
 // tom listan /ta bort allt data (alla noder) ur listan
-void ll_clear(ll *list);
+void ll_clear(ll *head, void (*freeObject)(voidp_t));
 
 // returnera forsta datat i listan
-voidp_t ll_get_first(const ll list);
+cvoidp_t ll_get_first(const ll* head);
 
 // returnera sista datat i listan
-voidp_t ll_get_last(const ll list);
+cvoidp_t ll_get_last(const ll* head);
 
 #endif

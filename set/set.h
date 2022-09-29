@@ -5,25 +5,31 @@
 #include "../bstree/bstree.h"
 #include "../datatype.h"
 
-typedef bstree set;
+typedef struct _set set;
 
+/**
+ * @brief create new empty set
+ * 
+ * @return set
+ */
+set st_create_empty();
 /**
  * @brief add an item to the set
  * 
  * @param s set to add to
  * @param item item to add
  * @return true if success
- * @return false if failure
+ * @return false if the set already contains item
  */
-bool set_add(set* s, cvoidp_t item);
+bool set_add(set* s, voidp_t item);
 /**
  * @brief remove an item from the set
  * 
  * @param s set to remove from
  * @param item item to remove
- * @return pointer to removed item or null if error
+ * @return pointer to removed item or null if the set doesn't contain the item
  */
-cvoidp_t set_remove(set* s, cvoidp_t item);
+voidp_t set_remove(set* s, voidp_t item);
 /**
  * @brief check if an item is in the set
  * 
@@ -32,6 +38,6 @@ cvoidp_t set_remove(set* s, cvoidp_t item);
  * @return true if in the set
  * @return false if not in the set
  */
-bool set_contains(set* s, cvoidp_t item);
+bool set_contains(set* s, voidp_t item);
 
 #endif

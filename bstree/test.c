@@ -9,6 +9,12 @@ static item *vcreate(int chv)
     return ch;
 }
 
+static void vfree(voidp_t ch_in)
+{
+    item* ch = (item*)ch_in;
+    free(ch);
+}
+
 static int rascii()
 {
     return rand() % 94 + 32; // ascii character value span
@@ -344,7 +350,7 @@ void auto_tests(int n, int mod)
         end = now();
         error_handler();
         if (tree != NULL)
-            bst_free(&tree);
+            bst_free(&tree, &vfree);
         tree = bst_create_empty();
         // test sequence end
         s = diff(start, end);
@@ -516,7 +522,7 @@ void test_sequence()
 
     print_inorder("depth test", bt);
 
-    bst_free(&bt);
+    bst_free(&bt, &vfree);
     assert(bst_is_empty(bt));
     assert(bst_count(bt) == 0);
     assert(bst_depth(bt) == 0);
@@ -564,7 +570,7 @@ void test_sequence()
     assert(bstree_test_suit(bt));
     print_inorder("2 remove p3", bt);
 
-    bst_free(&bt);
+    bst_free(&bt, &vfree);
     assert(bstree_test_suit(bt));
 
     v1 = NULL;
@@ -587,8 +593,8 @@ void test_sequence()
     bt = bst_merge(&bt, &t, &compare);
     print_inorder("merge non-empty with empty", bt);
     assert(bstree_test_suit(bt));
-    bst_free(&bt);
-    bst_free(&t);
+    bst_free(&bt, &vfree);
+    bst_free(&t, &vfree);
 
     // merge empty with non-empty
     bt = bst_create_empty();
@@ -598,8 +604,8 @@ void test_sequence()
 
     print_inorder("merge empty with non-empty", bt);
     assert(bstree_test_suit(bt));
-    bst_free(&bt);
-    bst_free(&t);
+    bst_free(&bt, &vfree);
+    bst_free(&t, &vfree);
 
     // merge non-empty with non-empty
     bt = bst_create_empty();
@@ -610,8 +616,8 @@ void test_sequence()
 
     print_inorder("merge non-empty with non-empty", t);
     assert(bstree_test_suit(bt));
-    bst_free(&bt);
-    bst_free(&t);
+    bst_free(&bt, &vfree);
+    bst_free(&t, &vfree);
 
     //// balance
 
@@ -623,7 +629,7 @@ void test_sequence()
     print_inorder("balance b1", bt);
     assert(bstree_test_suit(bt));
     assert(bst_depth(bt) == bst_mindepth(bt));
-    bst_free(&bt);
+    bst_free(&bt, &vfree);
 
     // b2
     bt = bst_create_empty();
@@ -633,7 +639,7 @@ void test_sequence()
     print_inorder("balance b2", bt);
     assert(bstree_test_suit(bt));
     assert(bst_depth(bt) == bst_mindepth(bt));
-    bst_free(&bt);
+    bst_free(&bt, &vfree);
 
     // b3
     bt = bst_create_empty();
@@ -643,7 +649,7 @@ void test_sequence()
     print_inorder("balance b3", bt);
     assert(bstree_test_suit(bt));
     assert(bst_depth(bt) == bst_mindepth(bt));
-    bst_free(&bt);
+    bst_free(&bt, &vfree);
 
     //// to array
 
@@ -698,7 +704,7 @@ void test_sequence()
 
     // free alloc'd memory
     free(arr3);
-    bst_free(&toarr);
+    bst_free(&toarr, &vfree);
 
     // test adding multiple items with the same value
     bt = bst_create_empty();
@@ -772,7 +778,7 @@ void test_sequence()
     v8 = NULL;
     v9 = NULL;
 
-    bst_free(&bt);
+    bst_free(&bt, &vfree);
 
     printf("Tests passed.\n");
 }

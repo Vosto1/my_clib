@@ -100,6 +100,7 @@ cvoidp_t sda_at(sdarray * a, dim_t index)
     else
     {
         // error
+        return NULL;
     }
 }
 

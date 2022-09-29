@@ -757,22 +757,22 @@ void bst_balance(bstree *tree, int (*compare)(cvoidp_t, cvoidp_t))
     }
 }
 
-static void free_all_elements(datacontainer *cont)
+static void free_all_elements(datacontainer *cont, void (*freeObject)(voidp_t))
 {
     if (cont->next != NULL)
-        free_all_elements(cont->next);
-    free((voidp_t)cont->element);
+        free_all_elements(cont->next, freeObject);
+    (*freeObject)((voidp_t)cont->element);
 }
 
-static void bstfree(bstree *tree)
+static void bstfree(bstree *tree, void (*freeObject)(voidp_t))
 {
     if ((*tree) != NULL)
     {
-        bstfree(&(*tree)->right);
-        bstfree(&(*tree)->left);
+        bstfree(&(*tree)->right, freeObject);
+        bstfree(&(*tree)->left, freeObject);
         // free all elements in the node
         datacontainer *tmp = &(*tree)->cont;
-        free_all_elements(tmp);
+        free_all_elements(tmp, freeObject);
         // free all value structs in which the elements were stored
         datacontainer *tmp2 = (*tree)->cont.next;
         free_container_structs(tmp2);
@@ -782,11 +782,11 @@ static void bstfree(bstree *tree)
     }
 }
 
-void bst_free(bstree *tree)
+void bst_free(bstree *tree, void (*freeObject)(voidp_t))
 {
     if ((*tree) != NULL)
     {
-        bstfree(tree);
+        bstfree(tree, freeObject);
     }
     else
     {
@@ -809,7 +809,7 @@ void bstdestr(bstree *tree)
     }
 }
 
-// free only nodes (and data container structs) (not elements in the tree)
+// free only nodes (and data container structs, not elements in the tree)
 void bst_destroy(bstree *tree)
 {
     if ((*tree) != NULL)

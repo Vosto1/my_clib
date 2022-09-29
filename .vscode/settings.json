@@ -1,5 +1,9 @@
 {
     "files.associations": {
-        "tserror.h": "c"
+        "tserror.h": "c",
+        "list": "c",
+        "xmemory": "c",
+        "xutility": "c",
+        "utility": "c"
     }
 }

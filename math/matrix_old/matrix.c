@@ -59,10 +59,7 @@ void printString(char *str)
 
 bool isError(int err)
 {
-	if (err == SUCCESS1)
-		return false;
-	else
-		return true;
+	return err != SUCCESS1;
 }
 
 void errorHandler1(int err)
