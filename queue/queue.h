@@ -6,7 +6,7 @@
 #include "../datatype.h"
 //#include "../hash_dictionary/hashtable.h"
 
-/*
+/* 1
     I need to find a good way to move all items in the queue when needed (it's not possible to use sdarray this time)
     Maybe I should create a new array implementation that is circular, and only expands when it is needed.
 
@@ -23,7 +23,7 @@
                 3. this should make sure that I can copy from the back of the queue to the front with as little temporary arrays (as in size) as possible
 */
 
-/*
+/* 2
     Or I can have rules where the queue keeps track of where in the array the indecies end up when they wrap around and then the array needs to be resized
     - Example:
                 On enqueue...
@@ -47,6 +47,11 @@
                 In other words the queue always tries to fill the empty spaces to the left in the array. The datastructure keeps track of indecies by having rules for certains ones.
                 The datastructure also needs to be able to remove rules when they aren't needed anymore. The rules should be kept in a hashtable for fast lookup (the hashtable should be typed)
 
+*/
+
+/* 3
+    1 Maybe its easier to just not use realloc and always malloc and rearange all values anyway
+    2 Otherwise research about data structures (maybe fibonacci heaps are relevant in this case?)
 */
 
 typedef struct q queue;
