@@ -30,7 +30,7 @@ done < "$cldir"
 chmod u+x cleandir.sh
 
 
-(cp "./cdepscan.sh" $1 && cp "./makeutils.sh" $1 && cp "./manualcomplcdeps.sh" $1 && cp "./addstr2cdeps.sh" $1 && cp "./dangerous/rmstrcdeps.sh" $1 && mv "./cleandir.sh" $1) || printf "copy error! The script shouldn't be moved from its original position\n" && exit -1
+(cp "./implementheader.sh" $1 && cp "./createheaderguards.sh" $1 && cp "./cdepscan.sh" $1 && cp "./makeutils.sh" $1 && cp "./manualcomplcdeps.sh" $1 && cp "./addstr2cdeps.sh" $1 && cp "./dangerous/rmstrcdeps.sh" $1 && mv "./cleandir.sh" $1) || printf "copy error! The script shouldn't be moved from its original position\n" && exit -1
 
 # exit normally
 exit 0
