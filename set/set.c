@@ -1,10 +1,5 @@
 #include "set.h"
 
-struct _set {
-    bstree t;
-    int (*compare)(cvoidp_t, cvoidp_t);
-};
-
 set st_create_empty()
 {
     struct _set s;

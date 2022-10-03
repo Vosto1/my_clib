@@ -58,7 +58,7 @@ bool bv_remove_last(bitvector *bv)
     }
 }
 
-// at == get value at index
+// at, get value at index
 bool *bv_at(bitvector *bv, int index)
 {
     if (index >= bv->used)
@@ -115,13 +115,14 @@ unsigned int bools2bits(bitvector *bv, binary *out)
         // j is where we are in the bit sequence and x is where we are in the current byte (0-8)
         for (unsigned int j = currentBit, x = 0; j < nextByteEndInBits && j < bit_count(bv); j++, x++)
         {                                     // set bits according to bitvector
-            bool *bit = (bool *)bv->array[j]; // convert from void* to bool*
+            bool *bit = (bool *)bv_at(bv, j); // convert from void* to bool*
             if (*bit)
             {
                 b = b | (1 << x); // set bit on position x to 1
             }
+            // if bit is false then we skip it, because all bits are initialized to 0 in the start of the outer for-loop
         }
-        bin[i] = b;
+        bin[i] = b; // save byte to byte array
     }
     out->residualBits = residualBitsInLastByte;
     out->amountOfBytes = amountOfBytes;
@@ -213,7 +214,7 @@ dim_t read_binary_from_file(char *file, binary *b)
 {
     void *fileContents;
     dim_t fileSize = read_file(file, &fileContents);
-    byte *byteBuffer = (byte *)fileContents; // set byte pointer to buffer to enable pointer arithmetic
+    byte *byteBuffer = (byte *)fileContents; // set byte pointer to point to buffer to enable pointer arithmetic
 
     dim_t byteSizeResidual = sizeof(unsigned int);    // residual bits size in bytes
     dim_t byteSizeData = fileSize - byteSizeResidual; // get data size in bytes
@@ -255,7 +256,7 @@ void printbitvector(bitvector *bv)
 {
     for (int i = 0; i < bit_count(bv); i++)
     {
-        bool *b = (bool *)bv->array[i];
+        bool *b = (bool *)bv_at(bv, i);
         if (*b)
             printf("value at %d: [true]\n", i);
         else
@@ -286,4 +287,42 @@ void printbinary(binary *bin)
         }
     }
     printf("\n");
+}
+
+binary bin_new()
+{
+    binary bin;
+    bin.amountOfBytes = 0;
+    bin.residualBits = 0;
+    bin.bytes = NULL;
+    return bin;
+}
+
+bool bin_equal(binary x, binary y)
+{
+    if (x.amountOfBytes != y.amountOfBytes || x.residualBits != y.residualBits)
+        return false;
+    // check if both binaries are equal
+    byte b1, b2;
+    for (int i = 0; i < x.amountOfBytes; i++)
+    {
+        b1 = x.bytes[i];
+        b2 = y.bytes[i];
+        if (b1 != b2)
+            return false;
+    }
+    return true;
+}
+
+unsigned int bin_amount_bytes(binary x)
+{
+    return x.amountOfBytes;
+}
+
+bool bin_free(binary x)
+{
+    if (x.bytes == NULL)
+        return false;
+    free(x.bytes);
+    return true;
 }

@@ -3,9 +3,9 @@ needs testing:
 - dstring
 - ll
 - matrix (pain)
++ bitvector changed, needs new testing.
 no leaks:
 + sdarray is tested!
-+ bitvector is tested!
 + btree is tested!
 + darray is tested!
 + s_heap is tested!

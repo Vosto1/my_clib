@@ -141,7 +141,7 @@ void ds_delete(dstring* del)
 	// Postcondition: *del ar NULL och minnet ar frigjort - beh�ver inte testas med assert
 }
 
-dim_t ds_copy(dstring dest, dstring src)
+dim_t ds_copy(dstring* dest, dstring src)
 {
 	if (src == NULL || strlen(src) == 0)
 	{
@@ -149,7 +149,9 @@ dim_t ds_copy(dstring dest, dstring src)
 		return 0;
 	}
 	dstring tmp = (dstring)malloc(strlen(src) + 1);
-
-
-
+	if (!tmp)
+		return 0;
+	*dest = tmp;
+	strcpy(*dest, src);
+	return 1;
 }

@@ -2,6 +2,7 @@
 #define DSTRING_H
 #define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
+#include "../datatype.h"
 
 typedef char *dstring;
 
@@ -26,5 +27,12 @@ void ds_print(dstring s, FILE *file);
 
 /* Frigor minnet f�r en dynamisk strang och satter strangen (*del) till NULL */
 void ds_delete(dstring *del);
+
+//TODO:
+// Fix this implementation
+// create better tests
+//functions to make:
+// string.split
+// string.replace
 
 #endif

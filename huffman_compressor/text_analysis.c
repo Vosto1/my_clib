@@ -40,14 +40,14 @@ hashtable letter_occurances(char *string, int strsize)
     for (int i = 0; i < strsize; i++)
     {
         e = _create_entry(string[i], 1);
-        l = ht_lookup(&ht, e);
+        l = ht_lookup(&ht, e); // the hash function is run only on the character --> i.e. the look up function checks if the character is already in the ht
         if (l == UNUSED)
         {
             ht_insert(&ht, e); // if the letter did not exist add to ht
         }
         else
         {
-            l->v += 1; // if the letter did exist, increment value
+            l->v += 1; // if the letter existed, increment value
         }
     }
     ht_trim(&ht);

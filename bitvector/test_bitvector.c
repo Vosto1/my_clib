@@ -16,14 +16,8 @@ void auto_tests(int tests, int lengthRange)
     bv_init(&bv);
     error_handler();
     bitvector out = bv_create_empty(); // this is initialized in bits2bools
-    binary bin;
-    bin.amountOfBytes = 0;
-    bin.residualBits = 0;
-    bin.bytes = NULL;
-    binary fromFile;
-    fromFile.amountOfBytes = 0;
-    fromFile.residualBits = 0;
-    fromFile.bytes = NULL;
+    binary bin = bin_new();
+    binary fromFile = bin_new();
     int j;
 
     // stats
@@ -51,10 +45,10 @@ void auto_tests(int tests, int lengthRange)
                 break;
             }
         }
-        assert(bv.used == length);
+        assert(bit_count(&bv) == length);
 
         // convert to binary
-        assert(bools2bits(&bv, &bin) == bin.amountOfBytes);
+        assert(bools2bits(&bv, &bin) == bin_amount_bytes(bin));
         error_handler();
         // write to file
         assert(write_binary_to_file(&bin, "autotestfile.bin") != 0);
@@ -63,14 +57,8 @@ void auto_tests(int tests, int lengthRange)
         assert(read_binary_from_file("autotestfile.bin", &fromFile) != 0);
         error_handler();
 
-        // check both binaries are equal
-        byte b1, b2;
-        for (int x = 0; x < bin.amountOfBytes; x++)
-        {
-            b1 = bin.bytes[x];
-            b2 = fromFile.bytes[x];
-            assert(b1 == b2);
-        }
+        // assure that both binaries are equal
+        assert(bin_equal(bin, fromFile));
         
         bv_init(&out);   // initialize
         error_handler();
@@ -110,14 +98,14 @@ void auto_tests(int tests, int lengthRange)
         boolsWrittenAndRead += length;
         avg += testTime;
         avglen += length;
-        free(bin.bytes);      // free binaries
-        free(fromFile.bytes); // free binaries
+        bin_free(bin);      // free binaries
+        bin_free(fromFile); // free binaries
     }
     testEnd = now();
     teststotalTime = diff(testStart, testEnd);
     avg /= tests; // calc average exec time
     avglen /= tests;
-    printf("%d tests passed, bools written to and read from file: %lld time: ", tests, boolsWrittenAndRead);
+    printf("%d tests passed, bools written to and read from file: %lld times. Total time: ", tests, boolsWrittenAndRead);
     char unit = 's';
     if (teststotalTime > 60.0f && teststotalTime < 3600.0f)
     {

@@ -18,14 +18,14 @@
 #include "../s_dynamic_array/sdarray.h"
 #include "../datatype.h"
 
-typedef sdarray bitvector;
 
-typedef struct
+typedef sdarray bitvector;
+typedef struct b
 {
     unsigned int residualBits;
     unsigned int amountOfBytes;
     byte *bytes;
-} binary;
+}binary;
 
 dim_t bit_count(bitvector *bv);
 bitvector bv_create_empty();
@@ -43,5 +43,10 @@ dim_t read_binary_from_file(char *file, binary *b);
 
 void printbitvector(bitvector *bv);
 void printbinary(binary *bin);
+
+binary bin_new();
+bool bin_equal(binary x, binary y);
+unsigned int bin_amount_bytes(binary x);
+bool bin_free(binary x);
 
 #endif

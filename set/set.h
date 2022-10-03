@@ -7,6 +7,11 @@
 
 typedef struct _set set;
 
+struct _set {
+    bstree t;
+    int (*compare)(cvoidp_t, cvoidp_t);
+};
+
 /**
  * @brief create new empty set
  * 
