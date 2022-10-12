@@ -1,1 +1,0 @@
-I need to add a freeObject function to all data structures so that it is possible to clear all items from them (check bstree, already did it there)

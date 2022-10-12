@@ -69,7 +69,7 @@ queue q_create_new_empty();
  * @param size initial size of the queue
  * @return the size of the new queue or 0 if error
  */
-dim_t q_init(queue *q, dim_t size);
+size_t q_init(queue *q, size_t size);
 /**
  * @brief check if the queue is empty
  * 

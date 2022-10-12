@@ -53,9 +53,10 @@ sheap sh_create_empty();
  * @param h pointer to the sheap to initialize
  * @param size the initial size of the sheap
  * @param compare a function that can compare two items of your data type
+ * @param freeObject a function that can free an item of your data type
  * @return the size the heap is initialized to or 0 if error
  */
-dim_t sh_init(sheap *h, dim_t size, int (*compare)(cvoidp_t x, cvoidp_t y));
+size_t sh_init(sheap *h, size_t size, int (*compare)(cvoidp_t x, cvoidp_t y), void (*freeObject)(voidp_t));
 /**
  * @brief remove (free) all items in the sheap and free the sheap
  *
@@ -69,7 +70,7 @@ void sh_free(sheap *h);
  * @param h the sheap to get the size of
  * @return item count
  */
-dim_t sh_size(sheap *h);
+size_t sh_size(sheap *h);
 /**
  * @brief peek the top item in the sheap without removing it
  *
@@ -101,7 +102,7 @@ bool sh_is_empty(sheap *h);
  * @param item a pointer to the memory of the item
  * @return the item count in the heap or a value larger than the item count in the heap if error
  */
-dim_t sh_insert(sheap *h, voidp_t item);
+size_t sh_insert(sheap *h, voidp_t item);
 /**
  * @brief extracts the top item (with the smallest key) and removes it from the sheap
  *
@@ -115,9 +116,10 @@ voidp_t sh_extract_min(sheap *h);
  * @param unorderedList an array of Data
  * @param size the size of the array of Data
  * @param compare a function that can compare two items of your data type
+ * @param freeObject a function that can free an item of your data type
  * @return the heap that was created
  */
-sheap sh_build_min_heap(voidp_t *unorderedList, dim_t size, int (*compare)(cvoidp_t x, cvoidp_t y));
+sheap sh_build_min_heap(voidp_t *unorderedList, size_t size, int (*compare)(cvoidp_t x, cvoidp_t y), void (*freeObject)(voidp_t));
 
 #ifdef __TESTING__
 /**

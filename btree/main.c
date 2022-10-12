@@ -12,6 +12,11 @@ static value createValue(int v)
     return a;
 }
 
+static void freeobj(voidp_t i)
+{
+    free(i);
+}
+
 static int rascii()
 {
     return rand() % 94 + 32; // ascii character value span
@@ -46,7 +51,7 @@ int main(void)
     bt->left = bt_new_node(arr[1]);
     bt->right = bt_new_node(arr[2]);
 
-    bt_free(&bt);
+    bt_free(&bt, freeobj);
 
     printf("Tests passed.\n");
 

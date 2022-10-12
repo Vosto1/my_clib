@@ -12,6 +12,6 @@ bool integrity_check(int n);
 
 // user defined functions needed for the sheap
 int compare(cvoidp_t x, cvoidp_t y);
-void print(dim_t used, voidp_t a[]);
+void print(size_t used, voidp_t a[]);
 
 #endif

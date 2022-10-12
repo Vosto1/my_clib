@@ -7,18 +7,18 @@ typedef struct
 {
     priority p;
     element e;
-} Item;
+} item;
 
 int compare(cvoidp_t x, cvoidp_t y)
 {
-    Item *item1 = (Item *)x;
-    Item *item2 = (Item *)y;
+    item *item1 = (item *)x;
+    item *item2 = (item *)y;
     return item1->p - item2->p;
 }
 
-void print(dim_t used, voidp_t a[])
+void print(size_t used, voidp_t a[])
 {
-    Item *itemArr = (Item *)a;
+    item *itemArr = (item *)a;
     for (int i = 0; i < used; i++)
     {
         printf("value at %d: [%d;%c]\n", i, itemArr[i].p, itemArr[i].e);
@@ -26,12 +26,17 @@ void print(dim_t used, voidp_t a[])
     printf("\n");
 }
 
-Item *createItem(int priority)
+item *create_item(int priority)
 {
-    Item *item = (Item *)malloc(sizeof(Item));
-    item->p = priority;
-    item->e = (char)priority;
-    return item;
+    item *it = (item *)malloc(sizeof(item));
+    it->p = priority;
+    it->e = (char)priority;
+    return it;
+}
+
+void freeObject(voidp_t i)
+{
+    free(i);
 }
 
 void heapPrintTree(sheap *h)
@@ -46,8 +51,8 @@ void heapPrintTree(sheap *h)
             y = h->items.used;
             if (y > x)
             {
-                Item *item = (Item *)h->items.array[x];
-                printf("[k%d|%c]", item->p, item->e);
+                item *it = (item *)h->items.array[x];
+                printf("[k%d|%c]", it->p, it->e);
             }
             else
                 printf("----");
@@ -60,11 +65,11 @@ bool integrity_check(int n)
 {
     srand(time(NULL));
     priorityqueue pq = pq_create_empty();
-    assert(pq_init(&pq, 1, &compare) == 1);
+    assert(pq_init(&pq, 1, &compare, &freeObject) == 1);
     error_handler();
-    Item *item;
-    Item *out;
-    Item *min;
+    item *it;
+    item *out;
+    item *min;
     int result = 0; // must be initialized to 0
     ticks start;
     ticks end;
@@ -83,8 +88,8 @@ bool integrity_check(int n)
             int val = (rand() % 100) + 1; // 1-100
             if (val < 81)
             { // 80%
-                item = createItem(val);
-                assert(pq_enqueue(&pq, (void *)item) != 0);
+                it = create_item(val);
+                assert(pq_enqueue(&pq, (void *)it) != 0);
                 error_handler();
                 // inc enqs
                 enqcount++;
@@ -94,11 +99,11 @@ bool integrity_check(int n)
                 if (pq_count(&pq) != 0)
                 {
                     min = sh_peek(&pq.h);
-                    item = pq_dequeue(&pq);
-                    assert(item != NULL);
+                    it = pq_dequeue(&pq);
+                    assert(it != NULL);
                     error_handler();
-                    result = compare(min, item);
-                    free(item);
+                    result = compare(min, it);
+                    free(it);
                     // inc dqs
                     dqcount++;
                 }

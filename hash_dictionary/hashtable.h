@@ -22,23 +22,24 @@
 typedef struct htabl hashtable;
 struct htabl
 {
-    dim_t (*hash)(cvoidp_t, const hashtable *);
+    size_t (*hash)(cvoidp_t, const hashtable *);
     int (*compare)(cvoidp_t, cvoidp_t);
+    void (*freeObject)(voidp_t);
     voidp_t *entries;
-    dim_t size;
+    size_t size;
 };
 
 hashtable ht_create_empty();
-dim_t ht_init(hashtable *ht, dim_t size, dim_t (*hash)(cvoidp_t, const hashtable *), int (*compare)(cvoidp_t, cvoidp_t));
+size_t ht_init(hashtable *ht, size_t size, size_t (*hash)(cvoidp_t, const hashtable *), int (*compare)(cvoidp_t, cvoidp_t), void (*freeObject)(voidp_t));
 void ht_destroy(hashtable *ht);
 void ht_free(hashtable *ht);
-dim_t ht_trim(hashtable *ht);
+size_t ht_trim(hashtable *ht);
 
 int ht_insert(hashtable *ht, voidp_t element);
 voidp_t ht_delete(hashtable *ht, cvoidp_t element);
 voidp_t ht_lookup(const hashtable *ht, cvoidp_t element);
 
-dim_t ht_size(const hashtable *ht);
-dim_t ht_count(const hashtable *ht);
+size_t ht_size(const hashtable *ht);
+size_t ht_count(const hashtable *ht);
 
 #endif

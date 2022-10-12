@@ -1,8 +1,8 @@
 #ifndef MAT2_H
 #define MAT2_H
 
-#include <math.h>
 #include "../vec2/vec2.h"
+#include "../math2.h"
 
 typedef struct matrix2x2d { double i[4]; } mat2;
 

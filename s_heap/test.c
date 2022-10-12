@@ -2,15 +2,16 @@
 
 static int compare(const void *x, const void *y);
 static void heapPrintTree(sheap *h);
-static Item *createItem(int x);
+static item *create_item(int x);
 static void insert_n(sheap *h, int n);
 static void remove_all(sheap *h);
+static void freeObject(voidp_t i);
 
 // dynamic array
 static int compare(const void *x, const void *y)
 {
-    Item *item0 = (Item *)x;
-    Item *item1 = (Item *)y;
+    item *item0 = (item *)x;
+    item *item1 = (item *)y;
     if (item0->key > item1->key)
         return 1;
     else if (item0->key < item1->key)
@@ -32,8 +33,8 @@ static void heapPrintTree(sheap *h)
             y = h->items.used;
             if (y > x)
             {
-                Item *item = (Item *)h->items.array[x];
-                printf("[k%f|%c]", item->key, item->element);
+                item *it = (item *)h->items.array[x];
+                printf("[k%f|%c]", it->key, it->element);
             }
             else
                 printf("----");
@@ -42,23 +43,28 @@ static void heapPrintTree(sheap *h)
     }
 }
 
-static Item *createItem(int x)
+static item *create_item(int x)
 {
-    Item *item = (Item *)malloc(sizeof(Item));
-    item->element = (char)x;
-    item->key = x;
-    return item;
+    item *it = (item *)malloc(sizeof(item));
+    it->element = (char)x;
+    it->key = x;
+    return it;
+}
+
+static void freeObject(voidp_t i)
+{
+    free(i);
 }
 
 static void insert_n(sheap *h, int n)
 {
-    dim_t e;
-    Item *item;
+    size_t e;
+    item *it;
     for (int j = 0; j < n; j++)
     {
-        item = createItem(rand() % 1000);
+        it = create_item(rand() % 1000);
         e = sh_size(h) + 1;
-        assert(sh_insert(h, (void *)item) == e);
+        assert(sh_insert(h, (void *)it) == e);
         error_handler();
     }
     assert(sh_size(h) == n);
@@ -73,10 +79,10 @@ static void remove_all(sheap *h)
 void compute_1_to_n_sequences_of_operations(long n, Test type)
 {
     sheap h = sh_create_empty();
-    assert(sh_init(&h, 1, &compare) == 1);
+    assert(sh_init(&h, 1, &compare, &freeObject) == 1);
     error_handler();
     long j = 1;
-    Item *item;
+    item *item;
     ticks start;
     ticks end;
     switch (type)
@@ -88,7 +94,7 @@ void compute_1_to_n_sequences_of_operations(long n, Test type)
             for (int i = 0; i < j; i++)
             {
                 int val = rand() % 1000;
-                item = createItem(val);
+                item = create_item(val);
                 assert(sh_insert(&h, item) == sh_size(&h));
             }
             end = now();
@@ -121,9 +127,9 @@ void compute_1_to_n_sequences_of_operations(long n, Test type)
 bool heap_integrity_test(int n)
 {
     sheap h = sh_create_empty();
-    assert(sh_init(&h, 10, &compare) == 10);
+    assert(sh_init(&h, 10, &compare, &freeObject) == 10);
     error_handler();
-    Item *item;
+    item *item;
     ticks start;
     ticks end;
     // counters
@@ -140,7 +146,7 @@ bool heap_integrity_test(int n)
             int val = rand() % 100;
             if (val < 81)
             { // 80%
-                item = createItem(val);
+                item = create_item(val);
                 assert(sh_insert(&h, item) == sh_size(&h));
                 // inc counter
                 inscount++;
@@ -186,20 +192,20 @@ void test_sequence()
 {
     srand(time(NULL));
     sheap h = sh_create_empty();
-    assert(sh_init(&h, 10, &compare) == 10);
+    assert(sh_init(&h, 10, &compare, &freeObject) == 10);
     error_handler();
-    Item *rm;
+    item *rm;
 
-    Item *item0 = createItem(97);
-    Item *item1 = createItem(82);
-    Item *item2 = createItem(59);
-    Item *item3 = createItem(99);
-    Item *item4 = createItem(77);
-    Item *item5 = createItem(34);
-    Item *item6 = createItem(78);
-    Item *item7 = createItem(46);
-    Item *item8 = createItem(21);
-    Item *item9 = createItem(45);
+    item *item0 = create_item(97);
+    item *item1 = create_item(82);
+    item *item2 = create_item(59);
+    item *item3 = create_item(99);
+    item *item4 = create_item(77);
+    item *item5 = create_item(34);
+    item *item6 = create_item(78);
+    item *item7 = create_item(46);
+    item *item8 = create_item(21);
+    item *item9 = create_item(45);
 
     sh_insert(&h, item0);
     sh_insert(&h, item1);
@@ -273,23 +279,23 @@ void test_sequence()
     error_handler();
 
     h = sh_create_empty();
-    assert(sh_init(&h, 1, &compare) == 1);
+    assert(sh_init(&h, 1, &compare, &freeObject) == 1);
     error_handler();
 
-    item0 = createItem(97);
-    item1 = createItem(82);
-    item2 = createItem(59);
-    item3 = createItem(99);
-    item4 = createItem(77);
-    item5 = createItem(34);
-    item6 = createItem(78);
-    item7 = createItem(46);
-    item8 = createItem(21);
-    item9 = createItem(45);
+    item0 = create_item(97);
+    item1 = create_item(82);
+    item2 = create_item(59);
+    item3 = create_item(99);
+    item4 = create_item(77);
+    item5 = create_item(34);
+    item6 = create_item(78);
+    item7 = create_item(46);
+    item8 = create_item(21);
+    item9 = create_item(45);
 
-    Item *b[10] = {item0, item1, item2, item3, item4, item5, item6, item7, item8, item9};
+    item *b[10] = {item0, item1, item2, item3, item4, item5, item6, item7, item8, item9};
 
-    h = sh_build_min_heap((void *)&b, 10, &compare);
+    h = sh_build_min_heap((void *)&b, 10, &compare, &freeObject);
 
     printf("build min sheap\n");
     heapPrintTree(&h);

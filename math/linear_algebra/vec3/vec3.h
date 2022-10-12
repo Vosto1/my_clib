@@ -1,9 +1,9 @@
 #ifndef VEC3_H
 #define VEC3_H
 
-#include <math.h>
 #include "../mat4/mat4.h"
 #include "../vec4/vec4.h"
+#include "../math2.h"
 
 typedef struct vector3d { double x, y, z; } vec3;
 

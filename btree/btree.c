@@ -2,7 +2,7 @@
 
 btree bt_new_node(voidp_t value)
 {
-    btree n = (btree)malloc(sizeof(struct treenode));
+    btree n = (btree)malloc(sizeof(struct treeNode));
     if (n != NULL)
     {
         n->value = value;
@@ -44,25 +44,25 @@ int bt_count(const btree tree)
     return 1 + bt_count(tree->right) + bt_count(tree->left);
 }
 
-static void btfree(btree *tree)
+static void btfree(btree *tree, void (*freeObject)(voidp_t))
 {
     if ((*tree) != NULL)
     {
-        btfree(&(*tree)->right);
-        btfree(&(*tree)->left);
+        btfree(&(*tree)->right, freeObject);
+        btfree(&(*tree)->left, freeObject);
         // free element in the node
-        free((*tree)->value);
+        (*freeObject)((*tree)->value);
         // free the node
         free((*tree));
         (*tree) = NULL;
     }
 }
 
-void bt_free(btree *tree)
+void bt_free(btree *tree, void (*freeObject)(voidp_t))
 {
     if ((*tree) != NULL)
     {
-        btfree(tree);
+        btfree(tree, freeObject);
     }
     else
     {

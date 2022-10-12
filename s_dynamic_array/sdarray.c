@@ -2,12 +2,12 @@
 
 static MEM sda_memory_decrease(sdarray *a);
 
-dim_t sda_count(sdarray *a)
+size_t sda_count(sdarray *a)
 {
     return a->used;
 }
 
-dim_t sda_size(sdarray *a)
+size_t sda_size(sdarray *a)
 {
     return a->size;
 }
@@ -21,7 +21,7 @@ sdarray sda_create_empty()
     return a;
 }
 
-dim_t sda_init(sdarray *a, dim_t init_size)
+size_t sda_init(sdarray *a, size_t init_size, void (*freeObject)(voidp_t))
 {
     a->size = 0;
     a->used = 0;
@@ -31,6 +31,7 @@ dim_t sda_init(sdarray *a, dim_t init_size)
     {
         a->array = temp;
         a->size = init_size;
+        a->freeObject = freeObject;
         return init_size;
     }
     else
@@ -41,7 +42,7 @@ dim_t sda_init(sdarray *a, dim_t init_size)
     }
 }
 
-dim_t sda_clear(sdarray *a)
+size_t sda_clear(sdarray *a)
 {
     if (sda_is_empty(a))
     {
@@ -57,7 +58,7 @@ dim_t sda_clear(sdarray *a)
     for (int i = 0; i < amount; i++)
     {
         d = sda_remove_last(a);
-        free(d);
+        (*a->freeObject)(d);
     }
     return amount;
 }
@@ -91,7 +92,7 @@ void sda_free(sdarray *a)
         errcset(EFREE_NULLPTR);
 }
 
-cvoidp_t sda_at(sdarray * a, dim_t index)
+cvoidp_t sda_at(sdarray * a, size_t index)
 {
     if (sda_count(a) < index)
     {
@@ -104,7 +105,7 @@ cvoidp_t sda_at(sdarray * a, dim_t index)
     }
 }
 
-dim_t sda_insert(sdarray *a, voidp_t item)
+size_t sda_insert(sdarray *a, voidp_t item)
 {
     if (a == NULL || a->array == NULL)
     {
@@ -179,7 +180,7 @@ voidp_t sda_remove_at(sdarray *a, int index)
     }
 }
 
-dim_t sda_merge(sdarray *a, sdarray *b)
+size_t sda_merge(sdarray *a, sdarray *b)
 {
     if (a == NULL || b == NULL)
     {

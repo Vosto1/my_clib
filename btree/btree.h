@@ -16,13 +16,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include "../s_dynamic_array/sdarray.h"
+//#include "../s_dynamic_array/sdarray.h"
 #include "../utils/error.h"
 #include "../datatype.h"
 
-typedef struct treenode *btree;
+typedef struct treeNode *btree;
 
-struct treenode
+struct treeNode
 {
 	voidp_t value;
 	btree left;
@@ -38,7 +38,7 @@ bool bt_is_empty(const btree tree);
 
 int bt_count(const btree tree);
 
-void bt_free(btree *tree);
+void bt_free(btree *tree, void (*freeObject)(voidp_t));
 void bt_destroy(btree *tree);
 
 #endif

@@ -1,9 +1,10 @@
 #ifndef MAT4_H
 #define MAT4_H
 
-#include <math.h>
+
 #include <stdio.h>
 #include "../vec3/vec3.h"
+#include "../math2.h"
 
 typedef struct matrix4x4d { double i[16]; } mat4;
 

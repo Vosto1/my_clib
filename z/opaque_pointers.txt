@@ -1,1 +1,0 @@
-I need to add opaque pointers to my structs to hide implementation details

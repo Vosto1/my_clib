@@ -3,6 +3,6 @@
 
 #include "../../datatype.h"
 
-void quicksort(voidp_t array[], dim_t array_size, int (*compare)(voidp_t, voidp_t));
+void quicksort(voidp_t array[], size_t array_size, int (*compare)(voidp_t, voidp_t));
 
 #endif

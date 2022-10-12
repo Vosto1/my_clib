@@ -43,9 +43,10 @@ typedef enum
 struct dynamicArray
 {
     voidp_t *array;
-    dim_t size;
-    dim_t used;
+    size_t size;
+    size_t used;
     int (*compare)(cvoidp_t x, cvoidp_t y);
+    void (*freeObject)(voidp_t);
 };
 
 typedef struct dynamicArray darray;
@@ -56,14 +57,14 @@ typedef struct dynamicArray darray;
  * @param a array to check
  * @return element count
  */
-dim_t da_count(darray *a);
+size_t da_count(darray *a);
 /**
  * @brief get size of an array
  *
  * @param a array to check
  * @return array size
  */
-dim_t da_size(darray *a);
+size_t da_size(darray *a);
 /**
  * create an empty dynamic array
  */
@@ -74,9 +75,10 @@ darray da_create_empty();
  * @param a pointer to the array to initialize
  * @param init_size the initial size of the array
  * @param compare comparison function to compare items
+ * @param freeObject function to free an item
  * @return the initial size of the array or 0 if error
  */
-dim_t da_init(darray *a, dim_t init_size, int (*compare)(cvoidp_t x, cvoidp_t y));
+size_t da_init(darray *a, size_t init_size, int (*compare)(cvoidp_t x, cvoidp_t y), void (*freeObject)(voidp_t));
 /**
  * @brief free the array but not the items
  * 
@@ -95,7 +97,7 @@ void da_free(darray *a);
  * @param a array to remove from
  * @return the amount of items that was removed or 0 if error
  */
-dim_t da_clear(darray *a);
+size_t da_clear(darray *a);
 /**
  * insert into the dynamic array
  *
@@ -103,7 +105,7 @@ dim_t da_clear(darray *a);
  * @param item item to insert
  * @return the amount of used indecies in the array or 0 if error
  */
-dim_t da_insert(darray *a, voidp_t item);
+size_t da_insert(darray *a, voidp_t item);
 /**
  * remove the last element of the dynamic array
  *
@@ -134,7 +136,7 @@ voidp_t da_remove_at(darray *a, int index);
  * @param b array to merge with (will be freed)
  * @return the new size of the array (a) or 0 if error
  */
-dim_t da_merge(darray *a, darray *b); // add array b on the end of array a O(n)
+size_t da_merge(darray *a, darray *b); // add array b on the end of array a O(n)
 /**
  * check if the dynamic array is uninitialized
  *

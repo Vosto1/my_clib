@@ -27,7 +27,7 @@ cvoidp_t llq_peek(llqueue* q)
     return ll_get_first(q);
 }
 
-dim_t llq_count(llqueue* q)
+size_t llq_count(llqueue* q)
 {
     return ll_node_count(q);
 }

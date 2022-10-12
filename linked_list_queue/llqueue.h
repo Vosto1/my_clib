@@ -47,6 +47,6 @@ cvoidp_t llq_peek(llqueue* q);
  * @param q queue to get count of
  * @return element count
  */
-dim_t llq_count(llqueue* q);
+size_t llq_count(llqueue* q);
 
 #endif

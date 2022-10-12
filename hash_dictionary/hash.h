@@ -3,7 +3,7 @@
 
 #include "../datatype.h"
 
-#define HASH dim_t
+#define HASH size_t
 #define UCHAR unsigned char
 
 HASH hash(void * data, int byteSize);

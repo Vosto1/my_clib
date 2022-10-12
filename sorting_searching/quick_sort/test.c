@@ -16,11 +16,11 @@ int compare(voidp_t i, voidp_t j)
     return *k - *l;
 }
 
-bool is_sorted(voidp_t a[], dim_t size)
+bool is_sorted(voidp_t a[], size_t size)
 {
 
     int* prev = (int*)a[0], *current;
-    for (dim_t i = 1; i < size; i++)
+    for (size_t i = 1; i < size; i++)
     {
         current = (int*)a[i];
         if (!(*current >= *prev))
@@ -41,7 +41,7 @@ void print(voidp_t a[])
     printf("\n");
 }
 
-void init(voidp_t a[], dim_t size, int max)
+void init(voidp_t a[], size_t size, int max)
 {
     for (int i = 0; i < size; i++)
     {
@@ -49,9 +49,9 @@ void init(voidp_t a[], dim_t size, int max)
     }
 }
 
-void free_array(voidp_t a[], dim_t size)
+void free_array(voidp_t a[], size_t size)
 {
-    for (dim_t i = 0; i < size; i++)
+    for (size_t i = 0; i < size; i++)
     {
         free(a[i]);
     }

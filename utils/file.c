@@ -1,7 +1,7 @@
 #include "file.h"
 
 // return read bytes
-dim_t read_file(const char *filepath, void **out)
+size_t read_file(const char *filepath, void **out)
 {
 	// make filepointer and open file
 	FILE *rfp = fopen(filepath, "rb"); // rb == read binary
@@ -13,11 +13,11 @@ dim_t read_file(const char *filepath, void **out)
 
 	// get file size (bytes)
 	fseek(rfp, 0, SEEK_END);
-	dim_t length = ftell(rfp);
+	size_t length = ftell(rfp);
 	fseek(rfp, 0, SEEK_SET);
 
 	// create buffer
-	dim_t sizeBytes = length * BYTE;
+	size_t sizeBytes = length * BYTE;
 	void *file = (void *)malloc(sizeBytes);
 	if (!file)
 	{
@@ -26,7 +26,7 @@ dim_t read_file(const char *filepath, void **out)
 	}
 
 	// read file contents
-	dim_t readBytes = fread(file, ELEMENT_SIZE, sizeBytes, rfp);
+	size_t readBytes = fread(file, ELEMENT_SIZE, sizeBytes, rfp);
 	// close file
 	fclose(rfp);
 
@@ -35,7 +35,7 @@ dim_t read_file(const char *filepath, void **out)
 }
 
 // return written bytes
-dim_t write_file(const char *filepath, void *contents, dim_t size)
+size_t write_file(const char *filepath, void *contents, size_t size)
 {
 	// make filepointer and open file
 	FILE *wfp = fopen(filepath, "wb"); // wb == write binary
@@ -51,23 +51,23 @@ dim_t write_file(const char *filepath, void *contents, dim_t size)
 		return 0;
 	}
 
-	dim_t sizeBytes = size * BYTE;
-	dim_t writtenBytes = fwrite(contents, ELEMENT_SIZE, sizeBytes, wfp);
+	size_t sizeBytes = size * BYTE;
+	size_t writtenBytes = fwrite(contents, ELEMENT_SIZE, sizeBytes, wfp);
 	// close file
 	fclose(wfp);
 	return writtenBytes;
 }
 
 // read file and return contents as a string (by ref)
-dim_t read_text_file(char *filepath, char **out)
+size_t read_text_file(char *filepath, char **out)
 {
 	void *buffer;
-	dim_t readBytes = read_file(filepath, &buffer);
+	size_t readBytes = read_file(filepath, &buffer);
 	*out = (char *)buffer;
 	return readBytes;
 }
 
-dim_t write_text_file(char *filepath, char **string, dim_t size)
+size_t write_text_file(char *filepath, char **string, size_t size)
 {
 	return write_file(filepath, (void *)string, size);
 }

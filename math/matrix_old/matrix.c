@@ -211,7 +211,7 @@ static int is_equal(cvoidp_t k, cvoidp_t l)
 	return 0; // equal
 }
 
-dim_t myhash(cvoidp_t ent, const hashtable *ht)
+size_t myhash(cvoidp_t ent, const hashtable *ht)
 {
 	entry *e = (entry *)ent;
 	// use generic hash fn
@@ -231,10 +231,10 @@ dim_t myhash(cvoidp_t ent, const hashtable *ht)
 #define EXP_CONSTANT 0.7777777 // I use this constant instead so that the size grows a little bit faster than the amount of calls
 #define COEFFICIENT_CONSTANT 2.28164
 
-static dim_t size(dim_t n)
+static size_t size(size_t n)
 {
 	long double exponent = (long double)n * EXP_CONSTANT;
-	return (dim_t)(COEFFICIENT_CONSTANT * powl(E, exponent));
+	return (size_t)(COEFFICIENT_CONSTANT * powl(E, exponent));
 }
 
 static void print(hashtable* ht)
@@ -264,8 +264,8 @@ ErrorCode1 getDeterminant(Matrix *mtrx, Data *pdet)
 	RST; // reset counter
 	hashtable ht;
 	// calculate initial hashtable size to optimize memory allocation
-	dim_t n = (dim_t)(*mtrx)->rows; // (cols == rows)
-	dim_t htablesize = size(n);
+	size_t n = (size_t)(*mtrx)->rows; // (cols == rows)
+	size_t htablesize = size(n);
 	if (htablesize % 2 == 0)
 		htablesize += 1;
 	assert(ht_init(&ht, htablesize, &myhash, &is_equal) == htablesize);

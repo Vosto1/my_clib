@@ -9,9 +9,8 @@ static item *vcreate(int chv)
     return ch;
 }
 
-static void vfree(voidp_t ch_in)
+static void vfree(voidp_t ch)
 {
-    item* ch = (item*)ch_in;
     free(ch);
 }
 
@@ -56,7 +55,7 @@ static void pio(const bstree bt)
     if (bt == NULL)
         return;
     pio(bt->left);
-    datacontainer *tmp = &bt->cont;
+    dataContainer *tmp = &bt->cont;
     while (tmp != NULL)
     {
         item *ch = (item *)tmp->element;
@@ -79,7 +78,7 @@ static void print_inorder(const char *description, const bstree bt)
 }
 
 // array print
-static void print_array(item **array, dim_t size)
+static void print_array(item **array, size_t size)
 {
     if (size == 0)
     {
@@ -134,8 +133,8 @@ static bool integrity_compar(const bstree parent, const bstree child, bool (*com
     item *p, *c;
     int pi, ci;
     bool sum = true;
-    datacontainer *ptmp = &parent->cont;
-    datacontainer *ctmp = &child->cont;
+    dataContainer *ptmp = &parent->cont;
+    dataContainer *ctmp = &child->cont;
     // make sure that all elements (with the same value) of the parent is
     // larger or smaller than all the elements (same values) of the child
     while (ctmp->next != NULL && ptmp->next != NULL)
@@ -373,7 +372,7 @@ void auto_tests(int n, int mod)
 #define SIZE3 5
 #define SIZE4 3
 
-static void initt(bstree *t, dim_t size, const char arr[])
+static void initt(bstree *t, size_t size, const char arr[])
 {
     for (int x = 0; x < size; x++)
         bst_insert(t, vcreate(arr[x]), &compare);
@@ -654,7 +653,7 @@ void test_sequence()
     //// to array
 
     bstree toarr = bst_create_empty();
-    dim_t size;
+    size_t size;
     item **arr3;
     item *comp;
 

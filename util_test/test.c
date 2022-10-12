@@ -104,7 +104,7 @@ void error_handler(error e)
 
 errorcode random_error()
 {
-    return rand() % 31; // 30 == amount of errors defined
+    return rand() % 31; // 30 == amount of errors defined with codes: 0 -> 30
 }
 
 void separator()

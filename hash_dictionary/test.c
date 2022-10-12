@@ -7,11 +7,11 @@ static int compare(cvoidp_t e1, cvoidp_t e2)
     return (int)en1->k - (int)en2->k;
 }
 
-static dim_t hashfn(cvoidp_t e, const hashtable* ht)
+static size_t hashfn(cvoidp_t e, const hashtable* ht)
 {
     entry* f = (entry*)e;
     
-    dim_t index = f->k * 37;
+    size_t index = f->k * 37;
     index %= ht_size(ht);
     return index;
 }
@@ -24,6 +24,13 @@ static entry* _create_entry(key k, value v)
     return e;
 }
 
+static void free_entry(voidp_t vp)
+{
+    entry* e = (entry*)vp;
+    free(e->k);
+    free(e->v);
+}
+
 char rascii()
 {
     return (char)(rand() % 94 + 32); // ascii character value span
@@ -31,8 +38,8 @@ char rascii()
 
 static entry* randomElement(hashtable* ht)
 {
-    dim_t size = ht_size(ht);
-    dim_t i = 0;
+    size_t size = ht_size(ht);
+    size_t i = 0;
     for (; i < size; i++)
     {
         if (ht->entries[i] != UNUSED)
@@ -68,7 +75,7 @@ unsigned int auto_tests(int tests, int mod)
     srand(time(NULL));
 
     hashtable ht = ht_create_empty();
-    ht_init(&ht, 10, &hashfn, &compare);
+    ht_init(&ht, 10, &hashfn, &compare, &free_entry);
     ticks start, end, prgStart, prgEnd;
     unsigned int count;
     unsigned int operations = 0, deletions = 0, insertions = 0, lookups = 0;
@@ -155,20 +162,20 @@ unsigned int auto_tests(int tests, int mod)
     }
     // test trim
     sdarray a = sda_create_empty();
-    sda_init(&a, 1);
-    for (dim_t i = 0; i < ht_size(&ht); i++)
+    sda_init(&a, 1, NULL);
+    for (size_t i = 0; i < ht_size(&ht); i++)
         if (ht.entries[i] != UNUSED)
             sda_insert(&a, ht.entries[i]);
     
-    dim_t count1 = ht_count(&ht);
+    size_t count1 = ht_count(&ht);
     ht_trim(&ht);
     //print(&ht);
-    dim_t count2 = ht_count(&ht);
+    size_t count2 = ht_count(&ht);
     assert(count1 == count2);
-    dim_t acount = sda_count(&a);
-    dim_t h;
+    size_t acount = sda_count(&a);
+    size_t h;
     entry* en;
-    for (dim_t i = 0; i < acount; i++)
+    for (size_t i = 0; i < acount; i++)
     {
         en = sda_remove_last(&a);
         h = hashfn(en, &ht);
@@ -190,7 +197,7 @@ void test_sequence()
 {
     entry* del;
     hashtable ht = ht_create_empty();
-    ht_init(&ht, 3, &hashfn, &compare);
+    ht_init(&ht, 3, &hashfn, &compare, &free_entry);
     entry* e1 = _create_entry('c', 1);
     entry* e2 = _create_entry('/', 3);
     entry* e3 = _create_entry('#', 7);

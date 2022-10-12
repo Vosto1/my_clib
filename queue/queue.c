@@ -2,16 +2,16 @@
 
 struct q {
     voidp_t *array;
-    dim_t size;
-    dim_t used;
+    size_t size;
+    size_t used;
     //hashtable rules; // index rules
-    dim_t first_element;
-    dim_t last_element;
+    size_t first_element;
+    size_t last_element;
 };
 
 /* struct r {
-    dim_t index_from;   // if you are at this index
-    dim_t index_to;     // then this is the previous index
+    size_t index_from;   // if you are at this index
+    size_t index_to;     // then this is the previous index
 }; */
 
 queue q_create_new_empty()

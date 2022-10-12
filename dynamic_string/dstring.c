@@ -141,7 +141,7 @@ void ds_delete(dstring* del)
 	// Postcondition: *del ar NULL och minnet ar frigjort - beh�ver inte testas med assert
 }
 
-dim_t ds_copy(dstring* dest, dstring src)
+size_t ds_copy(dstring* dest, dstring src)
 {
 	if (src == NULL || strlen(src) == 0)
 	{

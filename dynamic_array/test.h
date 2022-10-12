@@ -16,7 +16,7 @@
 typedef struct
 {
     int value;
-} Item;
+} item;
 
 typedef struct
 {
@@ -30,7 +30,7 @@ typedef struct
     seconds s;
     int operation_amount;
     char operation[64];
-} test_result;
+} testResult;
 
 // test functions
 void auto_tests(int n, int mod);

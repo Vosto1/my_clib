@@ -2,6 +2,7 @@
 #define MAT3_H
 
 #include "../vec2/vec2.h"
+#include "../math2.h"
 
 typedef struct matrix3x3d { double i[9]; } mat3;
 

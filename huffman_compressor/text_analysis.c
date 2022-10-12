@@ -9,11 +9,11 @@ static int _compare(cvoidp_t e1, cvoidp_t e2)
     return (int)en1->k - (int)en2->k;
 }
 
-static dim_t _hash(cvoidp_t e, const hashtable *ht)
+static size_t _hash(cvoidp_t e, const hashtable *ht)
 {
     entry *f = (entry *)e;
 
-    dim_t index = f->k * 37;
+    size_t index = f->k * 37;
     index %= ht_size(ht);
     return index;
 }
@@ -26,10 +26,15 @@ static entry *_create_entry(key k, value v)
     return e;
 }
 
+static void freeObject(voidp_t e)
+{
+    free(e);
+}
+
 hashtable letter_occurances(char *string, int strsize)
 {
     hashtable ht;
-    if (ht_init(&ht, ALPHABET, &_hash, &_compare) != ALPHABET)
+    if (ht_init(&ht, ALPHABET, &_hash, &_compare, &freeObject) != ALPHABET)
     {
         errcset(EHASHDICT);
         return ht;

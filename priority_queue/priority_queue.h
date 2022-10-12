@@ -15,7 +15,7 @@
 #include "../utils/error.h"
 #include "../datatype.h"
 
-typedef struct
+typedef struct // needs fixing (remove struct and only typedef sheap to pq)
 {
     sheap h;
 } priorityqueue;
@@ -50,7 +50,7 @@ priorityqueue pq_create_empty();
  * @param compare a function that can compare two items of your data type
  * @return the size the priority queue is initialized to or 0 if error
  */
-dim_t pq_init(priorityqueue *pq, dim_t size, int (*compare)(cvoidp_t x, cvoidp_t y));
+size_t pq_init(priorityqueue *pq, size_t size, int (*compare)(cvoidp_t x, cvoidp_t y), void (*freeObject)(voidp_t));
 /**
  * @brief remove (free) all items in the priority queue and free it
  *
@@ -64,7 +64,7 @@ void pq_free(priorityqueue *pq);
  * @param pq pointer to the priority queue to get the count from
  * @return item count
  */
-dim_t pq_count(priorityqueue *pq);
+size_t pq_count(priorityqueue *pq);
 /**
  * @brief enqueue an item into the priority queue
  *
@@ -72,7 +72,7 @@ dim_t pq_count(priorityqueue *pq);
  * @param item the item to enqueue
  * @return  the item count in the priority queue or 0 if error
  */
-dim_t pq_enqueue(priorityqueue *pq, voidp_t item);
+size_t pq_enqueue(priorityqueue *pq, voidp_t item);
 /**
  * @brief dequeue an item from the priority queue
  *

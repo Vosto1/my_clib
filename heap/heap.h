@@ -68,13 +68,15 @@ heap h_create_empty();
  * @param compare a function that can compare two items of your data type
  * @param setKey a function that can set a key of an item of your data type
  * @param minKey a function that based on a base element of your data type can create a smaller key
+ * @param freeObject a function that frees an item
  * @return the size the heap is initialized to or 0 if error
  */
-dim_t h_init(heap *h,
-                dim_t size,
+size_t h_init(heap *h,
+                size_t size,
                 int (*compare)(cvoidp_t x, cvoidp_t y),
                 voidp_t (*setKey)(voidp_t x, voidp_t key),
-                void (*minKey)(voidp_t base, voidp_t *out));
+                void (*minKey)(voidp_t base, voidp_t *out),
+                void (*freeObject)(voidp_t));
 /**
  * @brief remove (free) all items in the heap and free the heap
  *
@@ -88,7 +90,7 @@ void h_free(heap *h);
  * @param h the heap to get the size of
  * @return item count
  */
-dim_t h_size(heap *h);
+size_t h_size(heap *h);
 /**
  * @brief peek the top item in the heap without removing it
  *
@@ -120,7 +122,7 @@ bool h_is_empty(heap *h);
  * @param item a pointer to the memory of the item
  * @return the item count in the heap or a value larger than the size of the heap is error
  */
-dim_t h_insert(heap *h, voidp_t item);
+size_t h_insert(heap *h, voidp_t item);
 /**
  * @brief removes the specified item from the heap
  *
@@ -144,7 +146,7 @@ voidp_t h_extract_min(heap *h);
  * @param newKey the new key the item should have
  * @return the new index of the item or a value larger than the size of the heap is error
  */
-dim_t h_decrease_key(heap *h, voidp_t item, voidp_t newKey);
+size_t h_decrease_key(heap *h, voidp_t item, voidp_t newKey);
 /**
  * @brief build a heap from an array
  *
@@ -153,13 +155,15 @@ dim_t h_decrease_key(heap *h, voidp_t item, voidp_t newKey);
  * @param compare a function that can compare two items of your data type
  * @param setKey a function that can set a key of an item of your data type
  * @param minKey a function that based on a base element of your data type can create a smaller key
+ * @param freeObject a function that frees an item
  * @return the heap that was created
  */
 heap h_build_min_heap(voidp_t *unorderedList,
-                  dim_t size,
+                  size_t size,
                   int (*compare)(cvoidp_t x, cvoidp_t y),
                   voidp_t (*setKey)(voidp_t x, voidp_t key),
-                  void (*minKey)(voidp_t base, voidp_t *out));
+                  void (*minKey)(voidp_t base, voidp_t *out),
+                  void (*freeObject)(voidp_t));
 #ifdef __TESTING__
 /**
  * @brief tests the integrity of the heap

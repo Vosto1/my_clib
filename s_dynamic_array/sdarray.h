@@ -45,8 +45,9 @@ typedef enum
 struct s_dynamicArray
 {
     voidp_t *array;
-    dim_t size;
-    dim_t used;
+    size_t size;
+    size_t used;
+    void (*freeObject)(voidp_t);
 };
 
 typedef struct s_dynamicArray sdarray;
@@ -57,14 +58,14 @@ typedef struct s_dynamicArray sdarray;
  * @param a array to check
  * @return element count
  */
-dim_t sda_count(sdarray *a);
+size_t sda_count(sdarray *a);
 /**
  * @brief get size of an array
  *
  * @param a array to check
  * @return array size
  */
-dim_t sda_size(sdarray *a);
+size_t sda_size(sdarray *a);
 /**
  * create an empty dynamic array
  */
@@ -74,16 +75,17 @@ sdarray sda_create_empty();
  *
  * @param a pointer to the array to initialize
  * @param init_size the initial size of the array
+ * @param freeObject a function to free an item in the array
  * @return the size of the new array or 0 if error
  */
-dim_t sda_init(sdarray *a, dim_t init_size);
+size_t sda_init(sdarray *a, size_t init_size, void (*freeObject)(voidp_t));
 /**
  * remove (free) all items in the array
  *
  * @param a array to remove from
  * @return the amount of items that was removed or 0 if error
  */
-dim_t sda_clear(sdarray *a);
+size_t sda_clear(sdarray *a);
 /**
  * @brief free array (items not freed)
  *
@@ -102,7 +104,7 @@ void sda_free(sdarray *a);
  * @param a array to find item at index
  * @return pointer to item at index or NULL if index out of bounds
  */
-cvoidp_t sda_at(sdarray * a, dim_t index);
+cvoidp_t sda_at(sdarray * a, size_t index);
 /**
  * insert into the dynamic array
  *
@@ -110,7 +112,7 @@ cvoidp_t sda_at(sdarray * a, dim_t index);
  * @param item item to insert
  * @return the amount of used indecies in the array or 0 if error
  */
-dim_t sda_insert(sdarray *a, voidp_t item);
+size_t sda_insert(sdarray *a, voidp_t item);
 /**
  * remove the last element of the dynamic array
  *
@@ -133,7 +135,7 @@ voidp_t sda_remove_at(sdarray *a, int index);
  * @param b array to merge with (will be freed)
  * @return the new size of the array (a) or 0 if error
  */
-dim_t sda_merge(sdarray *a, sdarray *b);
+size_t sda_merge(sdarray *a, sdarray *b);
 /**
  * check if the dynamic array is uninitialized
  *

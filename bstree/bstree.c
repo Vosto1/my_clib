@@ -3,7 +3,7 @@
 // create a new bstree node
 static bstree new_node(cvoidp_t element)
 {
-    bstree n = (bstree)malloc(sizeof(struct treenode));
+    bstree n = (bstree)malloc(sizeof(struct treeNode));
     if (n != NULL)
     {
         n->cont.element = element;
@@ -68,11 +68,11 @@ static void insert(bstree *current, bstree prev, voidp_t element, int (*compare)
     }
     else if (is_equal((*current)->cont.element, element, compare))
     {
-        datacontainer *new_cont = (datacontainer *)malloc(sizeof(datacontainer));
+        dataContainer *new_cont = (dataContainer *)malloc(sizeof(dataContainer));
         new_cont->element = element;
         new_cont->next = NULL;
 
-        datacontainer *tmp = (*current)->cont.next;
+        dataContainer *tmp = (*current)->cont.next;
         if (tmp != NULL)
         {
             while (tmp->next != NULL)
@@ -133,14 +133,14 @@ static bstree *find_largest_left(bstree *bst, int (*compare)(cvoidp_t, cvoidp_t)
 static voidp_t rm_element_occurance(bstree rm)
 {
     // handle values that already exist in the tree
-    datacontainer *tmp = rm->cont.next;
-    datacontainer *prev = &rm->cont;
+    dataContainer *tmp = rm->cont.next;
+    dataContainer *prev = &rm->cont;
     while (tmp->next != NULL)
     {
         prev = tmp;
         tmp = tmp->next;
     }
-    datacontainer *new_rm = prev->next;
+    dataContainer *new_rm = prev->next;
     prev->next = NULL; // remove pointer to last object of type
 
     voidp_t element = (voidp_t)new_rm->element;
@@ -457,7 +457,7 @@ bool bst_is_empty(const bstree tree)
     return tree == NULL;
 }
 
-static dim_t writeSortedToArray(const bstree tree, voidp_t **array)
+static size_t writeSortedToArray(const bstree tree, voidp_t **array)
 {
     return bst_toarray_inorder(tree, array);
 }
@@ -474,7 +474,7 @@ static void insertFromSortedArray(bstree *tree, voidp_t *a, int start, int end, 
     insertFromSortedArray(tree, a, mid + 1, end, compare);
 }
 
-static void free_container_structs(datacontainer *cont)
+static void free_container_structs(dataContainer *cont)
 {
     if (cont != NULL)
     {
@@ -489,7 +489,7 @@ bstree bst_merge(bstree *bst1, bstree *bst2, int (*compare)(cvoidp_t, cvoidp_t))
     if ((*bst2) != NULL)
     {
         voidp_t *array;
-        dim_t size = writeSortedToArray(*bst2, &array);
+        size_t size = writeSortedToArray(*bst2, &array);
         insertFromSortedArray(bst1, array, 0, size - 1, compare);
         // free array
         free(array);
@@ -510,7 +510,7 @@ static void preorder(const bstree tree, cvoidp_t *a, int *index)
 {
     if (tree != NULL)
     {
-        datacontainer *tmp = &tree->cont;
+        dataContainer *tmp = &tree->cont;
         while (tmp != NULL)
         {
             a[*index] = tmp->element;
@@ -530,7 +530,7 @@ static void inorder(const bstree tree, cvoidp_t *a, int *index)
     {
         if (tree->left != NULL)
             inorder(tree->left, a, index);
-        datacontainer *tmp = &tree->cont;
+        dataContainer *tmp = &tree->cont;
         while (tmp != NULL)
         {
             a[*index] = tmp->element;
@@ -550,7 +550,7 @@ static void postorder(const bstree tree, cvoidp_t *a, int *index)
             postorder(tree->left, a, index);
         if (tree->right != NULL)
             postorder(tree->right, a, index);
-        datacontainer *tmp = &tree->cont;
+        dataContainer *tmp = &tree->cont;
         while (tmp != NULL)
         {
             a[*index] = tmp->element;
@@ -560,11 +560,11 @@ static void postorder(const bstree tree, cvoidp_t *a, int *index)
     }
 }
 
-static dim_t get_array(const bstree tree, void (*order)(const bstree, cvoidp_t *, int *), voidp_t **arr)
+static size_t get_array(const bstree tree, void (*order)(const bstree, cvoidp_t *, int *), voidp_t **arr)
 {
     if (tree != NULL)
     {
-        dim_t size = bst_count(tree);
+        size_t size = bst_count(tree);
         voidp_t *a = (voidp_t *)malloc(sizeof(voidp_t *) * size);
         if (arr != NULL)
         {
@@ -586,21 +586,21 @@ static dim_t get_array(const bstree tree, void (*order)(const bstree, cvoidp_t *
     }
 }
 
-dim_t bst_toarray_preorder(const bstree tree, voidp_t **array)
+size_t bst_toarray_preorder(const bstree tree, voidp_t **array)
 {
     if (tree == NULL)
         return 0;
     return get_array(tree, &preorder, array);
 }
 
-dim_t bst_toarray_inorder(const bstree tree, voidp_t **array)
+size_t bst_toarray_inorder(const bstree tree, voidp_t **array)
 {
     if (tree == NULL)
         return 0;
     return get_array(tree, &inorder, array);
 }
 
-dim_t bst_toarray_postorder(const bstree tree, voidp_t **array)
+size_t bst_toarray_postorder(const bstree tree, voidp_t **array)
 {
     if (tree == NULL)
         return 0;
@@ -655,7 +655,7 @@ int bst_count(const bstree tree)
     if (tree == NULL)
         return 0;
     int x = 0;
-    datacontainer *tmp = &tree->cont;
+    dataContainer *tmp = &tree->cont;
     do
     {
         x++;
@@ -699,12 +699,12 @@ void bst_balance(bstree *tree, int (*compare)(cvoidp_t, cvoidp_t))
 
         // write all elements to an array
         voidp_t *arr1;
-        dim_t arraysize = writeSortedToArray((*tree), &arr1);
+        size_t arraysize = writeSortedToArray((*tree), &arr1);
         if (arr1 != NULL)
         {
             bstree new = bst_create_empty();
             sdarray arr2 = sda_create_empty();
-            if (sda_init(&arr2, INIT_SIZE) != 0)
+            if (sda_init(&arr2, INIT_SIZE, NULL) != 0)
             {
                 // get an array with unique elements
                 voidp_t tmp = arr1[0];
@@ -757,7 +757,7 @@ void bst_balance(bstree *tree, int (*compare)(cvoidp_t, cvoidp_t))
     }
 }
 
-static void free_all_elements(datacontainer *cont, void (*freeObject)(voidp_t))
+static void free_all_elements(dataContainer *cont, void (*freeObject)(voidp_t))
 {
     if (cont->next != NULL)
         free_all_elements(cont->next, freeObject);
@@ -771,10 +771,10 @@ static void bstfree(bstree *tree, void (*freeObject)(voidp_t))
         bstfree(&(*tree)->right, freeObject);
         bstfree(&(*tree)->left, freeObject);
         // free all elements in the node
-        datacontainer *tmp = &(*tree)->cont;
+        dataContainer *tmp = &(*tree)->cont;
         free_all_elements(tmp, freeObject);
         // free all value structs in which the elements were stored
-        datacontainer *tmp2 = (*tree)->cont.next;
+        dataContainer *tmp2 = (*tree)->cont.next;
         free_container_structs(tmp2);
         // free the node
         free((*tree));
@@ -801,7 +801,7 @@ void bstdestr(bstree *tree)
         bstdestr(&(*tree)->right);
         bstdestr(&(*tree)->left);
         // free all data container structs in which the elements were stored
-        datacontainer *tmp = (*tree)->cont.next;
+        dataContainer *tmp = (*tree)->cont.next;
         free_container_structs(tmp);
         // free node
         free((*tree));

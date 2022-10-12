@@ -7,9 +7,9 @@ priorityqueue pq_create_empty()
     return pq;
 }
 
-dim_t pq_init(priorityqueue *pq, dim_t size, int (*compare)(cvoidp_t x, cvoidp_t y))
+size_t pq_init(priorityqueue *pq, size_t size, int (*compare)(cvoidp_t x, cvoidp_t y), void (*freeObject)(voidp_t))
 {
-    return sh_init(&pq->h, size, compare);
+    return sh_init(&pq->h, size, compare, freeObject);
 }
 
 void pq_free(priorityqueue *pq)
@@ -18,12 +18,12 @@ void pq_free(priorityqueue *pq)
     *pq = pq_create_empty();
 }
 
-dim_t pq_count(priorityqueue *pq)
+size_t pq_count(priorityqueue *pq)
 {
     return sh_size(&pq->h);
 }
 
-dim_t pq_enqueue(priorityqueue *pq, voidp_t item)
+size_t pq_enqueue(priorityqueue *pq, voidp_t item)
 {
     return sh_insert(&pq->h, item);
 }

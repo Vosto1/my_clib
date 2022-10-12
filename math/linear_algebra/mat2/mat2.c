@@ -22,7 +22,7 @@ mat2 m2sub(mat2 m, mat2 n)
 
 mat2 m2mul(mat2 m, mat2 n)
 {
-    mat2 m;
+    mat2 m2;
     int i, j, k;
     for (i = 0; i < 2; i++)
     {
@@ -31,11 +31,11 @@ mat2 m2mul(mat2 m, mat2 n)
             m.i[j*4+i] = 0.0f;
             for (k = 0; k < 2; k++)
             {
-                m.i[j*2+i] += m.i[k*2+i] * n.i[j*2+i];
+                m2.i[j*2+i] += m.i[k*2+i] * n.i[j*2+i];
             }
         }
     }
-    return m;
+    return m2;
 }
 
 mat2 m2div(mat2 m, double d)
