@@ -1,5 +1,0 @@
-﻿  list.c
-E:\FILER\Programming\Some programming projects for school and other\C\LinkedList\LinkedList\list.c(181): warning C4715: 'search': not all control paths return a value
-E:\FILER\Programming\Some programming projects for school and other\C\LinkedList\LinkedList\list.c(258): warning C4715: 'getFirstElement': not all control paths return a value
-E:\FILER\Programming\Some programming projects for school and other\C\LinkedList\LinkedList\list.c(273): warning C4715: 'getLastElement': not all control paths return a value
-  LinkedList.vcxproj -> E:\FILER\Programming\Some programming projects for school and other\C\LinkedList\x64\Debug\LinkedList.exe
