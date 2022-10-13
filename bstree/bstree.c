@@ -1,5 +1,6 @@
 #include "bstree.h"
 
+
 // create a new bstree node
 static bstree new_node(cvoidp_t element)
 {
@@ -15,7 +16,7 @@ static bstree new_node(cvoidp_t element)
     }
     else
     {
-        errcset(EBTREE_NODE_MEMALLOC);
+        //errcset(EBTREE_NODE_MEMALLOC);
         return NULL;
     }
 }
@@ -457,12 +458,12 @@ bool bst_is_empty(const bstree tree)
     return tree == NULL;
 }
 
-static size_t writeSortedToArray(const bstree tree, voidp_t **array)
+static size_t write_sorted_to_array(const bstree tree, voidp_t **array)
 {
     return bst_toarray_inorder(tree, array);
 }
 
-static void insertFromSortedArray(bstree *tree, voidp_t *a, int start, int end, int (*compare)(cvoidp_t, cvoidp_t))
+static void insert_from_sorted_array(bstree *tree, voidp_t *a, int start, int end, int (*compare)(cvoidp_t, cvoidp_t))
 {
     if (start > end)
         return;
@@ -470,8 +471,8 @@ static void insertFromSortedArray(bstree *tree, voidp_t *a, int start, int end, 
     int mid = (start + end) / 2;
     bst_insert(tree, a[mid], compare);
 
-    insertFromSortedArray(tree, a, start, mid - 1, compare);
-    insertFromSortedArray(tree, a, mid + 1, end, compare);
+    insert_from_sorted_array(tree, a, start, mid - 1, compare);
+    insert_from_sorted_array(tree, a, mid + 1, end, compare);
 }
 
 static void free_container_structs(dataContainer *cont)
@@ -489,8 +490,8 @@ bstree bst_merge(bstree *bst1, bstree *bst2, int (*compare)(cvoidp_t, cvoidp_t))
     if ((*bst2) != NULL)
     {
         voidp_t *array;
-        size_t size = writeSortedToArray(*bst2, &array);
-        insertFromSortedArray(bst1, array, 0, size - 1, compare);
+        size_t size = write_sorted_to_array(*bst2, &array);
+        insert_from_sorted_array(bst1, array, 0, size - 1, compare);
         // free array
         free(array);
         // free nodes only of bst2
@@ -562,26 +563,19 @@ static void postorder(const bstree tree, cvoidp_t *a, int *index)
 
 static size_t get_array(const bstree tree, void (*order)(const bstree, cvoidp_t *, int *), voidp_t **arr)
 {
-    if (tree != NULL)
+    size_t size = bst_count(tree);
+    voidp_t *a = (voidp_t *)malloc(sizeof(voidp_t *) * size);
+    if (arr != NULL)
     {
-        size_t size = bst_count(tree);
-        voidp_t *a = (voidp_t *)malloc(sizeof(voidp_t *) * size);
-        if (arr != NULL)
-        {
-            int index = 0;
-            (*order)(tree, (cvoidp_t *)a, &index);
-            *arr = a;
-            return size;
-        }
-        else
-        {
-            errcset(EBTREE_WRITEARR_MEMALLOC);
-            return 0;
-        }
+        int index = 0;
+        (*order)(tree, (cvoidp_t *)a, &index);
+        *arr = a;
+        return size;
     }
     else
     {
-        errcset(EBTREE_WRITEARR_EMPTY);
+        //errcset(EBTREE_WRITEARR_MEMALLOC);
+        free(a);
         return 0;
     }
 }
@@ -691,15 +685,15 @@ int bst_mindepth(const bstree tree)
     return 0;
 }
 
-#define INIT_SIZE 10
-void bst_balance(bstree *tree, int (*compare)(cvoidp_t, cvoidp_t))
+#define INIT_SIZE 100
+bool bst_balance(bstree *tree, int (*compare)(cvoidp_t, cvoidp_t))
 {
     if ((*tree) != NULL)
     {
 
         // write all elements to an array
         voidp_t *arr1;
-        size_t arraysize = writeSortedToArray((*tree), &arr1);
+        size_t arraysize = write_sorted_to_array((*tree), &arr1);
         if (arr1 != NULL)
         {
             bstree new = bst_create_empty();
@@ -721,7 +715,7 @@ void bst_balance(bstree *tree, int (*compare)(cvoidp_t, cvoidp_t))
                 }
 
                 // insert unique elements in the tree balanced
-                insertFromSortedArray(&new, arr2.array, 0, arr2.used - 1, compare);
+                insert_from_sorted_array(&new, arr2.array, 0, arr2.used - 1, compare);
                 sda_destroy(&arr2); // free array and not the elements
 
                 // add all the non-unique elements
@@ -740,6 +734,7 @@ void bst_balance(bstree *tree, int (*compare)(cvoidp_t, cvoidp_t))
                 // free only the nodes
                 bst_destroy(tree);
                 *tree = new;
+                return true;
             }
             else
             {
@@ -747,13 +742,19 @@ void bst_balance(bstree *tree, int (*compare)(cvoidp_t, cvoidp_t))
                 free(arr1);
                 // rollback (free)
                 bst_destroy(&new);
-                errcset(EBTREE_BALANCE);
+                //errcset(EBTREE_BALANCE);
+                return false;
             }
         }
         else
         {
-            errcset(EBTREE_WRITEARR_MEMALLOC);
+            //errcset(EBTREE_WRITEARR_MEMALLOC);
+            return false;
         }
+    }
+    else
+    {
+        return false;
     }
 }
 
@@ -782,15 +783,17 @@ static void bstfree(bstree *tree, void (*freeObject)(voidp_t))
     }
 }
 
-void bst_free(bstree *tree, void (*freeObject)(voidp_t))
+bool bst_free(bstree *tree, void (*freeObject)(voidp_t))
 {
     if ((*tree) != NULL)
     {
         bstfree(tree, freeObject);
+        return true;
     }
     else
     {
-        errcset(EBTREE_FREENULLPTR);
+        // errcset(EBTREE_FREENULLPTR);
+        return false;
     }
 }
 
@@ -810,14 +813,16 @@ void bstdestr(bstree *tree)
 }
 
 // free only nodes (and data container structs, not elements in the tree)
-void bst_destroy(bstree *tree)
+bool bst_destroy(bstree *tree)
 {
     if ((*tree) != NULL)
     {
         bstdestr(tree);
+        return true;
     }
     else
     {
-        errcset(EBTREE_FREENULLPTR);
+        // errcset(EBTREE_FREENULLPTR);
+        return false;
     }
 }

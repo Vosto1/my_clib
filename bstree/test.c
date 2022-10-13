@@ -111,7 +111,7 @@ static bool nullcheck(const bstree bt)
         return true;
 }
 
-// checks that all nodes has the correct parent
+// checks that all nodes have the correct parent
 static bool pch(const bstree curr, const bstree prev)
 {
     if (curr != NULL)
@@ -166,7 +166,7 @@ static bool bstree_integrity_check(const bstree tree)
     if (tree != NULL)
     {
         if (tree->parent->right == tree)
-        { // right side (parent should be larger)
+        { // right side (parent should be maller)
             if (integrity_compar(tree->parent, tree, &right))
             {
                 return true && bstree_integrity_check(tree->left) && bstree_integrity_check(tree->right);
@@ -177,7 +177,7 @@ static bool bstree_integrity_check(const bstree tree)
             }
         }
         else
-        { // left side (parent should be smaller)
+        { // left side (parent should be larger)
             if (integrity_compar(tree->parent, tree, &left))
             {
                 return true && bstree_integrity_check(tree->left) && bstree_integrity_check(tree->right);
@@ -216,14 +216,14 @@ static bool bstree_test_suit(const bstree tree)
 }
 
 // auto tests
-#define TYPES_MOD 6 // types + 1 to get 0-->amount_types with modulu
+#define MOD_TYPES 6 // types + 1 to get 0-->amount_types with modulu
 #define MOD_MERGE 100
 #define MIN_TESTS 1
 
 void auto_tests(int n, int mod)
 {
     srand(time(NULL));
-    errcinit();
+    //errcinit();
     bstree tree = bst_create_empty();
     voidp_t element, rm;
     int nexttests, type, r1, count;
@@ -234,7 +234,8 @@ void auto_tests(int n, int mod)
     seconds s;
 
     unsigned int insertion = 0, deletion = 0, find = 0, balance = 0, to_array = 0, merge = 0;
-
+    size_t operations = 0, realOperations = 0;
+    ticks totalstart = now();
     for (int i = 0; i < n; i++)
     {
         nexttests = rand() % mod + MIN_TESTS;
@@ -242,7 +243,7 @@ void auto_tests(int n, int mod)
         start = now();
         for (int j = 0; j < nexttests; j++)
         {
-            type = rand() % TYPES_MOD;
+            type = rand() % MOD_TYPES;
 
             switch (type)
             {
@@ -308,9 +309,12 @@ void auto_tests(int n, int mod)
                 find++;
                 break;
             case 5: // balance
-                bst_balance(&tree, comp);
-                assert(bst_depth(tree) == bst_mindepth(tree));
-                balance++;
+                if (tree != NULL)
+                {
+                    assert(bst_balance(&tree, comp));
+                    assert(bst_depth(tree) == bst_mindepth(tree));
+                    balance++;
+                }
                 break;
             }
             // integrity test
@@ -347,15 +351,17 @@ void auto_tests(int n, int mod)
             }
         }
         end = now();
-        error_handler();
+        //error_handler();
         if (tree != NULL)
-            bst_free(&tree, &vfree);
+            assert(bst_free(&tree, &vfree));
         tree = bst_create_empty();
         // test sequence end
         s = diff(start, end);
         printf("Computed %d operations", nexttests);
         printf(" --> %d insertions, %d deletions, %d merge, %d to array, %d find, %d balance", insertion, deletion, merge, to_array, find, balance);
         printf(" during %f seconds\n", s);
+        operations += nexttests;
+        realOperations += insertion + deletion + merge + to_array + find + balance;
         insertion = 0;
         deletion = 0;
         merge = 0;
@@ -363,7 +369,10 @@ void auto_tests(int n, int mod)
         find = 0;
         balance = 0;
     }
-    printf("Test passed\n");
+    ticks totalend = now();
+    seconds totalTime = diff(totalstart, totalend);
+    printf("Test passed ");
+    printf("%ld operations completed (%ld real operations) during %f seconds\n", operations, realOperations, totalTime);
 }
 
 // test sequence (explicitly test specific edge cases etc.)
@@ -407,7 +416,7 @@ static void initializeTree3(bstree *tree)
 
 void test_sequence()
 {
-    errcinit();
+    //errcinit();
     voidp_t rm;
     item *c = vcreate(99);
     free(c);
@@ -418,7 +427,7 @@ void test_sequence()
     rm = bst_remove(&bt, (voidp_t)c, &compare);
     assert(rm == NULL);
     assert(bst_depth(bt) == 0 && bst_mindepth(bt) == 0);
-    bst_balance(&bt, &compare);
+    assert(!bst_balance(&bt, &compare)); // balance should evaluate to false here since the tree is empty
 
     item *a[SIZE];
     int arr[SIZE] = {5, 10, 1, 3, 7, 19, 16};

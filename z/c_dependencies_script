@@ -1,3 +1,0 @@
-?1 I need to check if all the .c files exist, if they dont, remove them from the variable
-!1 maybe have a script that removes a file instead
-!2 check if *.c file exists after getting the *.h file

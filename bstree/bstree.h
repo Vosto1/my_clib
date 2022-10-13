@@ -49,9 +49,9 @@ int bst_depth(const bstree tree);
 
 int bst_mindepth(const bstree tree);
 
-void bst_balance(bstree *tree, int (*compare)(cvoidp_t, cvoidp_t));
+bool bst_balance(bstree *tree, int (*compare)(cvoidp_t, cvoidp_t));
 
-void bst_free(bstree *tree, void (*freeObject)(voidp_t));
-void bst_destroy(bstree *tree);
+bool bst_free(bstree *tree, void (*freeObject)(voidp_t));
+bool bst_destroy(bstree *tree);
 
 #endif
