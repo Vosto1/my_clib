@@ -10,7 +10,7 @@
 #include <stdlib.h>
 #include <assert.h>
 #include "darray.h"
-#include "../utils/error.h"
+//#include "../utils/error.h"
 #include "../utils/timer.h"
 
 typedef struct

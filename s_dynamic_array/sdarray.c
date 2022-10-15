@@ -37,7 +37,7 @@ size_t sda_init(sdarray *a, size_t init_size, void (*freeObject)(voidp_t))
     else
     {
         *a = sda_create_empty();
-        errcset(EMEM_ALLOC);
+        //errcset(EMEM_ALLOC);
         return 0;
     }
 }
@@ -50,7 +50,7 @@ size_t sda_clear(sdarray *a)
     }
     else if (sda_is_null(a))
     {
-        errcset(ENULL_ARG);
+        //errcset(ENULL_ARG);
         return 0;
     }
     int amount = a->used;
@@ -63,20 +63,22 @@ size_t sda_clear(sdarray *a)
     return amount;
 }
 
-void sda_destroy(sdarray *a)
+bool sda_destroy(sdarray *a)
 {
     if (!sda_is_null(a))
     {
         free(a->array);
         *a = sda_create_empty();
+        return true;
     }
-    else
+    return false;
+    /* else
     {
         errcset(EFREE_NULLPTR);
-    }
+    }*/
 }
 
-void sda_free(sdarray *a)
+bool sda_free(sdarray *a)
 {
     if (!sda_is_null(a))
     {
@@ -87,9 +89,10 @@ void sda_free(sdarray *a)
         }
         else
             sda_destroy(a);
+        return true;
     }
-    else
-        errcset(EFREE_NULLPTR);
+    //errcset(EFREE_NULLPTR);
+    return false;
 }
 
 cvoidp_t sda_at(sdarray * a, size_t index)
@@ -109,7 +112,7 @@ size_t sda_insert(sdarray *a, voidp_t item)
 {
     if (a == NULL || a->array == NULL)
     {
-        errcset(ENULL_ARG);
+        //errcset(ENULL_ARG);
         return 0;
     }
     // memory increase
@@ -124,7 +127,7 @@ size_t sda_insert(sdarray *a, voidp_t item)
         }
         else
         {
-            errcset(EMEM_IREALLOC);
+            //errcset(EMEM_IREALLOC);
             return 0;
         }
     }
@@ -137,7 +140,7 @@ voidp_t sda_remove_last(sdarray *a)
 {
     if (sda_is_empty(a))
     {
-        errcset(EARR_EMPTY);
+        //errcset(EARR_EMPTY);
         return NULL;
     }
     a->used -= 1;
@@ -158,7 +161,7 @@ voidp_t sda_remove_at(sdarray *a, int index)
 {
     if (index > a->used)
     {
-        errcset(EINDEX_OUT_OF_BOUNDS);
+        //errcset(EINDEX_OUT_OF_BOUNDS);
         return NULL;
     }
     voidp_t *data = a->array[index];
@@ -184,7 +187,7 @@ size_t sda_merge(sdarray *a, sdarray *b)
 {
     if (a == NULL || b == NULL)
     {
-        errcset(ENULL_ARG);
+        //errcset(ENULL_ARG);
         return 0;
     }
     for (int i = 0; i < b->used; i++)
@@ -222,7 +225,7 @@ static MEM sda_memory_decrease(sdarray *a)
         }
         else
         {
-            errcset(EMEM_DREALLOC);
+            //errcset(EMEM_DREALLOC);
             return ERRMEM_DECREASE;
         }
     }

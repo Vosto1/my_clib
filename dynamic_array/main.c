@@ -5,5 +5,5 @@ int main(void)
 {
     //test_sequence();
     auto_tests(100, 1000);
-    return SUCCESS;
+    return 0;
 }

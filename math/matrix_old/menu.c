@@ -45,7 +45,7 @@ void _menu()
 				{
 					break;
 				}
-				errorHandler1(freeMatrix(&workingMatrix));
+				freeMatrix(&workingMatrix);
 			}
 			List list = createEmptyList();
 			printf("\ncolumns: ");

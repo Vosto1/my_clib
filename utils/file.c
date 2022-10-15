@@ -7,7 +7,6 @@ size_t read_file(const char *filepath, void **out)
 	FILE *rfp = fopen(filepath, "rb"); // rb == read binary
 	if (!rfp)
 	{
-		errcset(EFILE_OPENWRITE);
 		return 0;
 	}
 
@@ -21,7 +20,6 @@ size_t read_file(const char *filepath, void **out)
 	void *file = (void *)malloc(sizeBytes);
 	if (!file)
 	{
-		errcset(EMEM_ALLOC);
 		return 0;
 	}
 
@@ -41,13 +39,11 @@ size_t write_file(const char *filepath, void *contents, size_t size)
 	FILE *wfp = fopen(filepath, "wb"); // wb == write binary
 	if (!wfp)
 	{
-		errcset(EFILE_OPENREAD);
 		return 0;
 	}
 
 	if (contents == NULL)
 	{
-		errcset(ENULL_ARG);
 		return 0;
 	}
 

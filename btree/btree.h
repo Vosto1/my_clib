@@ -17,7 +17,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 //#include "../s_dynamic_array/sdarray.h"
-#include "../utils/error.h"
+//#include "../utils/error.h"
 #include "../datatype.h"
 
 typedef struct treeNode *btree;
@@ -38,7 +38,7 @@ bool bt_is_empty(const btree tree);
 
 int bt_count(const btree tree);
 
-void bt_free(btree *tree, void (*freeObject)(voidp_t));
-void bt_destroy(btree *tree);
+bool bt_free(btree *tree, void (*freeObject)(voidp_t));
+bool bt_destroy(btree *tree);
 
 #endif

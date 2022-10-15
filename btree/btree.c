@@ -12,7 +12,7 @@ btree bt_new_node(voidp_t value)
     }
     else
     {
-        errcset(EBTREE_NODE_MEMALLOC);
+        //errcset(EBTREE_NODE_MEMALLOC);
         return NULL;
     }
 }
@@ -58,16 +58,18 @@ static void btfree(btree *tree, void (*freeObject)(voidp_t))
     }
 }
 
-void bt_free(btree *tree, void (*freeObject)(voidp_t))
+bool bt_free(btree *tree, void (*freeObject)(voidp_t))
 {
     if ((*tree) != NULL)
     {
         btfree(tree, freeObject);
+        return true;
     }
-    else
+    return false;
+    /* else
     {
         errcset(EBTREE_FREENULLPTR);
-    }
+    } */
 }
 
 static void btdestr(btree *tree)
@@ -83,14 +85,16 @@ static void btdestr(btree *tree)
 }
 
 // free only nodes (not elements in the tree)
-void bt_destroy(btree *tree)
+bool bt_destroy(btree *tree)
 {
     if ((*tree) != NULL)
     {
         btdestr(tree);
+        return true;
     }
-    else
+    return false;
+    /* else
     {
         errcset(EBTREE_FREENULLPTR);
-    }
+    } */
 }

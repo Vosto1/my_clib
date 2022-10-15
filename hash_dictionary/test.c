@@ -27,8 +27,7 @@ static entry* _create_entry(key k, value v)
 static void free_entry(voidp_t vp)
 {
     entry* e = (entry*)vp;
-    free(e->k);
-    free(e->v);
+    free(e);
 }
 
 char rascii()
@@ -49,6 +48,11 @@ static entry* randomElement(hashtable* ht)
 }
 
 // debug
+static void pvalue(entry* e, int index)
+{
+    printf("index %d: [%c,%d]\n", index, e->k, e->v);
+}
+
 static void print(hashtable* ht)
 {
     for (int i = 0; i < ht_size(ht); i++)
@@ -56,19 +60,13 @@ static void print(hashtable* ht)
         if (ht->entries[i] != UNUSED)
         {
             entry* e = (entry*)ht->entries[i];
-            printf("index %d: [%c,%d]\n", i, e->k, e->v);
+            pvalue(e, i);
         }
         else
             printf("index %d: UNUSED\n", i);
     }
     printf("\n");
 }
-
-static void pvalue(entry* e)
-{
-    printf("key: %c value: %d\n", e->k, e->v);
-}
-
 
 unsigned int auto_tests(int tests, int mod)
 {
@@ -189,7 +187,7 @@ unsigned int auto_tests(int tests, int mod)
     prgEnd = now();
     seconds programTime = diff(prgStart, prgEnd);
     printf("Test completed, computed %d operations during %fs\n", operations, programTime);
-    ht_free(&ht);
+    assert(ht_free(&ht));
     return operations;
 }
 
@@ -241,5 +239,6 @@ void test_sequence()
     ht_insert(&ht, e4);
     print(&ht);
 
+    assert(ht_free(&ht));
     printf("Test passed\n");
 }

@@ -3,7 +3,7 @@
 
 #include <stdbool.h>
 #include <assert.h>
-#include "../utils/error.h"
+//#include "../utils/error.h"
 #include "../utils/timer.h"
 #include "bitvector.h"
 

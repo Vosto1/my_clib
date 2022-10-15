@@ -61,16 +61,17 @@ size_t sh_init(sheap *h, size_t size, int (*compare)(cvoidp_t x, cvoidp_t y), vo
     return da_init(&(h->items), size, compare, freeObject);
 }
 
-void sh_free(sheap *h)
+bool sh_free(sheap *h)
 {
     if (!sh_is_null(h))
     {
-        da_free(&h->items);
+        return da_free(&h->items);
     }
-    else
+    return false;
+    /* else
     {
         errcset(EFREE_NULLPTR);
-    }
+    } */
 }
 
 size_t sh_size(sheap *h)
@@ -104,8 +105,9 @@ bool sh_is_empty(sheap *h)
  */
 size_t sh_insert(sheap *h, voidp_t item)
 {
-    da_insert(&(h->items), item);
-    if (errc != SUCCESS)
+    size_t s = da_count(&(h->items));
+    size_t s2 = da_insert(&(h->items), item);
+    if (s + 1 != s2)
     {
         return sh_size(h) + FLAG_ERROR;
     }
@@ -121,12 +123,12 @@ voidp_t sh_extract_min(sheap *h)
 {
     if (sh_is_null(h))
     {
-        errcset(EHEAP_NULL);
+        //errcset(EHEAP_NULL);
         return NULL;
     }
     if (sh_is_empty(h))
     {
-        errcset(EHEAP_EMPTY);
+        //errcset(EHEAP_EMPTY);
         return NULL;
     }
     voidp_t tempMin = h->items.array[0];

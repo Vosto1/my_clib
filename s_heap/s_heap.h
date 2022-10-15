@@ -12,7 +12,7 @@
 #define _HEAP_H
 
 #include "../dynamic_array/darray.h"
-#include "../utils/error.h"
+//#include "../utils/error.h"
 #include "../datatype.h"
 
 /**
@@ -61,9 +61,9 @@ size_t sh_init(sheap *h, size_t size, int (*compare)(cvoidp_t x, cvoidp_t y), vo
  * @brief remove (free) all items in the sheap and free the sheap
  *
  * @param h the sheap to free
+ * @return true on success
  */
-void sh_free(sheap *h);
-
+bool sh_free(sheap *h);
 /**
  * @brief get the size of the sheap (item count)
  *
@@ -94,7 +94,6 @@ bool sh_is_null(sheap *h);
  * @return false if not empty
  */
 bool sh_is_empty(sheap *h);
-
 /**
  * @brief insert an item of your data type into the sheap
  *

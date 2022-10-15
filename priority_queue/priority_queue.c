@@ -12,10 +12,11 @@ size_t pq_init(priorityqueue *pq, size_t size, int (*compare)(cvoidp_t x, cvoidp
     return sh_init(&pq->h, size, compare, freeObject);
 }
 
-void pq_free(priorityqueue *pq)
+bool pq_free(priorityqueue *pq)
 {
-    sh_free(&pq->h);
+    bool r = sh_free(&pq->h);
     *pq = pq_create_empty();
+    return r;
 }
 
 size_t pq_count(priorityqueue *pq)
@@ -32,7 +33,6 @@ voidp_t pq_dequeue(priorityqueue *pq)
 {
     if (pq_count(pq) == 0)
     {
-        errcset(EPQ_EMPTY);
         return NULL;
     }
     else

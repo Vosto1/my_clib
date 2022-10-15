@@ -45,25 +45,27 @@ size_t da_init(darray *a, size_t initSize, int (*compare)(cvoidp_t x, cvoidp_t y
     else
     {
         *a = da_create_empty();
-        errcset(EMEM_ALLOC);
+        //errcset(EMEM_ALLOC);
         return 0;
     }
 }
 
-void da_destroy(darray *a)
+bool da_destroy(darray *a)
 {
     if (!da_is_null(a))
     {
         free(a->array);
         *a = da_create_empty();
+        return true;
     }
-    else
+    return false;
+    /* else
     {
         errcset(EFREE_NULLPTR);
-    }
+    } */
 }
 
-void da_free(darray *a)
+bool da_free(darray *a)
 {
     if (!da_is_null(a))
     {
@@ -74,11 +76,13 @@ void da_free(darray *a)
         }
         else
             da_destroy(a);
+        return true;
     }
-    else
+    return false;
+    /* else
     {
         errcset(EFREE_NULLPTR);
-    }
+    } */
 }
 
 size_t da_clear(darray *a)
@@ -89,7 +93,7 @@ size_t da_clear(darray *a)
     }
     else if (da_is_null(a))
     {
-        errcset(ENULL_ARG);
+        //errcset(ENULL_ARG);
         return 0;
     }
     int amount = a->used;
@@ -106,7 +110,7 @@ size_t da_insert(darray *a, voidp_t item)
 {
     if (a == NULL || a->array == NULL)
     {
-        errcset(ENULL_ARG);
+        //errcset(ENULL_ARG);
         return 0;
     }
     // memory increase
@@ -122,7 +126,7 @@ size_t da_insert(darray *a, voidp_t item)
         }
         else
         {
-            errcset(EMEM_IREALLOC);
+            //errcset(EMEM_IREALLOC);
             return 0;
         }
     }
@@ -135,7 +139,7 @@ voidp_t da_remove_last(darray *a)
 {
     if (da_is_empty(a))
     {
-        errcset(EARR_EMPTY);
+        //errcset(EARR_EMPTY);
         return NULL;
     }
     a->used -= 1;
@@ -161,7 +165,7 @@ voidp_t da_remove_item(darray *a, voidp_t item)
             return da_remove_at(a, i);
         }
     }
-    errcset(EARRDATA_DOESNT_EXIST);
+    //errcset(EARRDATA_DOESNT_EXIST);
     return NULL;
 }
 
@@ -169,7 +173,7 @@ voidp_t da_remove_at(darray *a, int index)
 {
     if (index > a->used)
     {
-        errcset(EINDEX_OUT_OF_BOUNDS);
+        //errcset(EINDEX_OUT_OF_BOUNDS);
         return NULL;
     }
     voidp_t *data = a->array[index];
@@ -195,7 +199,7 @@ size_t da_merge(darray *a, darray *b)
 {
     if (a == NULL || b == NULL)
     {
-        errcset(ENULL_ARG);
+        //errcset(ENULL_ARG);
         return 0;
     }
     for (int i = 0; i < b->used; i++)
@@ -261,7 +265,7 @@ static MEM memory_decrease(darray *a)
         }
         else
         {
-            errcset(EMEM_DREALLOC);
+            //errcset(EMEM_DREALLOC);
             return ERRMEM_DECREASE;
         }
     }

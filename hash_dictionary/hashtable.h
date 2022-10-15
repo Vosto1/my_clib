@@ -13,7 +13,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "../utils/error.h"
+//#include "../utils/error.h"
 #include "../s_dynamic_array/sdarray.h"
 #include "../datatype.h"
 
@@ -31,8 +31,8 @@ struct htabl
 
 hashtable ht_create_empty();
 size_t ht_init(hashtable *ht, size_t size, size_t (*hash)(cvoidp_t, const hashtable *), int (*compare)(cvoidp_t, cvoidp_t), void (*freeObject)(voidp_t));
-void ht_destroy(hashtable *ht);
-void ht_free(hashtable *ht);
+bool ht_destroy(hashtable *ht);
+bool ht_free(hashtable *ht);
 size_t ht_trim(hashtable *ht);
 
 int ht_insert(hashtable *ht, voidp_t element);

@@ -12,7 +12,6 @@
 #define PRIORITY_QUEUE_H
 
 #include "../s_heap/s_heap.h"
-#include "../utils/error.h"
 #include "../datatype.h"
 
 typedef struct // needs fixing (remove struct and only typedef sheap to pq)
@@ -55,8 +54,9 @@ size_t pq_init(priorityqueue *pq, size_t size, int (*compare)(cvoidp_t x, cvoidp
  * @brief remove (free) all items in the priority queue and free it
  *
  * @param pq the priority queue to free
+ * @return true on success
  */
-void pq_free(priorityqueue *pq);
+bool pq_free(priorityqueue *pq);
 
 /**
  * @brief get the item count of the priority queue

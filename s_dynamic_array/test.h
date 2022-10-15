@@ -10,16 +10,13 @@
 #include <stdlib.h>
 #include <assert.h>
 #include "sdarray.h"
-#include "../utils/error.h"
+//#include "../utils/error.h"
 #include "../utils/timer.h"
 
 typedef struct
 {
     int value;
 } item;
-
-// userdefined function needed for the dyn-array
-static int compare(const void *i1, const void *i2);
 
 typedef struct
 {
@@ -36,13 +33,6 @@ typedef struct
 } testResult;
 
 // test functions
-static int _max(int x, int y);
-static double ratio(int used, int size);
-static void print_results(testResult res);
-static void print_status(stats stat);
-static item *create_item(int value);
-static void printData(sdarray *a);
-static void remove_all(sdarray *a);
 void auto_tests(int n, int mod);
 void test_sequence();
 

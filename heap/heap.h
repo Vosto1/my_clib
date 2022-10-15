@@ -12,7 +12,7 @@
 #define _HEAP_H
 
 #include "../dynamic_array/darray.h"
-#include "../utils/error.h"
+//#include "../utils/error.h"
 #include "../datatype.h"
 
 /**
@@ -81,8 +81,9 @@ size_t h_init(heap *h,
  * @brief remove (free) all items in the heap and free the heap
  *
  * @param h the heap to free
+ * @return true on success
  */
-void h_free(heap *h);
+bool h_free(heap *h);
 
 /**
  * @brief get the size of the heap (item count)

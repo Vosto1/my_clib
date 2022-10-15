@@ -15,7 +15,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <math.h>
-#include "../utils/error.h"
+//#include "../utils/error.h"
 #include "../datatype.h"
 
 #define QUARTER 0.25
@@ -90,14 +90,16 @@ size_t sda_clear(sdarray *a);
  * @brief free array (items not freed)
  *
  * @param a array to free
+ * @return true on success
  */
-void sda_destroy(sdarray *a);
+bool sda_destroy(sdarray *a);
 /**
  * remove (free) all items in array and then free allocated memory for the dynamic array
  *
  * @param a array to free
+ * @return true on success
  */
-void sda_free(sdarray *a);
+bool sda_free(sdarray *a);
 /**
  * @brief get item at index
  * 

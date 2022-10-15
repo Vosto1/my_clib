@@ -41,7 +41,7 @@ int main(void)
     arr[1] = bt->left->value;
     arr[2] = bt->right->value;
 
-    bt_destroy(&bt);
+    assert(bt_destroy(&bt));
 
     assert(bt == NULL);
 
@@ -51,7 +51,7 @@ int main(void)
     bt->left = bt_new_node(arr[1]);
     bt->right = bt_new_node(arr[2]);
 
-    bt_free(&bt, freeobj);
+    assert(bt_free(&bt, freeobj));
 
     printf("Tests passed.\n");
 

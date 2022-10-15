@@ -99,7 +99,6 @@ static void insert_n(heap *h, int n)
         item = create_item(rand() % 1000);
         e = h_size(h) + 1;
         assert(h_insert(h, (void *)item) == e);
-        error_handler();
     }
     assert(h_size(h) == n);
 }
@@ -114,7 +113,6 @@ void compute_1_to_n_sequences_of_operations(long n, Test type)
 {
     heap h = h_create_empty();
     assert(h_init(&h, 1, &compare, &setKey, &minKey, &freeObject) == 1);
-    error_handler();
     long j = 1;
     item *it;
     item *toDelete;
@@ -156,8 +154,7 @@ void compute_1_to_n_sequences_of_operations(long n, Test type)
         }
         break;
     }
-    h_free(&h);
-    error_handler();
+    assert(h_free(&h));
 }
 
 bool heap_integrity_test(int n)
@@ -165,7 +162,6 @@ bool heap_integrity_test(int n)
     srand(time(NULL));
     heap h = h_create_empty();
     assert(h_init(&h, 10, &compare, &setKey, &minKey, &freeObject) == 10);
-    error_handler();
     item *it;
     item *toDelete;
     ticks start;
@@ -223,8 +219,7 @@ bool heap_integrity_test(int n)
     printf("Computed a total of %ld operations and tests.\n", totalTests);
     printf("Total test running time: %fs\n", passed);
     printf("Integrity test exiting...\n");
-    h_free(&h);
-    error_handler();
+    assert(h_free(&h));
     return true;
 }
 
@@ -233,7 +228,6 @@ void test_sequence()
     srand(time(NULL));
     heap h = h_create_empty();
     assert(h_init(&h, 10, &compare, &setKey, &minKey, &freeObject) == 10);
-    error_handler();
     item *rm;
     item *tmp;
 
@@ -266,7 +260,6 @@ void test_sequence()
     free(tmp);
     assert(i != -1);
     assert(compare(h.items.array[i], item3) == 0);
-    error_handler();
 
     // decrease key of item3 to 1 but still same element as item3
     tmp = create_item(1);
@@ -300,9 +293,6 @@ void test_sequence()
     free(rm);
     rm = h_remove(&h, &comp);
     assert(rm == NULL);
-    assert(errc == EH_DATA_DOESNT_EXIST);
-    errcreset();
-    assert(errc == SUCCESS);
 
     rm = h_extract_min(&h);
     assert(rm != NULL);
@@ -339,11 +329,9 @@ void test_sequence()
     assert(compare(rm, item0) == 0);
     free(rm);
 
-    h_free(&h);
-    error_handler();
+    assert(h_free(&h));
     
     h = h_create_empty();
-    error_handler();
 
     item0 = create_item(97);
     item1 = create_item(82);
@@ -365,7 +353,6 @@ void test_sequence()
 
     assert(test_heap_integrity(&h));
 
-    h_free(&h);
-    error_handler();
+    assert(h_free(&h));
     printf("Tests passed.\n");
 }

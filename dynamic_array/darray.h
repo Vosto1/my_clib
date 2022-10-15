@@ -15,7 +15,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <math.h>
-#include "../utils/error.h"
+//#include "../utils/error.h"
 #include "../datatype.h"
 
 #define QUARTER 0.25
@@ -83,14 +83,16 @@ size_t da_init(darray *a, size_t init_size, int (*compare)(cvoidp_t x, cvoidp_t 
  * @brief free the array but not the items
  * 
  * @param a array to free
+ * @return true if success
  */
-void da_destroy(darray *a);
+bool da_destroy(darray *a);
 /**
  * remove (free) all items in array and then free allocated memory for the dynamic array
  *
  * @param a array to free
+ * @return true if success
  */
-void da_free(darray *a);
+bool da_free(darray *a);
 /**
  * remove (free) all items in the array
  *

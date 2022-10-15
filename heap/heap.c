@@ -70,16 +70,18 @@ size_t h_init(heap *h,
     return da_init(&(h->items), size, compare, freeObject);
 }
 
-void h_free(heap *h)
+bool h_free(heap *h)
 {
     if (!h_is_null(h))
     {
         da_free(&h->items);
+        return true;
     }
-    else
+    return false;
+    /* else
     {
         errcset(EFREE_NULLPTR);
-    }
+    } */
 }
 
 size_t h_size(heap *h)
@@ -113,8 +115,9 @@ bool h_is_empty(heap *h)
  */
 size_t h_insert(heap *h, voidp_t item)
 {
-    da_insert(&(h->items), item);
-    if (errc != SUCCESS)
+    size_t s = da_count(&h->items);
+    size_t s2 = da_insert(&(h->items), item);
+    if (s + 1 != s2)
     {
         return h_size(h) + FLAG_INDEX_ERROR;
     }
@@ -153,12 +156,12 @@ voidp_t h_extract_min(heap *h)
 {
     if (h_is_null(h))
     {
-        errcset(EHEAP_NULL);
+        //errcset(EHEAP_NULL);
         return NULL;
     }
     if (h_is_empty(h))
     {
-        errcset(EHEAP_EMPTY);
+        //errcset(EHEAP_EMPTY);
         return NULL;
     }
     voidp_t tempMin = h->items.array[0];
@@ -186,20 +189,20 @@ size_t h_decrease_key(heap *h, voidp_t item, voidp_t newKey)
         {
             if ((*h->compare)(h->items.array[i], newKey) == 0)
             {
-                errcset(EHNEW_KEY);
+                //errcset(EHNEW_KEY);
                 return h_size(h) + FLAG_INDEX_ERROR;
             }
             (*h->setKey)(h->items.array[i], newKey);
             int newindex = min_heapify_up(h, i);
             if ((*h->compare)(h->items.array[0], newKey) != 0)
             {
-                errcset(EHNEWKEY_NOT_SET);
+                //errcset(EHNEWKEY_NOT_SET);
                 return h_size(h) + FLAG_INDEX_ERROR;;
             }
             return newindex;
         }
     }
-    errcset(EH_DATA_DOESNT_EXIST);
+    //errcset(EH_DATA_DOESNT_EXIST);
     return h_size(h) + FLAG_INDEX_ERROR;;
 }
 

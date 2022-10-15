@@ -3,13 +3,13 @@ needs testing:
 - dstring
 - ll
 - matrix (pain)
-+ bitvector changed, needs new testing.
 no leaks:
-+ sdarray is tested!
-+ btree is tested!
-+ darray is tested!
-+ s_heap is tested!
-+ priority_queue is tested!
-+ heap is tested!
-+ hash_dictionary is tested!
-+ bstree is tested!
++ bstree tested! // might be good to write tests for the functions not currently being tested
++ btree tested!
++ darray tested!
++ sdarray tested!
++ heap tested!
++ hash_dictionary tested!
++ bitvector tested!
++ s_heap tested!
++ priority_queue tested!

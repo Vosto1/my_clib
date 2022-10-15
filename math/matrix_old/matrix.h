@@ -49,7 +49,7 @@ void errorHandler1(int err);
 // Prints matrix
 void printMatrix(Matrix mtrx);
 // Frees the allocated memory for the matrix. The pointer will point at NULL afterwards.
-ErrorCode1 freeMatrix(Matrix *mtrx);
+void freeMatrix(Matrix *mtrx);
 // Initializes the matrix with column number * 10 + row number.
 ErrorCode1 matrixTestInitialization(Matrix mtrx);
 // Initializes the matrix with data from the list. The list must have rows * columns amount of data.

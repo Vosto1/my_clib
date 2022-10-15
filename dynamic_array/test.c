@@ -79,14 +79,13 @@ static void insert_n(darray *a, int n)
         item = create_item(rand() % 1000);
         e = a->used + 1;
         assert(da_insert(a, (void *)item) == e);
-        error_handler();
     }
     assert(a->used == n);
 }
 
 static void remove_all(darray *a)
 {
-    da_clear(a);
+    assert(da_clear(a) != 0);
     assert(a->used == 0);
 }
 
@@ -98,7 +97,6 @@ void auto_tests(int n, int mod)
     assert(a.used == 0);
 
     assert(da_init(&a, 10, &compare, &free_item) == 10);
-    error_handler();
     assert(a.array != NULL);
     assert(a.size == 10);
     assert(a.used == 0);
@@ -124,7 +122,6 @@ void auto_tests(int n, int mod)
             {
                 d = create_item(rand() % 1000);
                 assert(da_insert(&a, (void *)d) != 0);
-                error_handler();
             }
             end = now();
             remove_all(&a);
@@ -138,7 +135,6 @@ void auto_tests(int n, int mod)
                 d = (item *)da_remove_item(&a, a.array[rand() % a.used]);
                 assert(d != NULL);
                 free(d);
-                error_handler();
             }
             end = now();
             break;
@@ -151,7 +147,6 @@ void auto_tests(int n, int mod)
                 d = (item *)da_remove_at(&a, rand() % a.used);
                 assert(d != NULL);
                 free(d);
-                error_handler();
             }
             end = now();
             break;
@@ -164,7 +159,6 @@ void auto_tests(int n, int mod)
                 d = (item *)da_remove_last(&a);
                 assert(d != NULL);
                 free(d);
-                error_handler();
             }
             end = now();
             break;
@@ -178,16 +172,13 @@ void auto_tests(int n, int mod)
                 assert(da_init(&c, size, &compare, &free_item) == size);
                 for (int k = 0; k < size; k++)
                     da_insert(&c, create_item(rand() % 1000));
-                error_handler();
                 for (int k = 0; k < size; k++)
                     da_insert(&a, create_item(rand() % 1000));
-                error_handler();
                 assert(da_merge(&a, &c) != 0);
-                error_handler();
                 operations += size + size;
             }
             end = now();
-            da_clear(&a);
+            assert(da_clear(&a) != 0);
             sprintf(operation, "merge (%lld insertions)", operations);
 
             // extra tests
@@ -195,11 +186,8 @@ void auto_tests(int n, int mod)
             assert(da_init(&b, 10, &compare, &free_item) == 10);
             for (int i = 0; i < rand() % 20; i++)
                 da_insert(&b, create_item(rand() % 100));
-            error_handler();
-            da_clear(&b);
-            error_handler();
-            da_destroy(&b);
-            error_handler();
+            assert(da_clear(&b) != 0);
+            assert(da_destroy(&b));
             // clear followed by destroy is the same as free
             break;
         }
@@ -209,7 +197,7 @@ void auto_tests(int n, int mod)
         test_r.s = s;
         print_results(test_r);
     }
-    da_free(&a);
+    assert(da_free(&a));
     printf("Test passed.\n");
 }
 
@@ -224,7 +212,6 @@ void test_sequence()
     assert(a.used == 0);
 
     assert(da_init(&a, 10, &compare, &free_item) != 0);
-    error_handler();
     assert(a.array != NULL);
     assert(a.size == 10);
     assert(a.used == 0);
@@ -233,7 +220,6 @@ void test_sequence()
     {
         itemptr = create_item(i);
         assert(da_insert(&a, (void *)itemptr) != 0);
-        error_handler();
         assert(a.used == (i + 1));
         itemptr = (item *)a.array[i];
         assert(itemptr->value == i);
@@ -245,7 +231,6 @@ void test_sequence()
     {
         itemptr = create_item(i + a.used);
         assert(da_insert(&a, (void *)itemptr) != 0);
-        error_handler();
         itemptr = (item *)a.array[a.used - 1];
         assert(itemptr->value == i + (a.used - 1));
     }
@@ -307,7 +292,7 @@ void test_sequence()
     assert(da_clear(&a) != 0);
     assert(a.used == 0);
 
-    da_free(&a);
+    assert(da_free(&a));
     assert(a.array == NULL);
     printf("Tests passed.\n");
 }

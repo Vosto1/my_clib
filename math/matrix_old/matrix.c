@@ -85,18 +85,23 @@ void printMatrix(Matrix m)
 	printf("\n\n");
 }
 
-ErrorCode1 freeMatrix(Matrix *mtrx)
+void freemtrx2(void* p)
 {
-	if ((*mtrx) == NULL)
+	Matrix* m = (Matrix*)p;
+	freeMatrix(m);
+}
+void freeMatrix(Matrix *mtrx)
+{
+	/* if ((*mtrx) == NULL)
 		return ERR_FREE_MATRIX_IS_NULL;
 	else if ((*mtrx)->matrix == NULL)
-		return ERR_FREE_MATRIX_IS_NULL;
+		return ERR_FREE_MATRIX_IS_NULL; */
 
 	free((*mtrx)->matrix);
 	(*mtrx)->matrix = NULL;
 	free((*mtrx));
 	*mtrx = NULL;
-	return SUCCESS1;
+	// return SUCCESS1;
 }
 
 ErrorCode1 matrixTestInitialization(Matrix mtrx)
@@ -268,19 +273,19 @@ ErrorCode1 getDeterminant(Matrix *mtrx, Data *pdet)
 	size_t htablesize = size(n);
 	if (htablesize % 2 == 0)
 		htablesize += 1;
-	assert(ht_init(&ht, htablesize, &myhash, &is_equal) == htablesize);
+	assert(ht_init(&ht, htablesize, &myhash, &is_equal, &freemtrx2) == htablesize);
 	*pdet = determinantDivideAndConquer(mtrx, &ht);
-	printf("initial hashtable size: %lld\n", htablesize);
+	//printf("initial hashtable size: %lld\n", htablesize);
 	entry *ent, *ent2;
 	Matrix m;
-	print(&ht);
+	//print(&ht);
 	for (int i = 0; i < ht_size(&ht); i++)
 	{
 		if (ht.entries[i] != UNUSED)
 		{
 			ent = (entry *)ht.entries[i];
 			m = ent->m;
-			printMatrix(m);
+			//printMatrix(m);
 		}
 	}
 	for (int i = 0; i < ht_size(&ht); i++)
@@ -289,13 +294,13 @@ ErrorCode1 getDeterminant(Matrix *mtrx, Data *pdet)
 		{
 			ent = (entry *)ht.entries[i];
 			m = ent->m;
-			printMatrix(m);
+			//printMatrix(m);
 			ent2 = ht_delete(&ht, ent);
 			assert(ent == ent2);
 			freeMatrix(&m);
 			free(ent);
 			//m = NULL; its done in freeMatrix
-			print(&ht);
+			//print(&ht);
 		}
 	}
 	ht_free(&ht);
@@ -562,9 +567,9 @@ ErrorCode1 transposeMatrix(Matrix *mtrx)
 	errorHandler1(copyto(transposedMatrix, (*mtrx)));
 
 	// free locals
-	errorHandler1(freeMatrix(&transposedMatrix));
+	freeMatrix(&transposedMatrix);
 	transposedMatrix = NULL;
-	errorHandler1(freeMatrix(&clone));
+	freeMatrix(&clone);
 	clone = NULL;
 	return SUCCESS1;
 }
@@ -587,7 +592,7 @@ ErrorCode1 getAdjugateMatrix(Matrix *mtrx)
 	errorHandler1(copyto(adjugateMatrix, (*mtrx)));
 
 	// free locals
-	errorHandler1(freeMatrix(&adjugateMatrix));
+	freeMatrix(&adjugateMatrix);
 	adjugateMatrix = NULL;
 	return SUCCESS1;
 }

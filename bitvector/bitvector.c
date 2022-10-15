@@ -25,8 +25,8 @@ size_t bv_add(bitvector *bv, bool value)
     bool *newbool = (bool *)malloc(sizeof(bool));
     if (newbool == NULL)
     {
-        errcset(EMEM_ALLOC);
-        return -1;
+        //errcset(EMEM_ALLOC);
+        return 0;
     }
     else
     {
@@ -39,8 +39,8 @@ size_t bv_merge(bitvector *bv, bitvector *mergeWith)
 {
     if (bv == NULL || mergeWith == NULL)
     {
-        errcset(ENULL_ARG);
-        return -1;
+        //errcset(ENULL_ARG);
+        return 0;
     }
     for (int i = 0; i < bit_count(mergeWith); i++)
         bv_add(bv, mergeWith->array[i]);
@@ -64,7 +64,7 @@ bool *bv_at(bitvector *bv, int index)
 {
     if (index >= bv->used)
     {
-        errcset(EINDEX_OUT_OF_BOUNDS);
+        //errcset(EINDEX_OUT_OF_BOUNDS);
         return NULL;
     }
     else
@@ -79,9 +79,9 @@ size_t bv_clear(bitvector *bv)
     return size;
 }
 
-void bv_delete(bitvector *bv)
+bool bv_delete(bitvector *bv)
 {
-    sda_free(bv);
+    return sda_free(bv);
 }
 
 // converts a bitvector into an array of bytes
@@ -89,7 +89,7 @@ unsigned int bools2bits(bitvector *bv, binary *out)
 {
     if (bv == NULL || out == NULL)
     {
-        errcset(ENULL_ARG);
+        //errcset(ENULL_ARG);
         return 0;
     }
     unsigned int residualBitsInLastByte = bytes_to_bits(sizeof(byte)) - (bit_count(bv) % bytes_to_bits(sizeof(byte)));
@@ -100,7 +100,7 @@ unsigned int bools2bits(bitvector *bv, binary *out)
     byte *bin = (byte *)malloc(amountOfBytes * sizeof(byte));
     if (bin == NULL)
     {
-        errcset(EMEM_ALLOC);
+        //errcset(EMEM_ALLOC);
         return 0;
     }
     for (unsigned int i = 0; i < amountOfBytes; i++)
@@ -136,13 +136,13 @@ bool bits2bools(binary *b, bitvector *out)
 {
     if (out == NULL)
     {
-        errcset(ENULL_ARG);
+        //errcset(ENULL_ARG);
         return false;
     }
     
     if (b->bytes == NULL)
     {
-        errcset(EARR_EMPTY);
+        //errcset(EARR_EMPTY);
         return false;
     }
 
@@ -173,7 +173,7 @@ size_t write_binary_to_file(binary *b, char *file)
     byte *buffer = (byte *)malloc((byteSizeResidual + byteSizeData) * sizeof(byte));
     if (!buffer)
     {
-        errcset(EMEM_ALLOC);
+        //errcset(EMEM_ALLOC);
         return 0;
     }
     byte tmp;
@@ -206,7 +206,7 @@ size_t write_binary_to_file(binary *b, char *file)
     else
     {
         free(buffer);
-        errcset(EWRITE_BINARY);
+        //errcset(EWRITE_BINARY);
         return 0;
     }
 }
@@ -228,7 +228,7 @@ size_t read_binary_from_file(char *file, binary *b)
     byte *tmp = (byte *)malloc(byteSizeData * sizeof(byte));
     if (!tmp)
     {
-        errcset(EMEM_ALLOC);
+        //errcset(EMEM_ALLOC);
         return 0;
     }
     else

@@ -6,7 +6,6 @@ write/read files
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "error.h"
 #include "../datatype.h"
 
 #define BYTE sizeof(byte)

@@ -18,7 +18,7 @@ size_t ht_init(hashtable *ht, size_t size, size_t (*hash)(cvoidp_t, const hashta
     ht->entries = (voidp_t)malloc(sizeof(voidp_t) * size);
     if (!ht->entries)
     {
-        errcset(EMEM_ALLOC);
+        //errcset(EMEM_ALLOC);
         return 0;
     }
     ht->size = size;
@@ -32,11 +32,12 @@ size_t ht_init(hashtable *ht, size_t size, size_t (*hash)(cvoidp_t, const hashta
     return ht->size;
 }
 
-void ht_free(hashtable *ht)
+bool ht_free(hashtable *ht)
 {
     if (ht == NULL)
     {
-        errcset(EHASH_NULL);
+        //errcset(EHASH_NULL);
+        return false;
     }
     else
     {
@@ -50,14 +51,16 @@ void ht_free(hashtable *ht)
         ht->compare = NULL;
         ht->hash = NULL;
         ht->size = 0;
+        return true;
     }
 }
 
 // only free the hashtable not the entries
-void ht_destroy(hashtable *ht)
+bool ht_destroy(hashtable *ht)
 {
     if (ht == NULL)
-        errcset(EHASH_NULL);
+        return false;
+        //errcset(EHASH_NULL);
     else
     {
         free(ht->entries);
@@ -65,6 +68,7 @@ void ht_destroy(hashtable *ht)
         ht->compare = NULL;
         ht->hash = NULL;
         ht->size = 0;
+        return true;
     }
 }
 
@@ -74,7 +78,7 @@ size_t ht_trim(hashtable *ht)
     sdarray a = sda_create_empty();
     if (sda_init(&a, size, NULL) != size)
     {
-        errcset(EHASH_TRIM_BUFFER);
+        //errcset(EHASH_TRIM_BUFFER);
         return 0;
     }
 
@@ -88,7 +92,7 @@ size_t ht_trim(hashtable *ht)
     voidp_t *temp = (voidp_t *)realloc(ht->entries, elementCount * sizeof(voidp_t));
     if (temp == NULL)
     {
-        errcset(EHASH_TRIM_MEMALLOC);
+        //errcset(EHASH_TRIM_MEMALLOC);
         return 0;
     }
     ht->entries = temp;
@@ -213,7 +217,7 @@ static size_t indexof(hashtable *ht, cvoidp_t value_to_search_for)
     // this function should only be called if
     // we know that the element is present in the table
     // so we shouldnt get here
-    errcset(EHASHDATA_DOESNT_EXIST);
+    //errcset(EHASHDATA_DOESNT_EXIST);
     return ht->size + FLAG_INDEX_ERROR;
 }
 
@@ -249,7 +253,7 @@ static size_t linear_probe(hashtable *ht, voidp_t element, int* collisions)
     sdarray a = sda_create_empty();
     if (sda_init(&a, ht_size(ht), NULL) != ht_size(ht))
     {
-        errcset(EHASHTABLE_OVERFLOW_BUFFER);
+        //errcset(EHASHTABLE_OVERFLOW_BUFFER);
         return ht->size + FLAG_INDEX_ERROR;
     }
 
@@ -272,7 +276,7 @@ static size_t linear_probe(hashtable *ht, voidp_t element, int* collisions)
     voidp_t *temp = (voidp_t *)realloc(ht->entries, ht->size * sizeof(voidp_t));
     if (temp == NULL)
     {
-        errcset(EHASHTABLE_OVERFLOW_MEMALLOC);
+        //errcset(EHASHTABLE_OVERFLOW_MEMALLOC);
         return ht->size + FLAG_INDEX_ERROR; // fatal error
     }
     ht->entries = temp;

@@ -14,7 +14,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include "../utils/file.h"
-#include "../utils/error.h"
+//#include "../utils/error.h"
 #include "../s_dynamic_array/sdarray.h"
 #include "../datatype.h"
 
@@ -35,7 +35,7 @@ size_t bv_merge(bitvector *bv, bitvector *unionWith);
 bool bv_remove_last(bitvector *bv);
 bool *bv_at(bitvector *bv, int index);
 size_t bv_clear(bitvector *bv);
-void bv_delete(bitvector *bv);
+bool bv_delete(bitvector *bv);
 unsigned int bools2bits(bitvector *bv, binary *out);
 bool bits2bools(binary *b, bitvector *out);
 size_t write_binary_to_file(binary *b, char *file);
