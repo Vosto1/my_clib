@@ -62,7 +62,7 @@ ErrorCode1 copyto(Matrix input, Matrix output);
 ErrorCode1 makeMatrix(int rows, int columns, Matrix *mtrx);
 // Gets the determinant of the inputed matrix. Matrix must be a square matrix. Determinant is assigned to what pdet points at.
 ErrorCode1 getDeterminant(Matrix *mtrx, Data *pdet);
-ErrorCode getDeterminantSlow(Matrix *mtrx, Data *pdet);
+ErrorCode1 getDeterminantSlow(Matrix *mtrx, Data *pdet);
 // Get cofactor matrix of input matrix.
 ErrorCode1 getCofactorMatrix(Matrix *mtrx, Matrix *resultMatrix);
 // transpose input matrix

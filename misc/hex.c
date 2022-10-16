@@ -1,6 +1,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+/*
+	How to convert from deci to hex:
+	1. divide number by 16 succesively until quotient is 0 (i.e. do modulo 16).
+	2. read from the bottom to the top to get the answer.
+	example:
+	1.
+		1.1 235/16 = 147, remainder = 5
+		1.2 147/16 = 9, remainder = 3
+		1.3 9/16 = 0, remainder = 9
+	2.
+		answer = 935
+*/
 
 int main(int argc, char* argv[])
 {

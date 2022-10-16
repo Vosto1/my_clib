@@ -627,7 +627,7 @@ ErrorCode1 getInverseMatrix(Matrix *mtrx)
 
 Data determinantDivideAndConquerSlow(Matrix *mtrx);
 
-ErrorCode getDeterminantSlow(Matrix *mtrx, Data *pdet)
+ErrorCode1 getDeterminantSlow(Matrix *mtrx, Data *pdet)
 {
 	RST; // reset counter
 	if (mtrx == NULL)
@@ -639,7 +639,7 @@ ErrorCode getDeterminantSlow(Matrix *mtrx, Data *pdet)
 		return ERR_NON_SQUARE_MATRIX;
 	}
 	*pdet = determinantDivideAndConquerSlow(mtrx);
-	return SUCCESS;
+	return SUCCESS1;
 }
 
 Data determinantDivideAndConquerSlow(Matrix *mtrx)

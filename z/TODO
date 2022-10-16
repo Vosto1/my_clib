@@ -1,10 +1,8 @@
-// remove old error handling --- started with this
 //fix math/linear_algebra includes
 //fix pq struct defintion
 //prepare valgrind (fix dependencies)
 //clean the code
 //write tests for the new stuff
-//test the old stuff after adding freeObject fn --- valgrind needs fix first
 //make sure that initializing sda_init with NULL as freeObject function in bstree and hashtable doesnt crash them
 
 //OPTIONAL

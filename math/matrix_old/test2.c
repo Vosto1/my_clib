@@ -2,8 +2,8 @@
 #include "test2.h"
 
 #define START_INDEX 2
-#define NEW_ALGO_MAX 14
-#define OLD_ALGO_MAX 11
+#define NEW_ALGO_MAX 5
+#define OLD_ALGO_MAX 4
 
 #define DET_SPACES 30
 
@@ -108,6 +108,6 @@ void test2()
         testloop(i);
 
     print_test_header2();
-    for (i = START_INDEX; i <= OLD_ALGO_MAX; i++)
-        comparison(i);
+    for (i = START_INDEX; i <= OLD_ALGO_MAX; i++);
+        //comparison(i);
 }
