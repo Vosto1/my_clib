@@ -9,7 +9,6 @@ write/read files
 #include "../datatype.h"
 
 #define BYTE sizeof(byte)
-#define ELEMENT_SIZE 1
 
 /**
  * read contents of a file (binary)

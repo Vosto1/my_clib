@@ -12,19 +12,18 @@ size_t read_file(const char *filepath, void **out)
 
 	// get file size (bytes)
 	fseek(rfp, 0, SEEK_END);
-	size_t length = ftell(rfp);
+	long length = ftell(rfp);
 	fseek(rfp, 0, SEEK_SET);
 
 	// create buffer
-	size_t sizeBytes = length * BYTE;
-	void *file = (void *)malloc(sizeBytes);
+	void *file = (void *)malloc(length);
 	if (!file)
 	{
 		return 0;
 	}
 
 	// read file contents
-	size_t readBytes = fread(file, ELEMENT_SIZE, sizeBytes, rfp);
+	size_t readBytes = fread(file, BYTE, length, rfp);
 	// close file
 	fclose(rfp);
 
@@ -47,8 +46,7 @@ size_t write_file(const char *filepath, void *contents, size_t size)
 		return 0;
 	}
 
-	size_t sizeBytes = size * BYTE;
-	size_t writtenBytes = fwrite(contents, ELEMENT_SIZE, sizeBytes, wfp);
+	size_t writtenBytes = fwrite(contents, BYTE, size, wfp);
 	// close file
 	fclose(wfp);
 	return writtenBytes;
