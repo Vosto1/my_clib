@@ -5,6 +5,8 @@
 
 typedef struct vector2d { double x, y; } vec2;
 
+vec2 vec2_create(double x, double y);
+
 vec2 v2add(vec2 v, vec2 w);
 vec2 v2sub(vec2 v, vec2 w);
 vec2 v2mul(vec2 v, vec2 w);

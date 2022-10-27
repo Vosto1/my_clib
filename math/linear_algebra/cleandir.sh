@@ -9,6 +9,8 @@ rm build.sh &> /dev/null
 rm manualcomplcdeps.sh &> /dev/null
 rm addstr2cdeps.sh &> /dev/null
 rm rmstrcdeps.sh &> /dev/null
+rm createheaderguards.sh &> /dev/null
+rm implementheader.sh &> /dev/null
 
 rm vmemtest.log &> /dev/null
 rm filesc.txt &> /dev/null

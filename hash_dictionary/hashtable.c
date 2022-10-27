@@ -241,7 +241,9 @@ static size_t linear_probe(hashtable *ht, voidp_t element, int* collisions)
                 // remove old value (that was equal)
                 // so that it can be updated 
                 // this makes sure there is no leaked memory
-                free((voidp_t)e);
+                //free((voidp_t)e);
+                printf("fatal error\n");
+                exit(-1);
             }
             ht->entries[index] = element; // update existing element or put element in an unoccupied slot
             *collisions =  (int)i; // i == collisions

@@ -1,9 +1,0 @@
-{
-    "files.associations": {
-        "s_dynamic_array.h": "c",
-        "hash.h": "c",
-        "list.h": "c",
-        "matrix.h": "c",
-        "test2.h": "c"
-    }
-}

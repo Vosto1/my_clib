@@ -7,6 +7,8 @@
 
 typedef struct vector4d { double x, y, z, w; } vec4;
 
+vec4 vec4_create(double x, double y, double z, double w);
+
 vec3 homogenize(vec4 h);
 
 #endif

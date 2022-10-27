@@ -7,6 +7,8 @@
 
 typedef struct vector3d { double x, y, z; } vec3;
 
+vec3 vec3_create(double x, double y, double z);
+
 vec3 vadd(vec3 v, vec3 w);
 vec3 vsub(vec3 v, vec3 w);
 vec3 cross(vec3 v, vec3 w);

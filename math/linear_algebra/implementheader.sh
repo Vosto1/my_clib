@@ -1,15 +1,13 @@
 #!/bin/bash
 
-dir=$(dirname $1)
-file=$(basename $1)
 # not a header file reg
 hreg='!(\.h$)'
 
 if [ -z "$1" ] || [[ "$1" =~ $hreg ]]; then
     printf "usage: ./implementheader [c header file]\n"
     exit -1
-elif [ -z $(ls $dir | grep -e "^$file$") ]; then
-    printf "file doesnt exist in the directory $dir\n"
+elif [ -z $(ls | grep -e "^$1$") ]; then
+    printf "file doesnt exist in the directory $(pwd)\n"
     exit -2
 fi
 
@@ -31,7 +29,7 @@ do
 done < "$1"
 
 # include header in c file
-printf "#include \"$file\"\n\n" > $cfile
+printf "#include \"$1\"\n\n" > $cfile
 # create function definitions
 i=0
 while [ $i -lt ${#fnarray[@]} ]; do

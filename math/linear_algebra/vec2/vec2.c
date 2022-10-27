@@ -1,5 +1,13 @@
 #include "vec2.h"
 
+vec2 vec2_create(double x, double y)
+{
+    vec2 v;
+    v.x = x;
+    v.y = y;
+    return v;
+}
+
 vec2 v2add(vec2 v, vec2 w)
 {
     vec2 a;

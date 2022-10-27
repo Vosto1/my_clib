@@ -17,9 +17,6 @@ fi
 rm filesc.txt &> /dev/null
 touch filesc.txt
 
-# remove spaces
-cfiles="${cfiles//' '/""}"
-
 # find all included .h files in file
 for file in $hfiles; do
     includes=$(cat $file | grep -e '^#include ".*\.h"$')
@@ -35,16 +32,22 @@ dependencies="${dependencies//'"'/""}"
 # replace ".h" with ".c"
 dependencies="${dependencies//'.h'/".c"}"
 
-# trim final
+# combine .h and .c files discovered in scan
 dependencies="$dependencies$cfiles"
-# remove all newlines, spaces, tabs etc
+# remove all tabs, newlines, etc..
 dependencies="${dependencies//[$'\t\r\n ']}"
-# add newline at the end of each file
-dependencies="${dependencies//'.c'/".c\\n"}"
+# create word list
+dependencies="${dependencies//".c"/".c "}"
+# if *.c file doesn't exist, remove it (and the space after it) from dependencies
+for dep in $dependencies; do
+    if [ ! -f "$dep" ]; then
+        dependencies="${dependencies//$dep /}"
+    fi
+done
+# add newline at the end of each file name (instead of spaces)
+dependencies="${dependencies//' '/"\\n"}"
 
-# remove duplicates
 dependencies=$(printf $dependencies | sort | uniq)
-
 # merge included .c files and the .c files from this directory and write to file
 printf "$dependencies\n" > filesc.txt
 # exit normally

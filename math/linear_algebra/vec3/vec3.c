@@ -1,5 +1,14 @@
 #include "vec3.h"
 
+vec3 vec3_create(double x, double y, double z)
+{
+    vec3 v;
+    v.x = x;
+    v.y = y;
+    v.z = z;
+    return v;
+}
+
 vec3 vadd(vec3 v, vec3 w)
 {
     vec3 a;
