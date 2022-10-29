@@ -16,7 +16,7 @@ void test()
     ab = v2add(b, a);
     assert(ab.x == 5 && ab.y == 5);
     ab = v2sub(a, b);
-    assert(ab.x = 1 && ab.y == -3);
+    assert(ab.x == 1 && ab.y == 3);
     ab = v2mul(a, b);
     assert(ab.x == 6 && ab.y == 4);
     ab = v2smul(a, 2);
@@ -30,5 +30,16 @@ void test()
     ab = v2normalize(a);
     assert(ab.x == 0.6 && ab.y == 0.8);
     assert(v2cross(a, b) == -5);
-    assert(v2dot(a, b) == 11);
+    assert(v2dot(a, b) == 10);
+
+    c = vec3_create(4, 2, 6);
+    d = vec3_create(1, 0, -1);
+
+    vec3 cd;
+
+    cd = vadd(c, d);
+    assert(cd.x == 5 && cd.y == 2 && cd.z == 5);
+    cd = vsub(c, d);
+    assert(cd.x == 3 && cd.y == 2 && cd.z == 7);
+    cd = cross(c, d);
 }
