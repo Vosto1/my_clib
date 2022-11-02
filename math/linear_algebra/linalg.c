@@ -426,7 +426,7 @@ void printmat3(char* name, mat3 m)
     {
         for (j = 0; j < 3; j++)
         {
-            printf("%6.5lf ", m.i[j*4+i]);
+            printf("%6.5lf ", m.i[j*3+i]);
         }
         printf("\n");
     }

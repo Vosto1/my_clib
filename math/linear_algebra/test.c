@@ -13,6 +13,7 @@ void test()
     b = vec2_create(2, 1);
 
     vec2 ab;
+
     ab = v2add(b, a);
     assert(ab.x == 5 && ab.y == 5);
     ab = v2sub(a, b);
@@ -42,4 +43,15 @@ void test()
     cd = vsub(c, d);
     assert(cd.x == 3 && cd.y == 2 && cd.z == 7);
     cd = cross(c, d);
+    assert(cd.x == -2 && cd.y == 10 && cd.z == -2);
+    assert(dot(c, d) == -2);
+    assert(len(c) == 2*sqrt(14));
+    cd = normalize(c);
+    //printvec3("idk", cd);
+    //printf("%lf ", 4/(2*sqrt(14)));
+    //printf("%lf ", 2/(2*sqrt(14)));
+    //printf("%lf ", 6/(2*sqrt(14)));
+    assert(cd.x == 4/(2*sqrt(14)) && cd.y == 2/(2*sqrt(14)) && cd.z == 6/(2*sqrt(14)));
+    cd = vsmul(c, 2);
+    assert(cd.x == 8 && cd.y == 4 && cd.z == 12);
 }

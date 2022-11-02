@@ -54,6 +54,15 @@
     2 Otherwise research about data structures (maybe fibonacci heaps are relevant in this case?)
 */
 
+
+/* 4
+    when the back pointer reaches the back of the memory (the end of the array) and an insertion is done
+    trim the memory so that the first element in the queue ends up on the first index, i.e. remove the memory that was before
+    the front of the queue.
+    memcpy
+    memmove
+*/
+
 typedef struct q queue;
 typedef struct r rules;
 /**
