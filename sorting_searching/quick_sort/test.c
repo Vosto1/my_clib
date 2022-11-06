@@ -9,14 +9,14 @@ int* create_value(int v)
     return tmp;
 }
 
-int compare(voidp_t i, voidp_t j)
+int compare(void* i, void* j)
 {
     int *k = (int *)i;
     int *l = (int *)j;
     return *k - *l;
 }
 
-bool is_sorted(voidp_t a[], size_t size)
+bool is_sorted(void* a[], size_t size)
 {
 
     int* prev = (int*)a[0], *current;
@@ -30,7 +30,7 @@ bool is_sorted(voidp_t a[], size_t size)
     return true;
 }
 
-void print(voidp_t a[])
+void print(void* a[])
 {
     int* j;
     for (int i = 0; i < SIZE; i++)
@@ -41,7 +41,7 @@ void print(voidp_t a[])
     printf("\n");
 }
 
-void init(voidp_t a[], size_t size, int max)
+void init(void* a[], size_t size, int max)
 {
     for (int i = 0; i < size; i++)
     {
@@ -49,7 +49,7 @@ void init(voidp_t a[], size_t size, int max)
     }
 }
 
-void free_array(voidp_t a[], size_t size)
+void free_array(void* a[], size_t size)
 {
     for (size_t i = 0; i < size; i++)
     {
@@ -62,13 +62,13 @@ void test(void)
 {
     srand(time(0));
     //int arr[SIZE] = {33, 23, 13, 37, 44, 43, 48, 40, 34, 24, 45, 28, 21};
-    voidp_t* a;
+    void** a;
     ticks sinner, einner;
     seconds dinner;
     ticks start = now();
     for (int i = 0; i < 100; i++)
     {
-        a = (voidp_t*)malloc(sizeof(voidp_t) * SIZE);
+        a = (void**)malloc(sizeof(void*) * SIZE);
         if (a == NULL)
             exit(-1);
         sinner = now();

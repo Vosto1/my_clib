@@ -42,11 +42,11 @@ typedef enum
 
 struct dynamicArray
 {
-    voidp_t *array;
+    void* *array;
     size_t size;
     size_t used;
-    int (*compare)(cvoidp_t x, cvoidp_t y);
-    void (*freeObject)(voidp_t);
+    int (*compare)(const void* x, const void* y);
+    void (*freeObject)(void*);
 };
 
 typedef struct dynamicArray darray;
@@ -78,7 +78,7 @@ darray da_create_empty();
  * @param freeObject function to free an item
  * @return the initial size of the array or 0 if error
  */
-size_t da_init(darray *a, size_t init_size, int (*compare)(cvoidp_t x, cvoidp_t y), void (*freeObject)(voidp_t));
+size_t da_init(darray *a, size_t init_size, int (*compare)(const void* x, const void* y), void (*freeObject)(void*));
 /**
  * @brief free the array but not the items
  * 
@@ -107,14 +107,14 @@ size_t da_clear(darray *a);
  * @param item item to insert
  * @return the amount of used indecies in the array or 0 if error
  */
-size_t da_insert(darray *a, voidp_t item);
+size_t da_insert(darray *a, void* item);
 /**
  * remove the last element of the dynamic array
  *
  * @param a array to remove from
  * @return a pointer to the removed item
  */
-voidp_t da_remove_last(darray *a);
+void* da_remove_last(darray *a);
 /**
  * @brief get the item at an index
  * 
@@ -122,7 +122,7 @@ voidp_t da_remove_last(darray *a);
  * @param index index to get item at 
  * @return void pointer to item 
  */
-cvoidp_t da_at(darray * a, size_t index);
+const void* da_at(darray * a, size_t index);
 /**
  * remove a specific item from the dynamic array
  *
@@ -130,7 +130,7 @@ cvoidp_t da_at(darray * a, size_t index);
  * @param item item to remove
  * @return a pointer to the removed item or null if error
  */
-voidp_t da_remove_item(darray *a, voidp_t item);
+void* da_remove_item(darray *a, void* item);
 /**
  * remove an item at a specific index from the dynamic array
  *
@@ -138,7 +138,7 @@ voidp_t da_remove_item(darray *a, voidp_t item);
  * @param index index to remove item from
  * @return a pointer to the removed item
  */
-voidp_t da_remove_at(darray *a, int index);
+void* da_remove_at(darray *a, int index);
 /**
  * merge two dynamic arrays, b will be put on the end of a and b will be freed
  *
@@ -168,7 +168,7 @@ bool da_is_empty(darray *a);
  * @param item item to look for
  * @return the index of the item or -1 if it doesnt exist
  */
-int da_find(darray *a, voidp_t item);
+int da_find(darray *a, void* item);
 /**
  * @brief check if an item exists in the array
  *
@@ -177,5 +177,5 @@ int da_find(darray *a, voidp_t item);
  * @return true if exists
  * @return false if not exists
  */
-bool da_exists(darray *a, voidp_t item);
+bool da_exists(darray *a, void* item);
 #endif

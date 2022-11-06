@@ -38,7 +38,7 @@
 typedef struct
 {
     darray items;
-    int (*compare)(cvoidp_t x, cvoidp_t y);
+    int (*compare)(const void* x, const void* y);
 } sheap;
 
 /**
@@ -56,7 +56,7 @@ sheap sh_create_empty();
  * @param freeObject a function that can free an item of your data type
  * @return the size the heap is initialized to or 0 if error
  */
-size_t sh_init(sheap *h, size_t size, int (*compare)(cvoidp_t x, cvoidp_t y), void (*freeObject)(voidp_t));
+size_t sh_init(sheap *h, size_t size, int (*compare)(const void* x, const void* y), void (*freeObject)(void*));
 /**
  * @brief remove (free) all items in the sheap and free the sheap
  *
@@ -77,7 +77,7 @@ size_t sh_size(sheap *h);
  * @param h sheap to peek
  * @return pointer to the item with the smallest key
  */
-voidp_t sh_peek(sheap *h);
+void* sh_peek(sheap *h);
 /**
  * @brief check if a sheap is null
  *
@@ -101,14 +101,14 @@ bool sh_is_empty(sheap *h);
  * @param item a pointer to the memory of the item
  * @return the item count in the heap or a value larger than the item count in the heap if error
  */
-size_t sh_insert(sheap *h, voidp_t item);
+size_t sh_insert(sheap *h, void* item);
 /**
  * @brief extracts the top item (with the smallest key) and removes it from the sheap
  *
  * @param h sheap to extract from
  * @return a pointer to the extracted item or null if error
  */
-voidp_t sh_extract_min(sheap *h);
+void* sh_extract_min(sheap *h);
 /**
  * @brief build an sheap from an array of your data type (Data)
  *
@@ -118,7 +118,7 @@ voidp_t sh_extract_min(sheap *h);
  * @param freeObject a function that can free an item of your data type
  * @return the heap that was created
  */
-sheap sh_build_min_heap(voidp_t *unorderedList, size_t size, int (*compare)(cvoidp_t x, cvoidp_t y), void (*freeObject)(voidp_t));
+sheap sh_build_min_heap(void* *unorderedList, size_t size, int (*compare)(const void* x, const void* y), void (*freeObject)(void*));
 
 #ifdef __TESTING__
 /**

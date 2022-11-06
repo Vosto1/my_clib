@@ -55,7 +55,7 @@ sheap sh_create_empty()
     return h;
 }
 
-size_t sh_init(sheap *h, size_t size, int (*compare)(cvoidp_t x, cvoidp_t y), void (*freeObject)(voidp_t))
+size_t sh_init(sheap *h, size_t size, int (*compare)(const void* x, const void* y), void (*freeObject)(void*))
 {
     h->compare = compare;
     return da_init(&(h->items), size, compare, freeObject);
@@ -83,7 +83,7 @@ size_t sh_size(sheap *h)
  * return the item with the smallest key (the top of the heap).
  * The item remains in the heap.
  */
-voidp_t sh_peek(sheap *h)
+void* sh_peek(sheap *h)
 {
     return h->items.array[0];
 }
@@ -103,7 +103,7 @@ bool sh_is_empty(sheap *h)
 /*
  * Add to the heap.
  */
-size_t sh_insert(sheap *h, voidp_t item)
+size_t sh_insert(sheap *h, void* item)
 {
     size_t s = da_count(&(h->items));
     size_t s2 = da_insert(&(h->items), item);
@@ -119,7 +119,7 @@ size_t sh_insert(sheap *h, voidp_t item)
  * Return the item with the smallest key (== highest priority).
  * The item is also removed from the heap
  */
-voidp_t sh_extract_min(sheap *h)
+void* sh_extract_min(sheap *h)
 {
     if (sh_is_null(h))
     {
@@ -131,8 +131,8 @@ voidp_t sh_extract_min(sheap *h)
         //errcset(EHEAP_EMPTY);
         return NULL;
     }
-    voidp_t tempMin = h->items.array[0];
-    voidp_t tempLast = h->items.array[sh_size(h) - 1];
+    void* tempMin = h->items.array[0];
+    void* tempLast = h->items.array[sh_size(h) - 1];
     da_remove_at(&(h->items), sh_size(h) - 1); // remove at last index
     if (sh_size(h) != 0)
     { // if the heap is not empty after removal
@@ -147,7 +147,7 @@ voidp_t sh_extract_min(sheap *h)
  * go through the non-leafs "backwards" and heapify-down
  * builds heap from an unordered list (array)
  */
-sheap sh_build_min_heap(voidp_t *unorderedList, size_t size, int (*compare)(cvoidp_t x, cvoidp_t y), void (*freeObject)(voidp_t))
+sheap sh_build_min_heap(void* *unorderedList, size_t size, int (*compare)(const void* x, const void* y), void (*freeObject)(void*))
 {
     sheap h;
     sh_init(&h, size, compare, freeObject);
@@ -165,10 +165,10 @@ bool sh_test_heap_integrity(sheap *h)
     {
         int l = left(i);
         int r = right(i);
-        voidp_t i1 = h->items.array[i];
+        void* i1 = h->items.array[i];
         if (l < sh_size(h))
         {
-            voidp_t l1 = h->items.array[l];
+            void* l1 = h->items.array[l];
             if ((*h->compare)(i1, l1) > 0)
             {
                 return false;
@@ -176,7 +176,7 @@ bool sh_test_heap_integrity(sheap *h)
         }
         if (r < sh_size(h))
         {
-            voidp_t r1 = h->items.array[r];
+            void* r1 = h->items.array[r];
             if ((*h->compare)(i1, r1) > 0)
             {
                 return false;
@@ -211,7 +211,7 @@ static int right(int i)
 /*swap two items in a dynamic array*/
 static void swap(darray *a, int i1, int i2)
 {
-    voidp_t temp1 = a->array[i1];
+    void* temp1 = a->array[i1];
     a->array[i1] = a->array[i2];
     a->array[i2] = temp1;
 }

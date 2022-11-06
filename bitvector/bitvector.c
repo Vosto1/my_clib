@@ -2,7 +2,7 @@
 #include "bitvector.h"
 
 static unsigned int bytes_to_bits(unsigned int bytes);
-static void freebit(voidp_t bit);
+static void freebit(void* bit);
 
 size_t bit_count(bitvector *bv)
 {
@@ -253,7 +253,7 @@ static unsigned int bytes_to_bits(unsigned int bytes)
     return bytes * BITS_IN_BYTE;
 }
 
-static void freebit(voidp_t bit)
+static void freebit(void* bit)
 {
     free(bit);
 }

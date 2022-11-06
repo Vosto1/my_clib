@@ -1,13 +1,13 @@
 #include "quicksort.h"
 
-static void swap(voidp_t a[], size_t i, size_t j)
+static void swap(void* a[], size_t i, size_t j)
 {
-    voidp_t temp = a[i];
+    void* temp = a[i];
     a[i] = a[j];
     a[j] = temp;
 }
 
-static size_t sort_partition(voidp_t array[], size_t start, size_t end, int (*compare)(voidp_t, voidp_t))
+static size_t sort_partition(void* array[], size_t start, size_t end, int (*compare)(void*, void*))
 {
     size_t pivot = start;
     size_t store_index = pivot + 1;
@@ -23,7 +23,7 @@ static size_t sort_partition(voidp_t array[], size_t start, size_t end, int (*co
     return store_index - 1;
 }
 
-static void sort(voidp_t array[], size_t start, size_t end, int (*compare)(voidp_t, voidp_t))
+static void sort(void* array[], size_t start, size_t end, int (*compare)(void*, void*))
 {
     if (start < end)
     {
@@ -33,7 +33,7 @@ static void sort(voidp_t array[], size_t start, size_t end, int (*compare)(voidp
     }
 }
 
-void quicksort(voidp_t array[], size_t array_size, int (*compare)(voidp_t, voidp_t))
+void quicksort(void* array[], size_t array_size, int (*compare)(void*, void*))
 {
     sort(array, 0, array_size, compare);
 }

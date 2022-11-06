@@ -26,33 +26,33 @@ ll ll_create_empty(void);
 bool ll_is_empty(const ll* head);
 
 // adds a new node first in the list
-void ll_add_first(ll *head, cvoidp_t data);
+void ll_add_first(ll *head, const void* data);
 
 // adds a new node last in the list
-void ll_add_last(ll *head, cvoidp_t data);
+void ll_add_last(ll *head, const void* data);
 
 // remove the node first in the list
-cvoidp_t ll_remove_first(ll *head);
+const void* ll_remove_first(ll *head);
 
 // remove the node last in the list
-cvoidp_t ll_remove_last(ll *head);
+const void* ll_remove_last(ll *head);
 
 // ta bort data ur listan (forsta forekomsten), returnera 0 om datat inte finns, annars 1
-cvoidp_t ll_remove_element(ll *head, cvoidp_t data, int (*compare)(cvoidp_t, cvoidp_t));
+const void* ll_remove_element(ll *head, const void* data, int (*compare)(const void*, const void*));
 
 // Sok efter data i listan, returnera 1 om datat finns, annars 0.
-cvoidp_t ll_search(const ll* head, cvoidp_t data, int (*compare)(cvoidp_t, cvoidp_t));
+const void* ll_search(const ll* head, const void* data, int (*compare)(const void*, const void*));
 
 // returnera hur manga noder som finns i listan
 int ll_node_count(const ll* head);
 
 // tom listan /ta bort allt data (alla noder) ur listan
-void ll_clear(ll *head, void (*freeObject)(voidp_t));
+void ll_clear(ll *head, void (*freeObject)(void*));
 
 // returnera forsta datat i listan
-cvoidp_t ll_get_first(const ll* head);
+const void* ll_get_first(const ll* head);
 
 // returnera sista datat i listan
-cvoidp_t ll_get_last(const ll* head);
+const void* ll_get_last(const ll* head);
 
 #endif

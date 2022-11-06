@@ -16,7 +16,7 @@ typedef struct datacont dataContainer;
 
 struct datacont
 { // handle mutiple occurances of the same value in the tree
-	cvoidp_t element;
+	const void* element;
 	dataContainer *next;
 };
 
@@ -30,17 +30,17 @@ struct treeNode
 
 bstree bst_create_empty();
 
-void bst_insert(bstree *tree, voidp_t element, int (*compare)(cvoidp_t, cvoidp_t));
-voidp_t bst_remove(bstree *tree, voidp_t element, int (*compare)(cvoidp_t, cvoidp_t));
+void bst_insert(bstree *tree, void* element, int (*compare)(const void*, const void*));
+void* bst_remove(bstree *tree, void* element, int (*compare)(const void*, const void*));
 bool bst_is_empty(const bstree tree);
 
-bstree bst_merge(bstree *bst1, bstree *bst2, int (*compare)(cvoidp_t, cvoidp_t));
+bstree bst_merge(bstree *bst1, bstree *bst2, int (*compare)(const void*, const void*));
 
-size_t bst_toarray_preorder(const bstree tree, voidp_t **array);
-size_t bst_toarray_inorder(const bstree tree, voidp_t **array);
-size_t bst_toarray_postorder(const bstree tree, voidp_t **array);
+size_t bst_toarray_preorder(const bstree tree, void* **array);
+size_t bst_toarray_inorder(const bstree tree, void* **array);
+size_t bst_toarray_postorder(const bstree tree, void* **array);
 
-cvoidp_t bst_find(const bstree tree, voidp_t element, int (*compare)(cvoidp_t, cvoidp_t));
+const void* bst_find(const bstree tree, void* element, int (*compare)(const void*, const void*));
 
 int bst_count(const bstree tree);
 int bst_node_count(const bstree tree);
@@ -49,9 +49,9 @@ int bst_depth(const bstree tree);
 
 int bst_mindepth(const bstree tree);
 
-bool bst_balance(bstree *tree, int (*compare)(cvoidp_t, cvoidp_t));
+bool bst_balance(bstree *tree, int (*compare)(const void*, const void*));
 
-bool bst_free(bstree *tree, void (*freeObject)(voidp_t));
+bool bst_free(bstree *tree, void (*freeObject)(void*));
 bool bst_destroy(bstree *tree);
 
 #endif

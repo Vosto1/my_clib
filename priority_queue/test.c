@@ -9,14 +9,14 @@ typedef struct
     element e;
 } item;
 
-int compare(cvoidp_t x, cvoidp_t y)
+int compare(const void* x, const void* y)
 {
     item *item1 = (item *)x;
     item *item2 = (item *)y;
     return item1->p - item2->p;
 }
 
-void print(size_t used, voidp_t a[])
+void print(size_t used, void* a[])
 {
     item *itemArr = (item *)a;
     for (int i = 0; i < used; i++)
@@ -34,7 +34,7 @@ item *create_item(int priority)
     return it;
 }
 
-void freeObject(voidp_t i)
+void freeObject(void* i)
 {
     free(i);
 }

@@ -7,7 +7,7 @@ static int compare(const void *i1, const void *i2)
     return item1->value - item2->value;
 }
 
-static void freeObject(voidp_t i)
+static void freeObject(void* i)
 {
     free(i);
 }

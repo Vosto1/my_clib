@@ -49,9 +49,9 @@
 typedef struct
 {
     darray items;
-    int (*compare)(cvoidp_t x, cvoidp_t y);
-    voidp_t (*setKey)(voidp_t x, voidp_t key);
-    void (*minKey)(voidp_t base, voidp_t *out);
+    int (*compare)(const void* x, const void* y);
+    void* (*setKey)(void* x, void* key);
+    void (*minKey)(void* base, void* *out);
 } heap;
 
 /**
@@ -73,10 +73,10 @@ heap h_create_empty();
  */
 size_t h_init(heap *h,
                 size_t size,
-                int (*compare)(cvoidp_t x, cvoidp_t y),
-                voidp_t (*setKey)(voidp_t x, voidp_t key),
-                void (*minKey)(voidp_t base, voidp_t *out),
-                void (*freeObject)(voidp_t));
+                int (*compare)(const void* x, const void* y),
+                void* (*setKey)(void* x, void* key),
+                void (*minKey)(void* base, void* *out),
+                void (*freeObject)(void*));
 /**
  * @brief remove (free) all items in the heap and free the heap
  *
@@ -98,7 +98,7 @@ size_t h_size(heap *h);
  * @param h heap to peek
  * @return pointer to the item with the smallest key
  */
-voidp_t h_min(heap *h);
+void* h_min(heap *h);
 /**
  * @brief check if a heap is null
  *
@@ -123,7 +123,7 @@ bool h_is_empty(heap *h);
  * @param item a pointer to the memory of the item
  * @return the item count in the heap or a value larger than the size of the heap is error
  */
-size_t h_insert(heap *h, voidp_t item);
+size_t h_insert(heap *h, void* item);
 /**
  * @brief removes the specified item from the heap
  *
@@ -131,14 +131,14 @@ size_t h_insert(heap *h, voidp_t item);
  * @param item a pointer to the item which should be removed
  * @return a pointer to the item removed from the heap or null if error
  */
-voidp_t h_remove(heap *h, voidp_t item);
+void* h_remove(heap *h, void* item);
 /**
  * @brief extracts the top item (with the smallest key) and removes it from the heap
  *
  * @param h heap to extract from
  * @return a pointer to the extracted item or null if error
  */
-voidp_t h_extract_min(heap *h);
+void* h_extract_min(heap *h);
 /**
  * @brief decreases a key of the specified item to the specified key. If the item doesnt exist or th key is equal or larger than the current key an error is set.
  *
@@ -147,7 +147,7 @@ voidp_t h_extract_min(heap *h);
  * @param newKey the new key the item should have
  * @return the new index of the item or a value larger than the size of the heap is error
  */
-size_t h_decrease_key(heap *h, voidp_t item, voidp_t newKey);
+size_t h_decrease_key(heap *h, void* item, void* newKey);
 /**
  * @brief build a heap from an array
  *
@@ -159,12 +159,12 @@ size_t h_decrease_key(heap *h, voidp_t item, voidp_t newKey);
  * @param freeObject a function that frees an item
  * @return the heap that was created
  */
-heap h_build_min_heap(voidp_t *unorderedList,
+heap h_build_min_heap(void* *unorderedList,
                   size_t size,
-                  int (*compare)(cvoidp_t x, cvoidp_t y),
-                  voidp_t (*setKey)(voidp_t x, voidp_t key),
-                  void (*minKey)(voidp_t base, voidp_t *out),
-                  void (*freeObject)(voidp_t));
+                  int (*compare)(const void* x, const void* y),
+                  void* (*setKey)(void* x, void* key),
+                  void (*minKey)(void* base, void* *out),
+                  void (*freeObject)(void*));
 #ifdef __TESTING__
 /**
  * @brief tests the integrity of the heap

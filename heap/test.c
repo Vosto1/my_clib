@@ -5,7 +5,7 @@ static int compare(const void *x, const void *y);
 static void *setKey(void *data, void *key);
 static void minKey(void *base, void **out);
 static void decrementKey(void *base, void **out);
-static void freeObject(voidp_t it);
+static void freeObject(void* it);
 
 // debug print
 static void heapPrintTree(heap *h);
@@ -49,7 +49,7 @@ static void *setKey(void *it, void *key)
     return i;
 }
 
-static void freeObject(voidp_t it)
+static void freeObject(void* it)
 {
     free(it);
 }

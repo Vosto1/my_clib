@@ -23,7 +23,7 @@
 /**
  * The s_dynamic array stores pointers to the data as void* pointers.
  * This way the type is generic, but all data must be allocated as
- * dynamic memory. The void* pointer is typedefed to voidp_t
+ * dynamic memory. The void* pointer is typedefed to void*
  * to make it easier to read.
  *
  * The differences between the s_dynamic array (this) and the dynamic array
@@ -44,10 +44,10 @@ typedef enum
 
 struct s_dynamicArray
 {
-    voidp_t *array;
+    void* *array;
     size_t size;
     size_t used;
-    void (*freeObject)(voidp_t);
+    void (*freeObject)(void*);
 };
 
 typedef struct s_dynamicArray sdarray;
@@ -78,7 +78,7 @@ sdarray sda_create_empty();
  * @param freeObject a function to free an item in the array
  * @return the size of the new array or 0 if error
  */
-size_t sda_init(sdarray *a, size_t init_size, void (*freeObject)(voidp_t));
+size_t sda_init(sdarray *a, size_t init_size, void (*freeObject)(void*));
 /**
  * remove (free) all items in the array
  *
@@ -106,7 +106,7 @@ bool sda_free(sdarray *a);
  * @param a array to find item at index
  * @return pointer to item at index or NULL if index out of bounds
  */
-cvoidp_t sda_at(sdarray * a, size_t index);
+const void* sda_at(sdarray * a, size_t index);
 /**
  * insert into the dynamic array
  *
@@ -114,14 +114,14 @@ cvoidp_t sda_at(sdarray * a, size_t index);
  * @param item item to insert
  * @return the amount of used indecies in the array or 0 if error
  */
-size_t sda_insert(sdarray *a, voidp_t item);
+size_t sda_insert(sdarray *a, void* item);
 /**
  * remove the last element of the dynamic array
  *
  * @param a array to remove from
  * @return a pointer to the removed item
  */
-voidp_t sda_remove_last(sdarray *a);
+void* sda_remove_last(sdarray *a);
 /**
  * remove a specific item from the dynamic array
  *
@@ -129,7 +129,7 @@ voidp_t sda_remove_last(sdarray *a);
  * @param item item to remove
  * @return a pointer to the removed item or null if error
  */
-voidp_t sda_remove_at(sdarray *a, int index);
+void* sda_remove_at(sdarray *a, int index);
 /**
  * merge two dynamic arrays, b will be put on the end of a and b will be freed
  *

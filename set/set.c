@@ -8,7 +8,7 @@ set set_create_empty()
     return s;
 }
 
-bool set_init(set* s, int (*compare)(void*, void*), void (*freeObject)(void*))
+bool set_init(set* s, int (*compare)(const void*, const void*), void (*freeObject)(void*))
 {
     if (compare == NULL || freeObject == NULL)
     {
@@ -19,7 +19,7 @@ bool set_init(set* s, int (*compare)(void*, void*), void (*freeObject)(void*))
     return true;
 }
 
-bool set_add(set* s, voidp_t item)
+bool set_add(set* s, void* item)
 {
     if (!set_contains(s, item))
     {
@@ -30,12 +30,12 @@ bool set_add(set* s, voidp_t item)
         return false;
 }
 
-voidp_t set_remove(set* s, voidp_t item)
+void* set_remove(set* s, void* item)
 {
     return bst_remove(&s->t, item, s->compare);
 }
 
-bool set_contains(set* s, voidp_t item)
+bool set_contains(set* s, void* item)
 {
     return NULL == bst_find(s->t, item, s->compare);
 }

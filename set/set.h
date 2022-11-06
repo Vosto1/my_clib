@@ -36,7 +36,7 @@ bool set_init(set* s, int (*compare)(const void*, const void*), void (*freeObjec
  * @return true if success
  * @return false if the set already contains item
  */
-bool set_add(set* s, voidp_t item);
+bool set_add(set* s, void* item);
 /**
  * @brief remove an item from the set
  * 
@@ -44,7 +44,7 @@ bool set_add(set* s, voidp_t item);
  * @param item item to remove
  * @return pointer to removed item or null if the set doesn't contain the item
  */
-voidp_t set_remove(set* s, voidp_t item);
+void* set_remove(set* s, void* item);
 /**
  * @brief check if an item is in the set
  * 
@@ -53,7 +53,7 @@ voidp_t set_remove(set* s, voidp_t item);
  * @return true if in the set
  * @return false if not in the set
  */
-bool set_contains(set* s, voidp_t item);
+bool set_contains(set* s, void* item);
 /**
  * @brief destroy set
  * 

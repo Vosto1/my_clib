@@ -1,13 +1,13 @@
 #include "test.h"
 
-static int compare(cvoidp_t e1, cvoidp_t e2)
+static int compare(const void* e1, const void* e2)
 {
     entry* en1 = (entry*)e1;
     entry* en2 = (entry*)e2;
     return (int)en1->k - (int)en2->k;
 }
 
-static size_t hashfn(cvoidp_t e, const hashtable* ht)
+static size_t hashfn(const void* e, const hashtable* ht)
 {
     entry* f = (entry*)e;
     
@@ -24,7 +24,7 @@ static entry* _create_entry(key k, value v)
     return e;
 }
 
-static void free_entry(voidp_t vp)
+static void free_entry(void* vp)
 {
     entry* e = (entry*)vp;
     free(e);

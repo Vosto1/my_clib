@@ -26,21 +26,21 @@ bool llq_is_empty(llqueue* q);
  * @param q queue to enqueue in
  * @param item item to enqueue
  */
-void llq_enqueue(llqueue* q, cvoidp_t item);
+void llq_enqueue(llqueue* q, const void* item);
 /**
  * @brief dequeue the first item
  * 
  * @param q queue to dequeue on
  * @return pointer to dequeued item
  */
-cvoidp_t llq_dequeue(llqueue* q);
+const void* llq_dequeue(llqueue* q);
 /**
  * @brief peek at the item in the front of the queue
  * 
  * @param q queue to peek
  * @return pointer to item in front
  */
-cvoidp_t llq_peek(llqueue* q);
+const void* llq_peek(llqueue* q);
 /**
  * @brief get the element count in the queue
  * 

@@ -59,10 +59,10 @@ heap h_create_empty()
 
 size_t h_init(heap *h,
                 size_t size,
-                int (*compare)(cvoidp_t x, cvoidp_t y),
-                voidp_t (*setKey)(voidp_t x, voidp_t key),
-                void (*minKey)(voidp_t base, voidp_t *out),
-                void (*freeObject)(voidp_t))
+                int (*compare)(const void* x, const void* y),
+                void* (*setKey)(void* x, void* key),
+                void (*minKey)(void* base, void* *out),
+                void (*freeObject)(void*))
 {
     h->compare = compare;
     h->setKey = setKey;
@@ -93,7 +93,7 @@ size_t h_size(heap *h)
  * return the item with the smallest key (the top of the heap).
  * The item remains in the heap.
  */
-voidp_t h_min(heap *h)
+void* h_min(heap *h)
 {
     return h->items.array[0];
 }
@@ -113,7 +113,7 @@ bool h_is_empty(heap *h)
 /*
  * Add to the heap.
  */
-size_t h_insert(heap *h, voidp_t item)
+size_t h_insert(heap *h, void* item)
 {
     size_t s = da_count(&h->items);
     size_t s2 = da_insert(&(h->items), item);
@@ -131,13 +131,13 @@ size_t h_insert(heap *h, voidp_t item)
  * (example: minInt or current root key - 1) to give the item to be removed
  * highest priority, then use h_extract_min
  */
-voidp_t h_remove(heap *h, voidp_t item)
+void* h_remove(heap *h, void* item)
 {
     if (h_size(h) == 0)
     {
         return NULL; // if empty heap return NULL
     }
-    voidp_t temp;
+    void* temp;
     (*h->minKey)(h_min(h), &temp);
     if (h_decrease_key(h, item, temp) > h_size(h))
     {
@@ -152,7 +152,7 @@ voidp_t h_remove(heap *h, voidp_t item)
  * Return the item with the smallest key (== highest priority).
  * The item is also removed from the heap
  */
-voidp_t h_extract_min(heap *h)
+void* h_extract_min(heap *h)
 {
     if (h_is_null(h))
     {
@@ -164,8 +164,8 @@ voidp_t h_extract_min(heap *h)
         //errcset(EHEAP_EMPTY);
         return NULL;
     }
-    voidp_t tempMin = h->items.array[0];
-    voidp_t tempLast = h->items.array[h_size(h) - 1];
+    void* tempMin = h->items.array[0];
+    void* tempLast = h->items.array[h_size(h) - 1];
     da_remove_at(&(h->items), h_size(h) - 1); // remove at last index
     if (h_size(h) != 0)
     { // if the heap is not empty after removal
@@ -181,7 +181,7 @@ voidp_t h_extract_min(heap *h)
  * Increases the items priority by assigning it a higher value Key.
  * The properties of the data structure must be preserved.
  */
-size_t h_decrease_key(heap *h, voidp_t item, voidp_t newKey)
+size_t h_decrease_key(heap *h, void* item, void* newKey)
 {
     for (int i = 0; i < h_size(h); i++)
     {
@@ -211,12 +211,12 @@ size_t h_decrease_key(heap *h, voidp_t item, voidp_t newKey)
  * go through the non-leafs "backwards" and heapify-down
  * builds heap from an unordered list (array)
  */
-heap h_build_min_heap(voidp_t *unorderedList,
+heap h_build_min_heap(void* *unorderedList,
                   size_t size,
-                  int (*compare)(cvoidp_t x, cvoidp_t y),
-                  voidp_t (*setKey)(voidp_t x, voidp_t key),
-                  void (*minKey)(voidp_t base, voidp_t *out),
-                  void (*freeObject)(voidp_t))
+                  int (*compare)(const void* x, const void* y),
+                  void* (*setKey)(void* x, void* key),
+                  void (*minKey)(void* base, void* *out),
+                  void (*freeObject)(void*))
 {
     heap h;
     h_init(&h, size, compare, setKey, minKey, freeObject);
@@ -234,10 +234,10 @@ bool test_heap_integrity(heap *h)
     {
         int l = left(i);
         int r = right(i);
-        voidp_t i1 = h->items.array[i];
+        void* i1 = h->items.array[i];
         if (l < h_size(h))
         {
-            voidp_t l1 = h->items.array[l];
+            void* l1 = h->items.array[l];
             if ((*h->compare)(i1, l1) > 0)
             {
                 return false;
@@ -245,7 +245,7 @@ bool test_heap_integrity(heap *h)
         }
         if (r < h_size(h))
         {
-            voidp_t r1 = h->items.array[r];
+            void* r1 = h->items.array[r];
             if ((*h->compare)(i1, r1) > 0)
             {
                 return false;
@@ -280,7 +280,7 @@ static int right(int i)
 /*swap two items in a dynamic array*/
 static void swap(darray *a, int i1, int i2)
 {
-    voidp_t temp1 = a->array[i1];
+    void* temp1 = a->array[i1];
     a->array[i1] = a->array[i2];
     a->array[i2] = temp1;
 }

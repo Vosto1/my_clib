@@ -28,12 +28,12 @@ darray da_create_empty()
     return a;
 }
 
-size_t da_init(darray *a, size_t initSize, int (*compare)(cvoidp_t x, cvoidp_t y), void (*freeObject)(voidp_t))
+size_t da_init(darray *a, size_t initSize, int (*compare)(const void* x, const void* y), void (*freeObject)(void*))
 {
     a->size = 0;
     a->used = 0;
-    voidp_t *temp;
-    temp = (voidp_t *)malloc(sizeof(voidp_t) * initSize);
+    void* *temp;
+    temp = (void* *)malloc(sizeof(void*) * initSize);
     if (temp != NULL)
     {
         a->array = temp;
@@ -97,7 +97,7 @@ size_t da_clear(darray *a)
         return 0;
     }
     int amount = a->used;
-    voidp_t d;
+    void* d;
     for (int i = 0; i < amount; i++)
     {
         d = da_remove_last(a);
@@ -106,7 +106,7 @@ size_t da_clear(darray *a)
     return amount;
 }
 
-size_t da_insert(darray *a, voidp_t item)
+size_t da_insert(darray *a, void* item)
 {
     if (a == NULL || a->array == NULL)
     {
@@ -118,8 +118,8 @@ size_t da_insert(darray *a, voidp_t item)
     { // index < size, is a guard
         // when array is full on insert, double the size
         a->size *= 2;
-        voidp_t *temp;
-        temp = (voidp_t *)realloc(a->array, sizeof(voidp_t) * a->size);
+        void* *temp;
+        temp = (void* *)realloc(a->array, sizeof(void*) * a->size);
         if (temp != NULL)
         {
             a->array = temp;
@@ -135,7 +135,7 @@ size_t da_insert(darray *a, voidp_t item)
     return a->used;
 }
 
-cvoidp_t da_at(darray * a, size_t index)
+const void* da_at(darray * a, size_t index)
 {
     if (da_count(a) < index)
     {
@@ -150,7 +150,7 @@ cvoidp_t da_at(darray * a, size_t index)
 
 
 
-voidp_t da_remove_last(darray *a)
+void* da_remove_last(darray *a)
 {
     if (da_is_empty(a))
     {
@@ -161,7 +161,7 @@ voidp_t da_remove_last(darray *a)
     MEM m = memory_decrease(a);
     if (m != ERRMEM_DECREASE)
     {
-        voidp_t data = a->array[a->used];
+        void* data = a->array[a->used];
         return data;
     }
     else
@@ -171,7 +171,7 @@ voidp_t da_remove_last(darray *a)
     }
 }
 
-voidp_t da_remove_item(darray *a, voidp_t item)
+void* da_remove_item(darray *a, void* item)
 {
     for (int i = 0; i < a->used; i++)
     {
@@ -184,14 +184,14 @@ voidp_t da_remove_item(darray *a, voidp_t item)
     return NULL;
 }
 
-voidp_t da_remove_at(darray *a, int index)
+void* da_remove_at(darray *a, int index)
 {
     if (index > a->used)
     {
         //errcset(EINDEX_OUT_OF_BOUNDS);
         return NULL;
     }
-    voidp_t *data = a->array[index];
+    void* *data = a->array[index];
     for (int i = index; i < a->used - 1; i++)
     {
         a->array[i] = a->array[i + 1];
@@ -241,7 +241,7 @@ bool da_is_empty(darray *a)
 }
 
 // linear search
-int find(darray *a, voidp_t item)
+int find(darray *a, void* item)
 {
     for (int i = 0; i < da_count(a); i++)
     {
@@ -253,7 +253,7 @@ int find(darray *a, voidp_t item)
     return -1;
 }
 
-bool da_exists(darray *a, voidp_t item)
+bool da_exists(darray *a, void* item)
 {
     if (find(a, item) != -1)
     {
@@ -271,8 +271,8 @@ static MEM memory_decrease(darray *a)
     if (ratio <= QUARTER && da_size(a) != 1)
     {
         a->size /= 2;
-        voidp_t *temp;
-        temp = (voidp_t *)realloc(a->array, sizeof(voidp_t) * a->size);
+        void* *temp;
+        temp = (void* *)realloc(a->array, sizeof(void*) * a->size);
         if (temp != NULL)
         {
             a->array = temp;

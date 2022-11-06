@@ -12,17 +12,17 @@ bool llq_is_empty(llqueue *q)
     return q == NULL;
 }
 
-void llq_enqueue(llqueue *q, cvoidp_t item)
+void llq_enqueue(llqueue *q, const void* item)
 {
     ll_add_last(q, item);
 }
 
-cvoidp_t llq_dequeue(llqueue* q)
+const void* llq_dequeue(llqueue* q)
 {
     return ll_remove_last(q);
 }
 
-cvoidp_t llq_peek(llqueue* q)
+const void* llq_peek(llqueue* q)
 {
     return ll_get_first(q);
 }

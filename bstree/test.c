@@ -9,7 +9,7 @@ static item *vcreate(int chv)
     return ch;
 }
 
-static void vfree(voidp_t ch)
+static void vfree(void* ch)
 {
     free(ch);
 }
@@ -94,7 +94,7 @@ static void print_array(item **array, size_t size)
 //// compare and test funcs
 
 // normal bstree compare (left subtree smaller, right subtree larger)
-static int compare(cvoidp_t v1, cvoidp_t v2)
+static int compare(const void* v1, const void* v2)
 {
     item *c1 = (item *)v1;
     item *c2 = (item *)v2;
@@ -139,9 +139,9 @@ static bool integrity_compar(const bstree parent, const bstree child, bool (*com
     // larger or smaller than all the elements (same values) of the child
     while (ctmp->next != NULL && ptmp->next != NULL)
     {
-        p = (voidp_t)ptmp->element;
+        p = (void*)ptmp->element;
         pi = (int)*p;
-        c = (voidp_t)ctmp->element;
+        c = (void*)ctmp->element;
         ci = (int)*c;
         sum &= (*comp)(pi, ci); // sum bools
         ptmp = ptmp->next;
@@ -225,9 +225,9 @@ void auto_tests(int n, int mod)
     srand(time(NULL));
     //errcinit();
     bstree tree = bst_create_empty();
-    voidp_t element, rm;
+    void* element, rm;
     int nexttests, type, r1, count;
-    int (*comp)(cvoidp_t, cvoidp_t);
+    int (*comp)(const void*, const void*);
     comp = &compare;
 
     ticks start, end;
@@ -288,7 +288,7 @@ void auto_tests(int n, int mod)
                     count = bst_count(tree);
                     item **arr;
                     item *v1, *v2;
-                    int size = bst_toarray_inorder(tree, (voidp_t **)&arr);
+                    int size = bst_toarray_inorder(tree, (void* **)&arr);
                     assert(count == size);
                     for (int x = 0; x < size - 1; x++)
                     {
@@ -417,14 +417,14 @@ static void initializeTree3(bstree *tree)
 void test_sequence()
 {
     //errcinit();
-    voidp_t rm;
+    void* rm;
     item *c = vcreate(99);
     free(c);
     c = NULL;
     bstree bt = bst_create_empty();
     assert(bst_is_empty(bt));
-    assert(bst_find(bt, (voidp_t)c, &compare) == NULL);
-    rm = bst_remove(&bt, (voidp_t)c, &compare);
+    assert(bst_find(bt, (void*)c, &compare) == NULL);
+    rm = bst_remove(&bt, (void*)c, &compare);
     assert(rm == NULL);
     assert(bst_depth(bt) == 0 && bst_mindepth(bt) == 0);
     assert(!bst_balance(&bt, &compare)); // balance should evaluate to false here since the tree is empty
@@ -435,19 +435,19 @@ void test_sequence()
         a[i] = vcreate(arr[i]);
 
     for (int i = 0; i < SIZE; i++)
-        bst_insert(&bt, (voidp_t)a[i], &compare);
+        bst_insert(&bt, (void*)a[i], &compare);
 
     assert(bst_count(bt) == SIZE);
 
     assert(bstree_test_suit(bt));
 
     for (int i = 0; i < SIZE; i++)
-        assert(bst_find(bt, (voidp_t)a[i], &compare) != NULL);
+        assert(bst_find(bt, (void*)a[i], &compare) != NULL);
 
     assert(bst_depth(bt) == 4);
     assert(bst_mindepth(bt) == 3);
 
-    rm = bst_remove(&bt, (voidp_t)&arr[4], &compare);
+    rm = bst_remove(&bt, (void*)&arr[4], &compare);
     assert(rm != NULL);
     assert((int)*(item *)rm == arr[4]);
     free(rm);
@@ -455,7 +455,7 @@ void test_sequence()
     assert(bst_count(bt) == 6);
     assert(bstree_test_suit(bt));
 
-    rm = bst_remove(&bt, (voidp_t)&arr[5], &compare);
+    rm = bst_remove(&bt, (void*)&arr[5], &compare);
     assert(rm != NULL);
     assert((int)*(item *)rm == arr[5]);
     free(rm);
@@ -463,7 +463,7 @@ void test_sequence()
     assert(bst_count(bt) == 5);
     assert(bstree_test_suit(bt));
 
-    rm = bst_remove(&bt, (voidp_t)&arr[0], &compare);
+    rm = bst_remove(&bt, (void*)&arr[0], &compare);
     assert(rm != NULL);
     assert((int)*(item *)rm == arr[0]);
     free(rm);
@@ -472,33 +472,33 @@ void test_sequence()
     assert(bstree_test_suit(bt));
 
     // make sure the elements are removed
-    assert(bst_find(bt, (voidp_t)&arr[4], &compare) == NULL);
-    assert(bst_find(bt, (voidp_t)&arr[5], &compare) == NULL);
-    assert(bst_find(bt, (voidp_t)&arr[0], &compare) == NULL);
+    assert(bst_find(bt, (void*)&arr[4], &compare) == NULL);
+    assert(bst_find(bt, (void*)&arr[5], &compare) == NULL);
+    assert(bst_find(bt, (void*)&arr[0], &compare) == NULL);
 
     // remove the rest of the elements
-    rm = bst_remove(&bt, (voidp_t)&arr[1], &compare);
+    rm = bst_remove(&bt, (void*)&arr[1], &compare);
     assert(rm != NULL);
     assert((int)*(item *)rm == arr[1]);
     free(rm);
 
     assert(bstree_test_suit(bt));
 
-    rm = bst_remove(&bt, (voidp_t)&arr[2], &compare);
+    rm = bst_remove(&bt, (void*)&arr[2], &compare);
     assert(rm != NULL);
     assert((int)*(item *)rm == arr[2]);
     free(rm);
 
     assert(bstree_test_suit(bt));
 
-    rm = bst_remove(&bt, (voidp_t)&arr[3], &compare);
+    rm = bst_remove(&bt, (void*)&arr[3], &compare);
     assert(rm != NULL);
     assert((int)*(item *)rm == arr[3]);
     free(rm);
 
     assert(bstree_test_suit(bt));
 
-    rm = bst_remove(&bt, (voidp_t)&arr[6], &compare);
+    rm = bst_remove(&bt, (void*)&arr[6], &compare);
     assert(rm != NULL);
     assert((int)*(item *)rm == arr[6]);
     free(rm);
@@ -508,20 +508,20 @@ void test_sequence()
     assert(bst_is_empty(bt));
 
     for (int i = 0; i < SIZE; i++)
-        assert(bst_find(bt, (voidp_t)&arr[i], &compare) == NULL);
+        assert(bst_find(bt, (void*)&arr[i], &compare) == NULL);
 
     item *a2[SIZE2];
     int arr2[10] = {32, 33, 34, 35, 36, 37, 38, 39, 40, 41};
     for (int i = 0; i < SIZE2; i++)
         a2[i] = vcreate(arr2[i]);
 
-    bst_insert(&bt, (voidp_t)a2[0], &compare);
-    assert(bst_find(bt, (voidp_t)a2[0], &compare) != NULL);
+    bst_insert(&bt, (void*)a2[0], &compare);
+    assert(bst_find(bt, (void*)a2[0], &compare) != NULL);
 
     assert(bstree_test_suit(bt));
 
     for (int i = 1; i < SIZE2; i++)
-        bst_insert(&bt, (voidp_t)a2[i], &compare);
+        bst_insert(&bt, (void*)a2[i], &compare);
 
     assert(bst_count(bt) == SIZE2);
     assert(bst_depth(bt) != bst_mindepth(bt));
@@ -674,7 +674,7 @@ void test_sequence()
     print_inorder("to array tree", toarr);
     assert(bstree_test_suit(bt));
 
-    size = bst_toarray_inorder(toarr, (voidp_t)&arr3);
+    size = bst_toarray_inorder(toarr, (void*)&arr3);
     assert(size == SIZE3);
     print_array(arr3, size);
 
@@ -687,7 +687,7 @@ void test_sequence()
     // free alloc'd memory
     free(arr3);
 
-    size = bst_toarray_postorder(toarr, (voidp_t)&arr3);
+    size = bst_toarray_postorder(toarr, (void*)&arr3);
     assert(size == SIZE3);
     print_array(arr3, size);
 
@@ -700,7 +700,7 @@ void test_sequence()
     // free alloc'd memory
     free(arr3);
 
-    size = bst_toarray_preorder(toarr, (voidp_t)&arr3);
+    size = bst_toarray_preorder(toarr, (void*)&arr3);
     assert(size == SIZE3);
     print_array(arr3, size);
 
@@ -754,25 +754,25 @@ void test_sequence()
     item c7 = *v7;
     for (int i = 0; i < 3; i++)
     {
-        rm = bst_remove(&bt, (voidp_t)&c1, compare);
+        rm = bst_remove(&bt, (void*)&c1, compare);
         assert(rm != NULL);
-        assert(compare(rm, (voidp_t)&c1) == 0);
+        assert(compare(rm, (void*)&c1) == 0);
         free(rm);
     }
 
     for (int i = 0; i < 3; i++)
     {
-        rm = bst_remove(&bt, (voidp_t)&c5, compare);
+        rm = bst_remove(&bt, (void*)&c5, compare);
         assert(rm != NULL);
-        assert(compare(rm, (voidp_t)&c5) == 0);
+        assert(compare(rm, (void*)&c5) == 0);
         free(rm);
     }
 
     for (int i = 0; i < 3; i++)
     {
-        rm = bst_remove(&bt, (voidp_t)&c7, compare);
+        rm = bst_remove(&bt, (void*)&c7, compare);
         assert(rm != NULL);
-        assert(compare(rm, (voidp_t)&c7) == 0);
+        assert(compare(rm, (void*)&c7) == 0);
         free(rm);
     }
 

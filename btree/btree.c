@@ -1,6 +1,6 @@
 #include "btree.h"
 
-btree bt_new_node(voidp_t value)
+btree bt_new_node(void* value)
 {
     btree n = (btree)malloc(sizeof(struct treeNode));
     if (n != NULL)
@@ -44,7 +44,7 @@ int bt_count(const btree tree)
     return 1 + bt_count(tree->right) + bt_count(tree->left);
 }
 
-static void btfree(btree *tree, void (*freeObject)(voidp_t))
+static void btfree(btree *tree, void (*freeObject)(void*))
 {
     if ((*tree) != NULL)
     {
@@ -58,7 +58,7 @@ static void btfree(btree *tree, void (*freeObject)(voidp_t))
     }
 }
 
-bool bt_free(btree *tree, void (*freeObject)(voidp_t))
+bool bt_free(btree *tree, void (*freeObject)(void*))
 {
     if ((*tree) != NULL)
     {

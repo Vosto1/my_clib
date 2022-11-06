@@ -12,7 +12,7 @@ static value createValue(int v)
     return a;
 }
 
-static void freeobj(voidp_t i)
+static void freeobj(void* i)
 {
     free(i);
 }

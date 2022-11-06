@@ -19,7 +19,7 @@ stack st_create_empty();
  * @param freeObject a function that can free an item that will be in the stack
  * @return size_t 
  */
-size_t st_init(stack* s, size_t init_size, void (*freeObject)(voidp_t));
+size_t st_init(stack* s, size_t init_size, void (*freeObject)(void*));
 /**
  * @brief get item count in stack
  * 
@@ -34,16 +34,16 @@ size_t st_clear(stack* s);
  * @brief peek at item on the top of the stack
  * 
  */
-cvoidp_t st_peek(stack* s);
+const void* st_peek(stack* s);
 /**
  * @brief put a new item on the top of the stack
  * 
  */
-bool st_push(stack* s, cvoidp_t item);
+bool st_push(stack* s, const void* item);
 /**
  * @brief remove the item at the top of the stack
  * 
  */
-voidp_t st_pop(stack* s);
+void* st_pop(stack* s);
 
 #endif

@@ -28,7 +28,7 @@ bool q_is_empty(queue* q)
     return q->queue == NULL;
 }
 
-bool q_enqueue(queue* q, cvoidp_t item)
+bool q_enqueue(queue* q, const void* item)
 {
     if (q_is_empty(q))
     {
@@ -56,7 +56,7 @@ bool q_enqueue(queue* q, cvoidp_t item)
     }
 }
 
-voidp_t q_dequeue(queue* q)
+void* q_dequeue(queue* q)
 {
     if (q_is_empty(q))
     {
@@ -94,7 +94,7 @@ voidp_t q_dequeue(queue* q)
     }
 }
 
-cvoidp_t q_peek(queue* q)
+const void* q_peek(queue* q)
 {
     return q->queue[q->end];
 }

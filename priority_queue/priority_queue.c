@@ -7,7 +7,7 @@ priorityqueue pq_create_empty()
     return pq;
 }
 
-size_t pq_init(priorityqueue *pq, size_t size, int (*compare)(cvoidp_t x, cvoidp_t y), void (*freeObject)(voidp_t))
+size_t pq_init(priorityqueue *pq, size_t size, int (*compare)(const void* x, const void* y), void (*freeObject)(void*))
 {
     return sh_init(&pq->h, size, compare, freeObject);
 }
@@ -24,12 +24,12 @@ size_t pq_count(priorityqueue *pq)
     return sh_size(&pq->h);
 }
 
-size_t pq_enqueue(priorityqueue *pq, voidp_t item)
+size_t pq_enqueue(priorityqueue *pq, void* item)
 {
     return sh_insert(&pq->h, item);
 }
 
-voidp_t pq_dequeue(priorityqueue *pq)
+void* pq_dequeue(priorityqueue *pq)
 {
     if (pq_count(pq) == 0)
     {
@@ -39,7 +39,7 @@ voidp_t pq_dequeue(priorityqueue *pq)
         return sh_extract_min(&pq->h);
 }
 
-bool pq_trydequeue(priorityqueue *pq, voidp_t *out)
+bool pq_trydequeue(priorityqueue *pq, void* *out)
 {
     if (pq_count(pq) == 0)
         return false;
@@ -50,7 +50,7 @@ bool pq_trydequeue(priorityqueue *pq, voidp_t *out)
     }
 }
 
-bool pq_peek(priorityqueue *pq, voidp_t *out)
+bool pq_peek(priorityqueue *pq, void* *out)
 {
     if (pq_count(pq) == 0)
         return false;

@@ -11,9 +11,9 @@ static item *create_item(int value);
 static void print_data(darray *a);
 static void insert_n(darray *a, int n);
 static void remove_all(darray *a);
-static void free_item(voidp_t i);
+static void free_item(void* i);
 
-static void free_item(voidp_t i)
+static void free_item(void* i)
 {
     free(i);
 }

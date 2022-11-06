@@ -5,7 +5,7 @@ static void heapPrintTree(sheap *h);
 static item *create_item(int x);
 static void insert_n(sheap *h, int n);
 static void remove_all(sheap *h);
-static void freeObject(voidp_t i);
+static void freeObject(void* i);
 
 // dynamic array
 static int compare(const void *x, const void *y)
@@ -51,7 +51,7 @@ static item *create_item(int x)
     return it;
 }
 
-static void freeObject(voidp_t i)
+static void freeObject(void* i)
 {
     free(i);
 }

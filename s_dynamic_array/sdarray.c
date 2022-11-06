@@ -21,12 +21,12 @@ sdarray sda_create_empty()
     return a;
 }
 
-size_t sda_init(sdarray *a, size_t init_size, void (*freeObject)(voidp_t))
+size_t sda_init(sdarray *a, size_t init_size, void (*freeObject)(void*))
 {
     a->size = 0;
     a->used = 0;
-    voidp_t *temp;
-    temp = (voidp_t *)malloc(sizeof(voidp_t) * init_size);
+    void* *temp;
+    temp = (void* *)malloc(sizeof(void*) * init_size);
     if (temp != NULL)
     {
         a->array = temp;
@@ -54,7 +54,7 @@ size_t sda_clear(sdarray *a)
         return 0;
     }
     int amount = a->used;
-    voidp_t d;
+    void* d;
     for (int i = 0; i < amount; i++)
     {
         d = sda_remove_last(a);
@@ -95,7 +95,7 @@ bool sda_free(sdarray *a)
     return false;
 }
 
-cvoidp_t sda_at(sdarray * a, size_t index)
+const void* sda_at(sdarray * a, size_t index)
 {
     if (sda_count(a) < index)
     {
@@ -108,7 +108,7 @@ cvoidp_t sda_at(sdarray * a, size_t index)
     }
 }
 
-size_t sda_insert(sdarray *a, voidp_t item)
+size_t sda_insert(sdarray *a, void* item)
 {
     if (a == NULL || a->array == NULL)
     {
@@ -120,7 +120,7 @@ size_t sda_insert(sdarray *a, voidp_t item)
     {   // index < size, is a guard
         // when array is full on insert, double the size
         a->size *= 2;
-        voidp_t *temp = (voidp_t *)realloc(a->array, sizeof(voidp_t) * a->size);
+        void* *temp = (void* *)realloc(a->array, sizeof(void*) * a->size);
         if (temp != NULL)
         {
             a->array = temp;
@@ -136,7 +136,7 @@ size_t sda_insert(sdarray *a, voidp_t item)
     return a->used;
 }
 
-voidp_t sda_remove_last(sdarray *a)
+void* sda_remove_last(sdarray *a)
 {
     if (sda_is_empty(a))
     {
@@ -144,7 +144,7 @@ voidp_t sda_remove_last(sdarray *a)
         return NULL;
     }
     a->used -= 1;
-    voidp_t data = a->array[a->used];
+    void* data = a->array[a->used];
     MEM m = sda_memory_decrease(a);
     if (m != ERRMEM_DECREASE)
     {
@@ -157,14 +157,14 @@ voidp_t sda_remove_last(sdarray *a)
     }
 }
 
-voidp_t sda_remove_at(sdarray *a, int index)
+void* sda_remove_at(sdarray *a, int index)
 {
     if (index > a->used)
     {
         //errcset(EINDEX_OUT_OF_BOUNDS);
         return NULL;
     }
-    voidp_t *data = a->array[index];
+    void* *data = a->array[index];
     for (int i = index; i < a->used; i++)
     {
         a->array[i] = a->array[i + 1];
@@ -217,7 +217,7 @@ static MEM sda_memory_decrease(sdarray *a)
     if (ratio <= QUARTER && sda_size(a) != 1)
     {
         a->size /= 2;
-        voidp_t *temp = (voidp_t *)realloc(a->array, sizeof(voidp_t) * a->size);
+        void* *temp = (void* *)realloc(a->array, sizeof(void*) * a->size);
         if (temp != NULL)
         {
             a->array = temp;

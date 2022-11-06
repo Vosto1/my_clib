@@ -24,13 +24,13 @@ typedef struct treeNode *btree;
 
 struct treeNode
 {
-	voidp_t value;
+	void* value;
 	btree left;
 	btree right;
 };
 
 btree bt_create_empty();
-btree bt_new_node(voidp_t value);
+btree bt_new_node(void* value);
 
 bool bt_left_is_null(const btree bst);
 bool bt_right_is_null(const btree bst);
@@ -38,7 +38,7 @@ bool bt_is_empty(const btree tree);
 
 int bt_count(const btree tree);
 
-bool bt_free(btree *tree, void (*freeObject)(voidp_t));
+bool bt_free(btree *tree, void (*freeObject)(void*));
 bool bt_destroy(btree *tree);
 
 #endif

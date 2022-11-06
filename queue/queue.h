@@ -45,21 +45,21 @@ bool q_is_empty(queue* q);
  * @param item item to enqueue
  * @return true if success
  */
-bool q_enqueue(queue* q, cvoidp_t item);
+bool q_enqueue(queue* q, const void* item);
 /**
  * @brief dequeue the first item
  * 
  * @param q queue to dequeue on
  * @return pointer to dequeued item
  */
-voidp_t q_dequeue(queue* q);
+void* q_dequeue(queue* q);
 /**
  * @brief peek at the item in the front of the queue
  * 
  * @param q queue to peek
  * @return pointer to item in front
  */
-cvoidp_t q_peek(queue* q);
+const void* q_peek(queue* q);
 /**
  * @brief free all items in the queue and delete the queue 
  * @param queue queue to destroy 

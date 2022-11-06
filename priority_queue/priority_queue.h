@@ -49,7 +49,7 @@ priorityqueue pq_create_empty();
  * @param compare a function that can compare two items of your data type
  * @return the size the priority queue is initialized to or 0 if error
  */
-size_t pq_init(priorityqueue *pq, size_t size, int (*compare)(cvoidp_t x, cvoidp_t y), void (*freeObject)(voidp_t));
+size_t pq_init(priorityqueue *pq, size_t size, int (*compare)(const void* x, const void* y), void (*freeObject)(void*));
 /**
  * @brief remove (free) all items in the priority queue and free it
  *
@@ -72,14 +72,14 @@ size_t pq_count(priorityqueue *pq);
  * @param item the item to enqueue
  * @return  the item count in the priority queue or 0 if error
  */
-size_t pq_enqueue(priorityqueue *pq, voidp_t item);
+size_t pq_enqueue(priorityqueue *pq, void* item);
 /**
  * @brief dequeue an item from the priority queue
  *
  * @param pq priority queue to dequeue from
  * @return a pointer to the item that was dequeued
  */
-voidp_t pq_dequeue(priorityqueue *pq);
+void* pq_dequeue(priorityqueue *pq);
 /**
  * @brief try to dequeue an item
  *
@@ -88,7 +88,7 @@ voidp_t pq_dequeue(priorityqueue *pq);
  * @return true if there was an item to dequeue
  * @return false if there wasn't an item to dequeue
  */
-bool pq_trydequeue(priorityqueue *pq, voidp_t *out);
+bool pq_trydequeue(priorityqueue *pq, void* *out);
 /**
  * @brief peek at the top of the priority queue
  *
@@ -97,6 +97,6 @@ bool pq_trydequeue(priorityqueue *pq, voidp_t *out);
  * @return true if there was an item
  * @return false if there was no item
  */
-bool pq_peek(priorityqueue *pq, voidp_t *out);
+bool pq_peek(priorityqueue *pq, void* *out);
 
 #endif
