@@ -18,7 +18,7 @@ touch $cfile
 # read file into array of strings
 declare -a fnarray
 declare i=0
-read='.*);$'
+read='^[a-zA-Z0-9_]+ [a-zA-Z0-9_]+\(.*\);$'
 while read -r line
 do
 	if [[ ${line} =~ ${read} ]]; then

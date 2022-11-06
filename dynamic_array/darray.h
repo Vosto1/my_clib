@@ -116,6 +116,14 @@ size_t da_insert(darray *a, voidp_t item);
  */
 voidp_t da_remove_last(darray *a);
 /**
+ * @brief get the item at an index
+ * 
+ * @param a array to get item from 
+ * @param index index to get item at 
+ * @return void pointer to item 
+ */
+cvoidp_t da_at(darray * a, size_t index);
+/**
  * remove a specific item from the dynamic array
  *
  * @param a array to remove from

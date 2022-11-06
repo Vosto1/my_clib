@@ -30,7 +30,6 @@ static void sort(voidp_t array[], size_t start, size_t end, int (*compare)(voidp
         size_t old_pivot = sort_partition(array, start, end, compare);
         sort(array, start, old_pivot, compare);
         sort(array, old_pivot+1, end, compare);
-
     }
 }
 

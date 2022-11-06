@@ -9,7 +9,8 @@ typedef struct _set set;
 
 struct _set {
     bstree t;
-    int (*compare)(cvoidp_t, cvoidp_t);
+    int (*compare)(const void*, const void*);
+    void (*freeObject)(void*);
 };
 
 /**
@@ -17,7 +18,16 @@ struct _set {
  * 
  * @return set
  */
-set st_create_empty();
+set set_create_empty();
+/**
+ * @brief initialize the set
+ * 
+ * @param s set to initialize 
+ * @param compare comparison function 
+ * @param freeObject function to free an item 
+ * @return true on success
+ */
+bool set_init(set* s, int (*compare)(const void*, const void*), void (*freeObject)(void*));
 /**
  * @brief add an item to the set
  * 
@@ -44,5 +54,12 @@ voidp_t set_remove(set* s, voidp_t item);
  * @return false if not in the set
  */
 bool set_contains(set* s, voidp_t item);
+/**
+ * @brief destroy set
+ * 
+ * @param s set to destroy 
+ * @return true on success
+ */
+bool set_destroy(set* s);
 
 #endif

@@ -89,7 +89,7 @@ size_t da_clear(darray *a)
 {
     if (da_is_empty(a))
     {
-        return 1;  // its empty job already done
+        return 1;  // its empty; job already done
     }
     else if (da_is_null(a))
     {
@@ -134,6 +134,21 @@ size_t da_insert(darray *a, voidp_t item)
     a->array[a->used - 1] = item;
     return a->used;
 }
+
+cvoidp_t da_at(darray * a, size_t index)
+{
+    if (da_count(a) < index)
+    {
+        return a->array[index];
+    }
+    else
+    {
+        // error
+        return NULL;
+    }
+}
+
+
 
 voidp_t da_remove_last(darray *a)
 {

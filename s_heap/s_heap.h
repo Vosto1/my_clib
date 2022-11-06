@@ -11,8 +11,8 @@
 #ifndef _HEAP_H
 #define _HEAP_H
 
+#include <limits.h>
 #include "../dynamic_array/darray.h"
-//#include "../utils/error.h"
 #include "../datatype.h"
 
 /**
