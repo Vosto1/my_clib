@@ -1,9 +1,7 @@
-//fix math/linear_algebra includes
 //fix pq struct defintion
-//prepare valgrind (fix dependencies)
 //clean the code
 //write tests for the new stuff
 //make sure that initializing sda_init with NULL as freeObject function in bstree and hashtable doesnt crash them
 
-//OPTIONAL
+//LATER
 //add opaque pointers to my structs to hide implementation details

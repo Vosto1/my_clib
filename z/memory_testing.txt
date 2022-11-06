@@ -2,7 +2,9 @@ I need to use valgrind to test for memory leaks
 needs testing:
 - dstring
 - ll
-- matrix (pain)
+- llq
+- set
+- stack
 no leaks:
 + bstree tested! // might be good to write tests for the functions not currently being tested
 + btree tested!
