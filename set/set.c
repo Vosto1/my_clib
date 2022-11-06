@@ -42,5 +42,5 @@ bool set_contains(set* s, void* item)
 
 bool set_destroy(set* s)
 {
-    return bst_free(s->t, s->freeObject);
+    return bst_free(&s->t, s->freeObject);
 }
