@@ -163,33 +163,33 @@ static bool left(int p, int c)
 // only works on a normal bstree (left subtree smaller values, right subtree larger values)
 static bool bstree_integrity_check(const bstree tree)
 {
-    if (tree != NULL)
+    if (tree == NULL)
     {
-        if (tree->parent->right == tree)
-        { // right side (parent should be maller)
-            if (integrity_compar(tree->parent, tree, &right))
-            {
-                return true && bstree_integrity_check(tree->left) && bstree_integrity_check(tree->right);
-            }
-            else
-            {
-                return false;
-            }
+        return true;
+    }
+
+    if (tree->parent->right == tree)
+    { // right side (parent should be maller)
+        if (integrity_compar(tree->parent, tree, &right))
+        {
+            return true && bstree_integrity_check(tree->left) && bstree_integrity_check(tree->right);
         }
         else
-        { // left side (parent should be larger)
-            if (integrity_compar(tree->parent, tree, &left))
-            {
-                return true && bstree_integrity_check(tree->left) && bstree_integrity_check(tree->right);
-            }
-            else
-            {
-                return false;
-            }
+        {
+            return false;
         }
     }
     else
-        return true;
+    { // left side (parent should be larger)
+        if (integrity_compar(tree->parent, tree, &left))
+        {
+            return true && bstree_integrity_check(tree->left) && bstree_integrity_check(tree->right);
+        }
+        else
+        {
+            return false;
+        }
+    }
 }
 
 static bool integrity_check(const bstree tree)
@@ -225,7 +225,7 @@ void auto_tests(int n, int mod)
     srand(time(NULL));
     //errcinit();
     bstree tree = bst_create_empty();
-    void* element, rm;
+    void* element, *rm;
     int nexttests, type, r1, count;
     int (*comp)(const void*, const void*);
     comp = &compare;

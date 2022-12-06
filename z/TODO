@@ -1,7 +1,9 @@
 //fix pq struct defintion
+//improve nesting https://www.youtube.com/watch?v=CFRhGnuXG-4
 //clean the code
 //write tests for the new stuff
 //make sure that initializing sda_init with NULL as freeObject function in bstree and hashtable doesnt crash them
+
 
 //LATER
 //add opaque pointers to my structs to hide implementation details

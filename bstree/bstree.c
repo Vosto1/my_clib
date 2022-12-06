@@ -5,20 +5,17 @@
 static bstree new_node(const void * element)
 {
     bstree n = (bstree)malloc(sizeof(struct treeNode));
-    if (n != NULL)
+    if (n == NULL)
     {
-        n->cont.element = element;
-        n->cont.next = NULL;
-        n->left = NULL;
-        n->right = NULL;
-        n->parent = NULL;
-        return n;
+        
     }
-    else
-    {
-        //errcset(EBTREE_NODE_MEMALLOC);
-        return NULL;
-    }
+
+    n->cont.element = element;
+    n->cont.next = NULL;
+    n->left = NULL;
+    n->right = NULL;
+    n->parent = NULL;
+    return n;
 }
 
 // compare functions
@@ -153,23 +150,24 @@ static void* rm_with_no_children(bstree *bst)
 {
     bstree rm = *bst;
 
-    if (rm->cont.next == NULL)
-    { // if the last of its value
-        if (rm->parent != NULL)
-        {
-            if (rm->parent->right == rm)
-                rm->parent->right = NULL;
-            else
-                rm->parent->left = NULL;
-        }
-        *bst = NULL;
-        void* e = (void*)rm->cont.element;
-        free(rm);
-        rm = NULL;
-        return e;
-    }
-    else
+    if (rm->cont.next != NULL)
+    { // not the last of its value 
         return rm_element_occurance(rm);
+    }
+        
+    // if the last of its value
+    if (rm->parent != NULL)
+    {
+        if (rm->parent->right == rm)
+            rm->parent->right = NULL;
+        else
+            rm->parent->left = NULL;
+    }
+    *bst = NULL;
+    void* e = (void*)rm->cont.element;
+    free(rm);
+    rm = NULL;
+    return e;
 }
 
 static void* rm_with_right_child(bstree *bst)
@@ -178,24 +176,25 @@ static void* rm_with_right_child(bstree *bst)
     bstree child = rm->right;
     bstree parent = rm->parent;
 
-    if (rm->cont.next == NULL)
-    { // if the last of its value
-        if (rm->parent != NULL)
-        {
-            if (parent->right == rm)
-                parent->right = child;
-            else
-                parent->left = child;
-        }
-
-        child->parent = parent;
-        (*bst) = child;
-        void* e = (void*)rm->cont.element;
-        free(rm);
-        return e;
+    if (rm->cont.next != NULL)
+    { // not the last of its value
+       return rm_element_occurance(rm);
     }
-    else
-        return rm_element_occurance(rm);
+
+    // if the last of its value
+    if (rm->parent != NULL)
+    {
+        if (parent->right == rm)
+            parent->right = child;
+        else
+            parent->left = child;
+    }
+
+    child->parent = parent;
+    (*bst) = child;
+    void* e = (void*)rm->cont.element;
+    free(rm);
+    return e;
 }
 
 static void* rm_with_left_child(bstree *bst)
@@ -204,24 +203,25 @@ static void* rm_with_left_child(bstree *bst)
     bstree child = rm->left;
     bstree parent = rm->parent;
 
-    if (rm->cont.next == NULL)
-    { // if the last of its value
-        if (rm->parent != NULL)
-        {
-            if (parent->right == rm)
-                parent->right = child;
-            else
-                parent->left = child;
-        }
+    if (rm->cont.next != NULL)
+    { // not the last of its value
+       return rm_element_occurance(rm);
+    } 
 
-        child->parent = parent;
-        (*bst) = child;
-        void* e = (void*)rm->cont.element;
-        free(rm);
-        return e;
+    // if the last of its value
+    if (rm->parent != NULL)
+    {
+        if (parent->right == rm)
+            parent->right = child;
+        else
+            parent->left = child;
     }
-    else
-        return rm_element_occurance(rm);
+
+    child->parent = parent;
+    (*bst) = child;
+    void* e = (void*)rm->cont.element;
+    free(rm);
+    return e;
 }
 
 static void* rm_with_two_children(bstree *bst, int (*compare)(const void *, const void *))
@@ -240,38 +240,40 @@ static void* rm_with_two_children(bstree *bst, int (*compare)(const void *, cons
     }
 
     // remove node-to-replace-with from tree, and then replace node-to-remove with that node
-    if (rm->cont.next == NULL)
-    { // if the last of its value
-        bstree node = remove_node(bst, *repl, compare);
-        bstree parent = rm->parent;
 
-        bstree lchild = rm->left;
-        bstree rchild = rm->right;
-
-        if (lchild != NULL)
-            lchild->parent = node;
-        if (rchild != NULL)
-            rchild->parent = node;
-
-        if (parent != NULL)
-        {
-            if (parent->right == rm)
-                parent->right = node;
-            else
-                parent->left = node;
-        }
-
-        node->left = lchild;
-        node->right = rchild;
-        node->parent = rm->parent;
-
-        (*bst) = node;
-        void* e = (void*)rm->cont.element;
-        free(rm);
-        return e;
-    }
-    else
+    if (rm->cont.next != NULL)
+    { // not last of its value
         return rm_element_occurance(rm);
+    }
+
+    // if the last of its value
+    bstree node = remove_node(bst, *repl, compare);
+    bstree parent = rm->parent;
+
+    bstree lchild = rm->left;
+    bstree rchild = rm->right;
+
+    if (lchild != NULL)
+        lchild->parent = node;
+    if (rchild != NULL)
+        rchild->parent = node;
+
+    if (parent != NULL)
+    {
+        if (parent->right == rm)
+            parent->right = node;
+        else
+            parent->left = node;
+    }
+
+    node->left = lchild;
+    node->right = rchild;
+    node->parent = rm->parent;
+
+    (*bst) = node;
+    void* e = (void*)rm->cont.element;
+    free(rm);
+    return e;
 }
 
 static bstree rm_node_with_no_children(bstree *bst)
@@ -373,83 +375,79 @@ static bstree rm_node_with_two_children(bstree *bst, int (*compare)(const void *
 
 static bstree remove_node(bstree *tree, bstree rm, int (*compare)(const void *, const void *))
 {
-    if (*tree != NULL)
+    if (*tree == NULL)
     {
-        if (rm == *tree) // comparing adresses, because we want to remove a node, not an element.
-        {
-            if (left_isnull(*tree) && right_isnull(*tree))
-            { // if the node doesnt have children
-                return rm_node_with_no_children(tree);
-            }
-            else if (left_isnull(*tree))
-            { // if the node has a right child
-                return rm_node_with_right_child(tree);
-            }
-            else if (right_isnull(*tree))
-            { // if the node has a left child
-                return rm_node_with_left_child(tree);
-            }
-            else
-            { // if the node has two children
-                return rm_node_with_two_children(tree, compare);
-            }
+        return NULL;
+    }
+
+    if (rm == *tree) // comparing adresses, because we want to remove a node, not an element.
+    {
+        if (left_isnull(*tree) && right_isnull(*tree))
+        { // if the node doesnt have children
+            return rm_node_with_no_children(tree);
+        }
+        else if (left_isnull(*tree))
+        { // if the node has a right child
+            return rm_node_with_right_child(tree);
+        }
+        else if (right_isnull(*tree))
+        { // if the node has a left child
+            return rm_node_with_left_child(tree);
         }
         else
-        { // was not equal
-            if (is_bigger((*tree)->cont.element, rm->cont.element, compare)) // find the node by comparing size of elements
-            {
-                return remove_node(&(*tree)->right, rm, compare);
-            }
-            else
-            {
-                return remove_node(&(*tree)->left, rm, compare);
-            }
+        { // if the node has two children
+            return rm_node_with_two_children(tree, compare);
         }
     }
     else
-    { // btree doesnt contain element
-        return NULL;
+    { // was not equal
+        if (is_bigger((*tree)->cont.element, rm->cont.element, compare)) // find the node by comparing size of elements
+        {
+            return remove_node(&(*tree)->right, rm, compare);
+        }
+        else
+        {
+            return remove_node(&(*tree)->left, rm, compare);
+        }
     }
 }
 
 void* bst_remove(bstree *tree, void* element, int (*compare)(const void *, const void *))
 {
-    if (*tree != NULL)
+    if (*tree == NULL)
     {
-        if (is_equal((*tree)->cont.element, element, compare))
-        {
-            if (left_isnull(*tree) && right_isnull(*tree))
-            { // if the node doesnt have children
-                return rm_with_no_children(tree);
-            }
-            else if (left_isnull(*tree))
-            { // if the node has a right child
-                return rm_with_right_child(tree);
-            }
-            else if (right_isnull(*tree))
-            { // if the node has a left child
-                return rm_with_left_child(tree);
-            }
-            else
-            { // if the node has two children
-                return rm_with_two_children(tree, compare);
-            }
+        return NULL;
+    }
+
+    if (is_equal((*tree)->cont.element, element, compare))
+    {
+        if (left_isnull(*tree) && right_isnull(*tree))
+        { // if the node doesnt have children
+            return rm_with_no_children(tree);
+        }
+        else if (left_isnull(*tree))
+        { // if the node has a right child
+            return rm_with_right_child(tree);
+        }
+        else if (right_isnull(*tree))
+        { // if the node has a left child
+            return rm_with_left_child(tree);
         }
         else
-        { // tree->element was not equal to element
-            if (is_bigger((*tree)->cont.element, element, compare))
-            {
-                return bst_remove(&(*tree)->right, element, compare);
-            }
-            else
-            {
-                return bst_remove(&(*tree)->left, element, compare);
-            }
+        { // if the node has two children
+            return rm_with_two_children(tree, compare);
         }
     }
     else
-    { // btree doesnt contain element
-        return NULL;
+    { // tree->element was not equal to element
+        if (is_bigger((*tree)->cont.element, element, compare))
+        {
+            return bst_remove(&(*tree)->right, element, compare);
+        }
+        else
+        {
+            return bst_remove(&(*tree)->left, element, compare);
+        }
     }
 }
 
@@ -477,12 +475,14 @@ static void insert_from_sorted_array(bstree *tree, void* *a, int start, int end,
 
 static void free_container_structs(dataContainer *cont)
 {
-    if (cont != NULL)
+    if (cont == NULL)
     {
-        free_container_structs(cont->next);
-        free(cont);
-        cont = NULL;
+        return;
     }
+
+    free_container_structs(cont->next);
+    free(cont);
+    cont = NULL;
 }
 
 bstree bst_merge(bstree *bst1, bstree *bst2, int (*compare)(const void *, const void *))
@@ -509,55 +509,61 @@ bstree bst_merge(bstree *bst1, bstree *bst2, int (*compare)(const void *, const 
 
 static void preorder(const bstree tree, const void * *a, int *index)
 {
-    if (tree != NULL)
+    if (tree == NULL)
     {
-        dataContainer *tmp = &tree->cont;
-        while (tmp != NULL)
-        {
-            a[*index] = tmp->element;
-            *index += 1;
-            tmp = tmp->next;
-        }
-        if (tree->left != NULL)
-            preorder(tree->left, a, index);
-        if (tree->right != NULL)
-            preorder(tree->right, a, index);
+        return;
     }
+
+    dataContainer *tmp = &tree->cont;
+    while (tmp != NULL)
+    {
+        a[*index] = tmp->element;
+        *index += 1;
+        tmp = tmp->next;
+    }
+    if (tree->left != NULL)
+        preorder(tree->left, a, index);
+    if (tree->right != NULL)
+        preorder(tree->right, a, index);
 }
 
 static void inorder(const bstree tree, const void * *a, int *index)
 {
-    if (tree != NULL)
+    if (tree == NULL)
     {
-        if (tree->left != NULL)
-            inorder(tree->left, a, index);
-        dataContainer *tmp = &tree->cont;
-        while (tmp != NULL)
-        {
-            a[*index] = tmp->element;
-            *index += 1;
-            tmp = tmp->next;
-        }
-        if (tree->right != NULL)
-            inorder(tree->right, a, index);
+        return;
     }
+
+    if (tree->left != NULL)
+        inorder(tree->left, a, index);
+    dataContainer *tmp = &tree->cont;
+    while (tmp != NULL)
+    {
+        a[*index] = tmp->element;
+        *index += 1;
+        tmp = tmp->next;
+    }
+    if (tree->right != NULL)
+        inorder(tree->right, a, index);
 }
 
 static void postorder(const bstree tree, const void * *a, int *index)
 {
-    if (tree != NULL)
+    if (tree == NULL)
     {
-        if (tree->left != NULL)
-            postorder(tree->left, a, index);
-        if (tree->right != NULL)
-            postorder(tree->right, a, index);
-        dataContainer *tmp = &tree->cont;
-        while (tmp != NULL)
-        {
-            a[*index] = tmp->element;
-            *index += 1;
-            tmp = tmp->next;
-        }
+        return;
+    }
+
+    if (tree->left != NULL)
+        postorder(tree->left, a, index);
+    if (tree->right != NULL)
+        postorder(tree->right, a, index);
+    dataContainer *tmp = &tree->cont;
+    while (tmp != NULL)
+    {
+        a[*index] = tmp->element;
+        *index += 1;
+        tmp = tmp->next;
     }
 }
 
@@ -565,19 +571,17 @@ static size_t get_array(const bstree tree, void (*order)(const bstree, const voi
 {
     size_t size = bst_count(tree);
     void* *a = (void* *)malloc(sizeof(void* *) * size);
-    if (arr != NULL)
+
+    if (arr == NULL)
     {
-        int index = 0;
-        (*order)(tree, (const void * *)a, &index);
-        *arr = a;
-        return size;
-    }
-    else
-    {
-        //errcset(EBTREE_WRITEARR_MEMALLOC);
         free(a);
         return 0;
     }
+
+    int index = 0;
+    (*order)(tree, (const void * *)a, &index);
+    *arr = a;
+    return size;
 }
 
 size_t bst_toarray_preorder(const bstree tree, void* **array)
@@ -603,24 +607,22 @@ size_t bst_toarray_postorder(const bstree tree, void* **array)
 
 const void * bst_find(const bstree tree, void* element, int (*compare)(const void *, const void *))
 {
-    if (tree != NULL)
+    if (tree == NULL)
     {
-        if (is_equal(tree->cont.element, element, compare))
-        {
-            return tree->cont.element;
-        }
-        else if (is_bigger(tree->cont.element, element, compare))
-        {
-            return bst_find(tree->right, element, compare);
-        }
-        else
-        {
-            return bst_find(tree->left, element, compare);
-        }
+        return NULL;
+    }
+
+    if (is_equal(tree->cont.element, element, compare))
+    {
+        return tree->cont.element;
+    }
+    else if (is_bigger(tree->cont.element, element, compare))
+    {
+        return bst_find(tree->right, element, compare);
     }
     else
-    { // btree doesnt contain element
-        return NULL;
+    {
+        return bst_find(tree->left, element, compare);
     }
 }
 
@@ -688,72 +690,65 @@ int bst_mindepth(const bstree tree)
 #define INIT_SIZE 100
 bool bst_balance(bstree *tree, int (*compare)(const void *, const void *))
 {
-    if ((*tree) != NULL)
+    if ((*tree) == NULL)
     {
+        return false;
+    }
 
-        // write all elements to an array
-        void* *arr1;
-        size_t arraysize = write_sorted_to_array((*tree), &arr1);
-        if (arr1 != NULL)
+    // write all elements to an array
+    void* *arr1;
+    size_t arraysize = write_sorted_to_array((*tree), &arr1);
+    if (arr1 == NULL)
+    {
+        return false;
+    }
+    bstree new = bst_create_empty();
+    sdarray arr2 = sda_create_empty();
+    if (sda_init(&arr2, INIT_SIZE, NULL) != 0)
+    {
+        // get an array with unique elements
+        void* tmp = arr1[0];
+        sda_insert(&arr2, tmp);
+        arr1[0] = NULL;
+        for (int i = 1; i < arraysize; i++)
         {
-            bstree new = bst_create_empty();
-            sdarray arr2 = sda_create_empty();
-            if (sda_init(&arr2, INIT_SIZE, NULL) != 0)
+            if (!is_equal(tmp, arr1[i], compare))
             {
-                // get an array with unique elements
-                void* tmp = arr1[0];
-                sda_insert(&arr2, tmp);
-                arr1[0] = NULL;
-                for (int i = 1; i < arraysize; i++)
-                {
-                    if (!is_equal(tmp, arr1[i], compare))
-                    {
-                        sda_insert(&arr2, arr1[i]);
-                        tmp = arr1[i];
-                        arr1[i] = NULL;
-                    }
-                }
-
-                // insert unique elements in the tree balanced
-                insert_from_sorted_array(&new, arr2.array, 0, arr2.used - 1, compare);
-                sda_destroy(&arr2); // free array and not the elements
-
-                // add all the non-unique elements
-                for (int i = 0; i < arraysize; i++)
-                    if (arr1[i] != NULL)
-                        bst_insert(&new, arr1[i], compare);
-            }
-            int nc = bst_count(new);
-            int oc = bst_count(*tree);
-            int d = bst_depth(new);
-            int md = bst_mindepth(new);
-            // was it successful?
-            if (nc == oc && d == md)
-            {
-                free(arr1);
-                // free only the nodes
-                bst_destroy(tree);
-                *tree = new;
-                return true;
-            }
-            else
-            {
-                // rollback (free)
-                free(arr1);
-                // rollback (free)
-                bst_destroy(&new);
-                //errcset(EBTREE_BALANCE);
-                return false;
+                sda_insert(&arr2, arr1[i]);
+                tmp = arr1[i];
+                arr1[i] = NULL;
             }
         }
-        else
-        {
-            //errcset(EBTREE_WRITEARR_MEMALLOC);
-            return false;
-        }
+
+        // insert unique elements in the tree balanced
+        insert_from_sorted_array(&new, arr2.array, 0, arr2.used - 1, compare);
+        sda_destroy(&arr2); // free array and not the elements
+
+        // add all the non-unique elements
+        for (int i = 0; i < arraysize; i++)
+            if (arr1[i] != NULL)
+                bst_insert(&new, arr1[i], compare);
+    }
+    int nc = bst_count(new);
+    int oc = bst_count(*tree);
+    int d = bst_depth(new);
+    int md = bst_mindepth(new);
+    // was it successful?
+    if (nc == oc && d == md)
+    {
+        free(arr1);
+        // free only the nodes
+        bst_destroy(tree);
+        *tree = new;
+        return true;
     }
     else
     {
+        // rollback (free)
+        free(arr1);
+        // rollback (free)
+        bst_destroy(&new);
+        //errcset(EBTREE_BALANCE);
         return false;
     }
 }
@@ -767,62 +762,56 @@ static void free_all_elements(dataContainer *cont, void (*freeObject)(void*))
 
 static void bstfree(bstree *tree, void (*freeObject)(void*))
 {
-    if ((*tree) != NULL)
+    if ((*tree) == NULL)
     {
-        bstfree(&(*tree)->right, freeObject);
-        bstfree(&(*tree)->left, freeObject);
-        // free all elements in the node
-        dataContainer *tmp = &(*tree)->cont;
-        free_all_elements(tmp, freeObject);
-        // free all value structs in which the elements were stored
-        dataContainer *tmp2 = (*tree)->cont.next;
-        free_container_structs(tmp2);
-        // free the node
-        free((*tree));
-        (*tree) = NULL;
+        return;
     }
+    bstfree(&(*tree)->right, freeObject);
+    bstfree(&(*tree)->left, freeObject);
+    // free all elements in the node
+    dataContainer *tmp = &(*tree)->cont;
+    free_all_elements(tmp, freeObject);
+    // free all value structs in which the elements were stored
+    dataContainer *tmp2 = (*tree)->cont.next;
+    free_container_structs(tmp2);
+    // free the node
+    free((*tree));
+    (*tree) = NULL;
 }
 
 bool bst_free(bstree *tree, void (*freeObject)(void*))
 {
-    if ((*tree) != NULL)
+    if ((*tree) == NULL)
     {
-        bstfree(tree, freeObject);
-        return true;
-    }
-    else
-    {
-        // errcset(EBTREE_FREENULLPTR);
         return false;
     }
+    bstfree(tree, freeObject);
+    return true;
 }
 
 void bstdestr(bstree *tree)
 {
-    if ((*tree) != NULL)
+    if ((*tree) == NULL)
     {
-        bstdestr(&(*tree)->right);
-        bstdestr(&(*tree)->left);
-        // free all data container structs in which the elements were stored
-        dataContainer *tmp = (*tree)->cont.next;
-        free_container_structs(tmp);
-        // free node
-        free((*tree));
-        (*tree) = NULL;
+        return;
     }
+    bstdestr(&(*tree)->right);
+    bstdestr(&(*tree)->left);
+    // free all data container structs in which the elements were stored
+    dataContainer *tmp = (*tree)->cont.next;
+    free_container_structs(tmp);
+    // free node
+    free((*tree));
+    (*tree) = NULL;
 }
 
 // free only nodes (and data container structs, not elements in the tree)
 bool bst_destroy(bstree *tree)
 {
-    if ((*tree) != NULL)
+    if ((*tree) == NULL)
     {
-        bstdestr(tree);
-        return true;
-    }
-    else
-    {
-        // errcset(EBTREE_FREENULLPTR);
         return false;
     }
+    bstdestr(tree);
+    return true;
 }
