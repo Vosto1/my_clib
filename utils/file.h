@@ -48,4 +48,12 @@ size_t read_text_file(char *filepath, char **out);
  */
 size_t write_text_file(char *filepath, char **string, size_t size);
 
+/**
+ * @brief Get the size of a file
+ * 
+ * @param filepath path to the file
+ * @return size_t in bytes
+ */
+size_t get_file_size(char *filepath);
+
 #endif

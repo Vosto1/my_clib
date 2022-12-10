@@ -66,6 +66,20 @@ size_t write_text_file(char *filepath, char **string, size_t size)
 	return write_file(filepath, (void *)string, size);
 }
 
+size_t get_file_size(char *filepath)
+{
+	FILE *fp = fopen(filepath, "rb"); // rb == read binary
+    // get file size (bytes)
+	if (fp == NULL)
+	{
+		return 0;
+	}
+	fseek(fp, 0, SEEK_END);
+	long length = ftell(fp);
+	fclose(fp);
+	return length;
+}
+
 // future functions
 // size_t append_file(); // append to the end of the file
 // size_t readBytesFile(int amountBytes, int offset); // read a specified amount of bytes from file (from offset to amountBytes)
