@@ -23,8 +23,7 @@
 /**
  * The s_dynamic array stores pointers to the data as void* pointers.
  * This way the type is generic, but all data must be allocated as
- * dynamic memory. The void* pointer is typedefed to void*
- * to make it easier to read.
+ * dynamic memory.
  *
  * The differences between the s_dynamic array (this) and the dynamic array
  * is functionality. The s_dynamic array has less functionality than the

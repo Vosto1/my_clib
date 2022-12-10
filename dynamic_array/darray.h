@@ -23,8 +23,7 @@
 /**
  * The dynamic array stores pointers to the data as void* pointers.
  * This way the type is generic, but all data must be allocated as
- * dynamic memory. The void* pointer is typedefed to voidp
- * to make it easier to read.
+ * dynamic memory.
  *
  * The data structure needs a comparison function
  * from the user to be able to function correctly.

@@ -23,7 +23,7 @@ int main()
         method = get_method(recieved_message);
         route = get_route(recieved_message);
         printf("Recived: %s %s\n", method, route);
-        if (strcmp(route, "/") == 0)
+        if (strcmp(route, "/") == 0) // replace this with hashtable lookup
         {
             dstring html = get_html_page("test.html");
             dstring http = ds_init("HTTP/1.1 200 OK\n\n"); // these respones should be calculated in http.c with a response function or something

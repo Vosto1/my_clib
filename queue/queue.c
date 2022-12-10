@@ -34,64 +34,60 @@ bool q_enqueue(queue* q, const void* item)
     {
         return false;
     }
-    else
+
+    if (q->size == q->end)
     {
-        if (q->size == q->end)
+        q->size *= 2;
+        void** temp = (void**)realloc(q->queue, sizeof(void*)*q->size);
+        if (temp != NULL)
         {
-            q->size *= 2;
-            void** temp = (void**)realloc(q->queue, sizeof(void*)*q->size);
-            if (temp != NULL)
-            {
-                q->queue = temp;
-            }
-            else
-            {
-                q->size /= 2;
-                return false;
-            }
+            q->queue = temp;
         }
-        q->end += 1;
-        q->queue[q->end - 1] = item;
-        return true;
+        else
+        {
+            q->size /= 2;
+            return false;
+        }
     }
+    q->end += 1;
+    q->queue[q->end - 1] = item;
+    return true;
 }
 
 void* q_dequeue(queue* q)
 {
-    if (q_is_empty(q))
+    if (q_is_empty(q) || q_item_count(q) <= 0)
     {
         return false;
     }
-    else
+
+    double ratio = (double)(q->end - q->front)/q->size;
+    if (ratio <= QUARTER && q->size != 1)
     {
-        double ratio = (double)(q->end - q->front)/q->size;
-        if (ratio <= QUARTER && q->size != 1)
+        //move all items to the front of the memory
+        uint icount = q_item_count(q);
+        uint f = q->front;
+        for (uint i = 0; i < icount; i++)
         {
-            //move all items to the front of the memory
-            uint icount = q_item_count(q);
-            uint f = q->front;
-            for (uint i = 0; i < icount; i++)
-            {
-               q->queue[i] = q->queue[i+f];
-            }
-            q->front = 0;
-            q->end = icount;
-            q->size /= 2;
-            void** temp = (void**)realloc(q->queue, sizeof(void*)*q->size);
-            if (temp != NULL)
-            {
-                q->queue = temp;
-            }
-            else
-            {
-                q->size /= 2;
-                return NULL;
-            }
+            q->queue[i] = q->queue[i+f];
         }
-        void* item = q->queue[q->front];
-        q->front += 1;
-        return item;
+        q->front = 0;
+        q->end = icount;
+        q->size /= 2;
+        void** temp = (void**)realloc(q->queue, sizeof(void*)*q->size);
+        if (temp != NULL)
+        {
+            q->queue = temp;
+        }
+        else
+        {
+            q->size /= 2;
+            return NULL;
+        }
     }
+    void* item = q->queue[q->front];
+    q->front += 1;
+    return item;
 }
 
 const void* q_peek(queue* q)

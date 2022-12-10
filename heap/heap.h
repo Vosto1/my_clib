@@ -18,8 +18,7 @@
 /**
  * The heap stores pointers to the data as void* pointers.
  * This way the type is generic, but all data must be allocated as
- * dynamic memory. The void* pointer is typedefed to voidp to
- * make it easier to read.
+ * dynamic memory.
  *
  * To enable testing functions define __TESTING__
  *

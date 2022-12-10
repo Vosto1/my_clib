@@ -21,8 +21,7 @@ typedef struct // needs fixing (remove struct and only typedef sheap to pq)
 /**
  * The priority queue stores pointers to data as void* pointers.
  * This way the type is generic, but all data must be allocated as
- * dynamic memory. The void* pointer is typedefed to voidp to
- * make it easier to read.
+ * dynamic memory.
  *
  * The data structure needs a comparison function (compare)
  * from the user to be able to function correctly.
