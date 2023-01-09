@@ -37,7 +37,7 @@ size_t q_init(queue *q, size_t size, void (*freeObject)(void*));
  * @param q queue to check
  * @return true if empty
  */
-bool q_is_empty(queue* q);
+bool q_is_null(queue* q);
 /**
  * @brief enqueue new item
  * 

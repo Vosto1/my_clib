@@ -8,6 +8,7 @@ int main()
     // 127.0.0.1:6000/
     // Might have to add a port exception to firefox in about:config
     // (check the picture in this directory)
+    //https://developer.mozilla.org/en-US/docs/Web/HTTP/Status 
     char buffer[4096];
     server s = new_server(6000);
     client c;
@@ -23,10 +24,10 @@ int main()
         method = get_method(recieved_message);
         route = get_route(recieved_message);
         printf("Recived: %s %s\n", method, route);
-        if (strcmp(route, "/") == 0) // replace this with hashtable lookup
+        if (strcmp(route, "/") == 0) // replace this with hashtable lookup (route string is key and value is filename e.g. route: "/" file: "index.html" or "/home" "home.html")
         {
             dstring html = get_html_page("test.html");
-            dstring http = ds_init("HTTP/1.1 200 OK\n\n"); // these respones should be calculated in http.c with a response function or something
+            dstring http = ds_new_string_initialize("HTTP/1.1 200 OK\n\n"); // these respones should be calculated in http.c with a response function or something 
             dstring result = ds_concat(http, html);
             puts("Responding:\n");
             puts(result);
@@ -37,7 +38,7 @@ int main()
         }
         else if (strcmp(route, "/favicon.ico") == 0)
         {
-            dstring http = ds_init("HTTP/1.1 204 No Content\n\n");
+            dstring http = ds_new_string_initialize("HTTP/1.1 204 No Content\n\n");
             puts("Responding:\n\n");
             puts(http);
             send_message(c, http, true);
@@ -45,7 +46,7 @@ int main()
         }
         else
         {
-            dstring http = ds_init("HTTP/1.1 400 Bad Request\n\n");
+            dstring http = ds_new_string_initialize("HTTP/1.1 400 Bad Request\n\n");
             puts("Responding:\n\n");
             puts(http);
             send_message(c, http, true);
