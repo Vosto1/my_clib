@@ -74,29 +74,39 @@ unsigned int auto_tests(int tests, int mod)
 
     hashtable ht = ht_create_empty();
     ht_init(&ht, 10, &hashfn, &compare, &free_entry);
-    ticks start, end, prgStart, prgEnd;
     unsigned int count;
-    unsigned int operations = 0, deletions = 0, insertions = 0, lookups = 0;
-    unsigned int random, nexttests, val;
+    #ifdef HT_VERBOSE
+    ticks start, end, prgStart, prgEnd;
+    unsigned int operations = 0, deletions = 0, insertions = 0, lookups = 0, toarrays = 0, trims = 0;
     double avg_collisions;
-    int collisions = 0, tmp_col;
+    int collisions = 0;
+    #endif
+    int tmp_col;
+    unsigned int random, nexttests, val;
     entry* element;
     entry* e;
     entry* del; 
     bool existsht = false;
 
+    
+    #ifdef HT_VERBOSE
     prgStart = now();
+    #endif
     for (unsigned int i = 0; i < tests; i++)
     {
         nexttests = rand() % mod;
+        #ifdef HT_VERBOSE
         start = now();
+        #endif
         for (unsigned int j = 0; j < nexttests; j++)
         {
             val = rand(); // random integer instead to get more collisions //rascii(); // random ascii character
             random = rand() % 100;
             if (random < 80)
             { // insert
-                //printf("insertion, element count: %d\n", ht_count(&ht));
+                #ifdef HT_DEBUG
+                printf("insertion, element count: %d\n", ht_count(&ht));
+                #endif
                 element = _create_entry((char)val, val);
                 existsht = ht_lookup(&ht, element) != NULL; // check if element already exists in ht
                 count = ht_count(&ht);
@@ -104,19 +114,23 @@ unsigned int auto_tests(int tests, int mod)
                 //print(&ht);
                 tmp_col = ht_insert(&ht, element);
                 assert(tmp_col != -1);
-                collisions += tmp_col;
                 // debug
                 //print(&ht);
                 if (!existsht) // if it already existed the element was "updated" (its not visible since its updated to the same values)
                     assert(ht_count(&ht) == count + 1);
                 assert(ht_lookup(&ht, element) != NULL); // check if the element was inserted
+                #ifdef HT_VERBOSE
+                collisions += tmp_col;
                 insertions++;
+                #endif
             }
-            else if (random > 80 && random < 90)
+            else if (random >= 80 && random < 90)
             { // delete
                 if (ht_count(&ht) > 0)
                 {
-                    //printf("deletion, element count: %d\n", ht_count(&ht));
+                    #ifdef HT_DEBUG
+                    printf("deletion, element count: %d\n", ht_count(&ht));
+                    #endif
                     e = randomElement(&ht);
                     // debug
                     //pvalue(e);
@@ -127,68 +141,100 @@ unsigned int auto_tests(int tests, int mod)
                     e = ht_lookup(&ht, del);
                     assert(e == NULL); // del shouldnt be in ht
                     free(del);
+                    #ifdef HT_VERBOSE
                     deletions++;
+                    #endif
                 }
             }
-            else
+            else if (random >= 90 && random < 95)
             { // look up
                 if (ht_count(&ht) > 0)
                 {
-                    //printf("lookup, element count: %d\n", ht_count(&ht));
+                    #ifdef HT_DEBUG
+                    printf("lookup, element count: %d\n", ht_count(&ht));
+                    #endif
                     element = randomElement(&ht);
                     // debug
                     //pvalue(element);
                     //print(&ht);
                     e = ht_lookup(&ht, element);
                     assert(element == e); // make sure we found the right element
+                    #ifdef HT_VERBOSE
                     lookups++;
+                    #endif
                 }
             }
+            else if (random >= 95 && random < 97)
+            {
+                #ifdef HT_DEBUG
+                printf("to array, element count: %d\n", ht_count(&ht));
+                #endif
+                sdarray a = ht_to_array(&ht);
+                int size = sda_count(&a);
+                for (int i = 0; i < size; i++)
+                {
+                    assert(ht_lookup(&ht, a.array[i]) != NULL);
+                }
+                sda_destroy(&a);
+                #ifdef HT_VERBOSE
+                toarrays++;
+                #endif
+            }
+            else
+            {
+                #ifdef HT_DEBUG
+                printf("trim, element count: %d\n", ht_count(&ht));
+                #endif
+                sdarray a = ht_to_array(&ht);
+                int elementCount = sda_count(&a);
+                if (elementCount != 0)
+                {
+                    ht_trim(&ht);
+                    int size = ht_size(&ht);
+                    assert(size == elementCount);
+                    for (int i = 0; i < ht_size(&ht); i++)
+                    {
+                        assert(ht.entries[i] != UNUSED);
+                    }
+                    #ifdef HT_VERBOSE
+                    trims++;
+                    #endif
+                }
+                sda_destroy(&a);
+            }
+            #ifdef HT_VERBOSE
             operations++;
+            #endif
         }
+        #ifdef HT_VERBOSE
         end = now();
         seconds subtest = diff(start, end);
         if (insertions != 0)
             avg_collisions = (double)collisions / (double)insertions;
         else
             avg_collisions = 0.0f;
-        printf("Computed %d operations (%d insertions with %d collisions and %.1f average collisions, %d deletions %d lookups) during %f\n", nexttests, insertions, collisions, avg_collisions, deletions, lookups, subtest);
+        printf("Computed %d operations (%d insertions with %d collisions and %.1f average collisions, %d deletions %d lookups %d to array conversions %d trims) during %f\n", nexttests, insertions, collisions, avg_collisions, deletions, lookups, toarrays, trims, subtest);
         insertions = 0;
         deletions = 0;
         lookups = 0;
+        toarrays = 0;
+        trims = 0;
         collisions = 0;
-    }
-    // test trim
-    sdarray a = sda_create_empty();
-    sda_init(&a, 1, NULL);
-    for (size_t i = 0; i < ht_size(&ht); i++)
-        if (ht.entries[i] != UNUSED)
-            sda_insert(&a, ht.entries[i]);
-    
-    size_t count1 = ht_count(&ht);
-    ht_trim(&ht);
-    //print(&ht);
-    size_t count2 = ht_count(&ht);
-    assert(count1 == count2);
-    size_t acount = sda_count(&a);
-    size_t h;
-    entry* en;
-    for (size_t i = 0; i < acount; i++)
-    {
-        en = sda_remove_last(&a);
-        h = hashfn(en, &ht);
-        assert(ht.entries[h] != UNUSED);
+        #endif
     }
 
-    // free sdarray
-    sda_destroy(&a);
+    // free
+    assert(ht_free(&ht));
 
 
+    #ifdef HT_VERBOSE
     prgEnd = now();
     seconds programTime = diff(prgStart, prgEnd);
     printf("Test completed, computed %d operations during %fs\n", operations, programTime);
-    assert(ht_free(&ht));
     return operations;
+    #else
+    return 0;
+    #endif
 }
 
 void test_sequence()

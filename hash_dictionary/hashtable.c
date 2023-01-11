@@ -36,7 +36,6 @@ bool ht_free(hashtable *ht)
 {
     if (ht == NULL)
     {
-        //errcset(EHASH_NULL);
         return false;
     }
     else
@@ -74,19 +73,7 @@ bool ht_destroy(hashtable *ht)
 
 size_t ht_trim(hashtable *ht)
 {
-    size_t size = ht_size(ht);
-    sdarray a = sda_create_empty();
-    if (sda_init(&a, size, NULL) != size)
-    {
-        //errcset(EHASH_TRIM_BUFFER);
-        return 0;
-    }
-
-    // move all elements from the hashtable to an array
-    for (size_t i = 0; i < size; i++)
-        if (ht->entries[i] != UNUSED)
-            sda_insert(&a, ht->entries[i]);
-
+    sdarray a = ht_to_array(ht);
     // trim memory
     size_t elementCount = sda_count(&a);
     void* *temp = (void* *)realloc(ht->entries, elementCount * sizeof(void*));
@@ -114,6 +101,34 @@ size_t ht_trim(hashtable *ht)
     sda_destroy(&a);
 
     return ht->size;
+}
+
+sdarray ht_to_array(hashtable* ht)
+{
+    size_t size = ht_size(ht);
+    sdarray a = sda_create_empty();
+    if (sda_init(&a, size, NULL) != size)
+    {
+        return sda_create_empty();
+    }
+
+    // move all elements from the hashtable to an array
+    for (size_t i = 0; i < size; i++)
+        if (ht->entries[i] != UNUSED)
+            sda_insert(&a, ht->entries[i]);
+    return a;
+}
+
+hashtable ht_from_array(sdarray* a, size_t (*hash)(const void*, const hashtable *), int (*compare)(const void*, const void*), void (*freeObject)(void*))
+{
+    hashtable ht = ht_create_empty();
+    int count = sda_count(a);
+    assert(ht_init(&ht, count, hash, compare, freeObject) == count);
+    for (int i = 0; i < count; i++)
+    {
+        ht_insert(&ht, sda_remove_last(a));
+    }
+    return ht;
 }
 
 // returns collisions if insert was successful, otherwise -1
@@ -241,9 +256,7 @@ static size_t linear_probe(hashtable *ht, void* element, int* collisions)
                 // remove old value (that was equal)
                 // so that it can be updated 
                 // this makes sure there is no leaked memory
-                //free((void*)e);
-                printf("fatal error\n");
-                exit(-1);
+                (*ht->freeObject)((void*)e);
             }
             ht->entries[index] = element; // update existing element or put element in an unoccupied slot
             *collisions =  (int)i; // i == collisions

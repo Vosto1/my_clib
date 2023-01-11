@@ -13,7 +13,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-//#include "../utils/error.h"
+#include <assert.h>
 #include "../s_dynamic_array/sdarray.h"
 #include "../datatype.h"
 
@@ -34,6 +34,8 @@ size_t ht_init(hashtable *ht, size_t size, size_t (*hash)(const void*, const has
 bool ht_destroy(hashtable *ht);
 bool ht_free(hashtable *ht);
 size_t ht_trim(hashtable *ht);
+sdarray ht_to_array(hashtable *ht);
+hashtable ht_from_array(sdarray* a, size_t (*hash)(const void*, const hashtable *), int (*compare)(const void*, const void*), void (*freeObject)(void*));
 
 int ht_insert(hashtable *ht, void* element);
 void* ht_delete(hashtable *ht, const void* element);

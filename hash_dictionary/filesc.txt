@@ -1,0 +1,6 @@
+hash.c
+hashtable.c
+main.c
+../s_dynamic_array/sdarray.c
+test.c
+../utils/timer.c

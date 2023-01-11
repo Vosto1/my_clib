@@ -6,6 +6,9 @@
 #include "hashtable.h"
 #include "../utils/timer.h"
 
+//#define HT_DEBUG
+//#define HT_VERBOSE
+
 typedef int value;
 typedef char key;
 typedef struct
