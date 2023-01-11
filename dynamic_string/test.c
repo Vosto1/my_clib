@@ -3,8 +3,8 @@
 void test()
 {
 	dstring str1, str2;
-	str1 = ds_init("Department of ");
-	str2 = ds_init("Redundancy ");
+	str1 = ds_new_string_initialize("Department of ");
+	str2 = ds_new_string_initialize("Redundancy ");
 	dstring str3 = ds_concat(str1, str2); 
 
 	assert(str1 != NULL);

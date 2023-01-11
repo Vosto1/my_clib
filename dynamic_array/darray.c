@@ -241,7 +241,7 @@ bool da_is_empty(darray *a)
 }
 
 // linear search
-int find(darray *a, void* item)
+int da_find(darray *a, void* item)
 {
     for (int i = 0; i < da_count(a); i++)
     {
@@ -255,7 +255,7 @@ int find(darray *a, void* item)
 
 bool da_exists(darray *a, void* item)
 {
-    if (find(a, item) != -1)
+    if (da_find(a, item) != -1)
     {
         return true;
     }

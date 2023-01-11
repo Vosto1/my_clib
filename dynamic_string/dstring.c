@@ -22,7 +22,7 @@ dstring ds_random(int length)
 	return s;
 }
 
-dstring ds_init(const char* s)
+dstring ds_new_string_initialize(const char* s)
 {
 	assert(s != NULL);
 	char* temp;
@@ -123,26 +123,12 @@ dstring ds_substring(dstring string, int start, int end)
 // return index of first occurance of the character
 int ds_find_character(dstring message, char character)
 {
-    int i;
-    int len = strlen(message);
-    for (i = 0; i < strlen(message); i++)
-    {
-        if (message[i] == character)
-        {
-            break;
-        }
-    }
-
-	if (i == len)
-	{
-		return -1;
-	}
-
-    return i;
+    return ds_find_character_start_at(message, 0, character);
 }
 
 int ds_find_character_start_at(dstring message, int start, char character)
 {
+	assert(message != NULL);
 	assert(start < strlen(message));
 	assert(start >= 0);
     int i;

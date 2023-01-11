@@ -13,7 +13,7 @@ dstring ds_new_string(int length);
 
 dstring ds_random(int length);
 
-dstring ds_init(const char *s);
+dstring ds_new_string_initialize(const char *s);
 
 dstring ds_concat(dstring str1, dstring str2);
 

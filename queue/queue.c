@@ -23,14 +23,14 @@ size_t q_init(queue *q, size_t size, void (*freeObject)(void*))
     q->size = size;
 }
 
-bool q_is_empty(queue* q)
+bool q_is_null(queue* q)
 {
     return q->queue == NULL;
 }
 
 bool q_enqueue(queue* q, const void* item)
 {
-    if (q_is_empty(q))
+    if (q_is_null(q))
     {
         return false;
     }
@@ -56,7 +56,7 @@ bool q_enqueue(queue* q, const void* item)
 
 void* q_dequeue(queue* q)
 {
-    if (q_is_empty(q) || q_item_count(q) <= 0)
+    if (q_is_null(q) || q_item_count(q) <= 0)
     {
         return false;
     }
@@ -97,7 +97,7 @@ const void* q_peek(queue* q)
 
 bool q_destroy(queue* q)
 {
-    if (q_is_empty(q))
+    if (q_is_null(q))
     {
         return false;
     }
