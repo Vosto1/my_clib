@@ -1,7 +1,7 @@
 #include <assert.h>
 #include "bitvector.h"
 
-static unsigned int bytes_to_bits(unsigned int bytes);
+static uint bytes_to_bits(uint bytes);
 static void freebit(void* bit);
 
 uint bit_count(bitvector *bv)
@@ -20,13 +20,12 @@ int bv_init(bitvector *bv)
     return sda_init(bv, 1, &freebit);
 }
 
-uint bv_add(bitvector *bv, bool value)
+int bv_add(bitvector *bv, bool value)
 {
     bool *newbool = (bool *)malloc(sizeof(bool));
     if (newbool == NULL)
     {
-        //errcset(EMEM_ALLOC);
-        return 0;
+        return ERRMEM;
     }
     else
     {
@@ -35,12 +34,11 @@ uint bv_add(bitvector *bv, bool value)
     }
 }
 
-uint bv_merge(bitvector *bv, bitvector *mergeWith)
+int bv_merge(bitvector *bv, bitvector *mergeWith)
 {
     if (bv == NULL || mergeWith == NULL)
     {
-        //errcset(ENULL_ARG);
-        return 0;
+        return NULLARG;
     }
     for (int i = 0; i < bit_count(mergeWith); i++)
         bv_add(bv, mergeWith->array[i]);
@@ -60,20 +58,14 @@ bool bv_remove_last(bitvector *bv)
 }
 
 // at, get value at index
-bool *bv_at(bitvector *bv, int index)
+bool *bv_at(bitvector *bv, uint index)
 {
-    if (index >= bv->used)
-    {
-        //errcset(EINDEX_OUT_OF_BOUNDS);
-        return NULL;
-    }
-    else
-        return (bool *)bv->array[index];
+    return (bool *)sda_at(bv, index);
 }
 
 uint bv_clear(bitvector *bv)
 {
-    uint size = bv->used;
+    uint size = sda_count(bv);
     for (uint i = 0; i < size; i++)
         assert(bv_remove_last(bv));
     return size;
@@ -85,36 +77,34 @@ bool bv_delete(bitvector *bv)
 }
 
 // converts a bitvector into an array of bytes
-unsigned int bools2bits(bitvector *bv, binary *out)
+int bools2bits(bitvector *bv, binary *out)
 {
     if (bv == NULL || out == NULL)
     {
-        //errcset(ENULL_ARG);
-        return 0;
+        return NULLARG;
     }
-    unsigned int residualBitsInLastByte = bytes_to_bits(sizeof(byte)) - (bit_count(bv) % bytes_to_bits(sizeof(byte)));
+    uint residualBitsInLastByte = bytes_to_bits(sizeof(byte)) - (bit_count(bv) % bytes_to_bits(sizeof(byte)));
     // size of the bin file
-    unsigned int bits = bit_count(bv) + residualBitsInLastByte; // file size + the number of residual bits
-    unsigned int amountOfBytes = bits / bytes_to_bits(sizeof(byte));
+    uint bits = bit_count(bv) + residualBitsInLastByte; // file size + the number of residual bits
+    uint amountOfBytes = bits / bytes_to_bits(sizeof(byte));
     // init array of bytes
     byte *bin = (byte *)malloc(amountOfBytes * sizeof(byte));
     if (bin == NULL)
     {
-        //errcset(EMEM_ALLOC);
-        return 0;
+        return ERRMEM;
     }
-    for (unsigned int i = 0; i < amountOfBytes; i++)
+    for (uint i = 0; i < amountOfBytes; i++)
     { // for every byte
         byte b;
-        for (unsigned int k = 0; k < bytes_to_bits(sizeof(byte)); k++)
+        for (uint k = 0; k < bytes_to_bits(sizeof(byte)); k++)
         {                     // initialize byte
             b = b & (0 << k); // set all bits to 0
         }
         // in the next for loop we go though the next bytes' bits:
-        unsigned int currentBit = bytes_to_bits(i * sizeof(byte)); // (next byte start)
-        unsigned int nextByteEndInBits = bytes_to_bits(i * sizeof(byte)) + bytes_to_bits(sizeof(byte));
+        uint currentBit = bytes_to_bits(i * sizeof(byte)); // (next byte start)
+        uint nextByteEndInBits = bytes_to_bits(i * sizeof(byte)) + bytes_to_bits(sizeof(byte));
         // j is where we are in the bit sequence and x is where we are in the current byte (0-8)
-        for (unsigned int j = currentBit, x = 0; j < nextByteEndInBits && j < bit_count(bv); j++, x++)
+        for (uint j = currentBit, x = 0; j < nextByteEndInBits && j < bit_count(bv); j++, x++)
         {                                     // set bits according to bitvector
             bool *bit = (bool *)bv_at(bv, j); // convert from void* to bool*
             if (*bit)
@@ -136,13 +126,11 @@ bool bits2bools(binary *b, bitvector *out)
 {
     if (out == NULL)
     {
-        //errcset(ENULL_ARG);
         return false;
     }
     
     if (b->bytes == NULL)
     {
-        //errcset(EARR_EMPTY);
         return false;
     }
 
@@ -164,17 +152,16 @@ bool bits2bools(binary *b, bitvector *out)
     return true;
 }
 
-uint write_binary_to_file(binary *b, char *file)
+int write_binary_to_file(binary *b, char *file)
 {
     byte *res = (byte *)&b->residualBits;
     // create memory buffer with the right amount of bytes
-    uint byteSizeResidual = sizeof(unsigned int);
+    uint byteSizeResidual = sizeof(uint);
     uint byteSizeData = sizeof(byte) * b->amountOfBytes;
     byte *buffer = (byte *)malloc((byteSizeResidual + byteSizeData) * sizeof(byte));
     if (!buffer)
     {
-        //errcset(EMEM_ALLOC);
-        return 0;
+        return ERRMEM;
     }
     byte tmp;
     // start at the back for the uint
@@ -206,21 +193,20 @@ uint write_binary_to_file(binary *b, char *file)
     else
     {
         free(buffer);
-        //errcset(EWRITE_BINARY);
-        return 0;
+        return ERRWRITE;
     }
 }
 
-uint read_binary_from_file(char *file, binary *b)
+int read_binary_from_file(char *file, binary *b)
 {
     void *fileContents;
     uint fileSize = read_file(file, &fileContents);
     byte *byteBuffer = (byte *)fileContents; // set byte pointer to point to buffer to enable pointer arithmetic
 
-    uint byteSizeResidual = sizeof(unsigned int);    // residual bits size in bytes
+    uint byteSizeResidual = sizeof(uint);    // residual bits size in bytes
     uint byteSizeData = fileSize - byteSizeResidual; // get data size in bytes
 
-    unsigned int residualBits = 0;
+    uint residualBits = 0;
     byte *res = (byte *)&residualBits;
     for (int i = 0; i < byteSizeResidual; i++) // for each byte in residual bits value
         res[i] = byteBuffer[i];                // set byte i in residualBits to bit i in bytes read from file
@@ -228,8 +214,7 @@ uint read_binary_from_file(char *file, binary *b)
     byte *tmp = (byte *)malloc(byteSizeData * sizeof(byte));
     if (!tmp)
     {
-        //errcset(EMEM_ALLOC);
-        return 0;
+        return ERRMEM;
     }
     else
         b->bytes = tmp;
@@ -248,7 +233,7 @@ uint read_binary_from_file(char *file, binary *b)
 
 #define BITS_IN_BYTE 8;
 
-static unsigned int bytes_to_bits(unsigned int bytes)
+static uint bytes_to_bits(uint bytes)
 {
     return bytes * BITS_IN_BYTE;
 }
@@ -277,10 +262,10 @@ void printbinary(binary *bin)
     printf("byte count: %d\n", bin->amountOfBytes);
     printf("residual: %d\n", bin->residualBits);
     printf("binary: ");
-    for (unsigned int i = 0; i < bin->amountOfBytes; i++)
+    for (uint i = 0; i < bin->amountOfBytes; i++)
     {                      // for every byte
         b = bin->bytes[i]; // extract byte at position i
-        for (unsigned int j = 0; j < bytes_to_bits(sizeof(byte)); j++)
+        for (uint j = 0; j < bytes_to_bits(sizeof(byte)); j++)
         { // for each bit in a byte
             if (b & (1 << j))
             { // extract bit at position j
@@ -320,7 +305,7 @@ bool bin_equal(binary x, binary y)
     return true;
 }
 
-unsigned int bin_amount_bytes(binary x)
+uint bin_amount_bytes(binary x)
 {
     return x.amountOfBytes;
 }

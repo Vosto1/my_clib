@@ -1,4 +1,4 @@
-#include "./test_bitvector.h"
+#include "test.h"
 
 int main(void)
 {

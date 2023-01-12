@@ -90,7 +90,7 @@ bool sda_free(sdarray *a)
 
 const void* sda_at(sdarray * a, uint index)
 {
-    if (sda_count(a) <= index)
+    if (sda_count(a) > index)
     {
         return a->array[index];
     }

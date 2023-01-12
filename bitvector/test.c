@@ -1,4 +1,4 @@
-#include "test_bitvector.h"
+#include "test.h"
 
 void auto_tests(int tests, int lengthRange)
 {
@@ -21,7 +21,7 @@ void auto_tests(int tests, int lengthRange)
     // stats
     ticks start, end, testStart, testEnd;
     seconds testTime, teststotalTime, avg = 0.0f;
-    size_t boolsWrittenAndRead = 0;
+    uint boolsWrittenAndRead = 0;
     int avglen = 0;
 
     testStart = now();
@@ -93,7 +93,7 @@ void auto_tests(int tests, int lengthRange)
     teststotalTime = diff(testStart, testEnd);
     avg /= tests; // calc average exec time
     avglen /= tests;
-    printf("%d tests passed, bools written to and read from file: %ld times. Total time: ", tests, boolsWrittenAndRead);
+    printf("%d tests passed, bools written to and read from file: %d times. Total time: ", tests, boolsWrittenAndRead);
     char unit = 's';
     if (teststotalTime > 60.0f && teststotalTime < 3600.0f)
     {

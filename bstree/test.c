@@ -169,7 +169,7 @@ static bool bstree_integrity_check(const bstree tree)
     }
 
     if (tree->parent->right == tree)
-    { // right side (parent should be maller)
+    { // right side (parent should be smaller)
         if (integrity_compar(tree->parent, tree, &right))
         {
             return true && bstree_integrity_check(tree->left) && bstree_integrity_check(tree->right);

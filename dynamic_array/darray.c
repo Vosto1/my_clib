@@ -125,7 +125,7 @@ int da_insert(darray *a, void* item)
 
 const void* da_at(darray * a, uint index)
 {
-    if (da_count(a) < index)
+    if (da_count(a) > index)
     {
         return a->array[index];
     }
