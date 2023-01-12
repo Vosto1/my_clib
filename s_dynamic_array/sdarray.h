@@ -37,15 +37,15 @@
 typedef enum
 {                               // decrease memory results
     MEM_HALVED = 0,             // memory halved
-    MEM_MS_REACHED_NO_NEED = 1, // MEMory Min Size REACHED or no need
-    ERRMEM_DECREASE = 2,        // ERRor MEMory DECREASE (error, check errc global)
+    MEM_OK = 1,                 // memory min size reached or no need
+    ERRMEM_DECREASE = 2,        // ERRor MEMory DECREASE
 } MEM;
 
 struct s_dynamicArray
 {
     void* *array;
-    size_t size;
-    size_t used;
+    uint size;
+    uint used;
     void (*freeObject)(void*);
 };
 
@@ -57,14 +57,14 @@ typedef struct s_dynamicArray sdarray;
  * @param a array to check
  * @return element count
  */
-size_t sda_count(sdarray *a);
+uint sda_count(sdarray *a);
 /**
  * @brief get size of an array
  *
  * @param a array to check
  * @return array size
  */
-size_t sda_size(sdarray *a);
+uint sda_size(sdarray *a);
 /**
  * create an empty dynamic array
  */
@@ -75,16 +75,16 @@ sdarray sda_create_empty();
  * @param a pointer to the array to initialize
  * @param init_size the initial size of the array
  * @param freeObject a function to free an item in the array
- * @return the size of the new array or 0 if error
+ * @return the size of the new array on success
  */
-size_t sda_init(sdarray *a, size_t init_size, void (*freeObject)(void*));
+int sda_init(sdarray *a, uint init_size, void (*freeObject)(void*));
 /**
  * remove (free) all items in the array
  *
  * @param a array to remove from
- * @return the amount of items that was removed or 0 if error
+ * @return the amount of items that was removed on success
  */
-size_t sda_clear(sdarray *a);
+int sda_clear(sdarray *a);
 /**
  * @brief free array (items not freed)
  *
@@ -105,15 +105,15 @@ bool sda_free(sdarray *a);
  * @param a array to find item at index
  * @return pointer to item at index or NULL if index out of bounds
  */
-const void* sda_at(sdarray * a, size_t index);
+const void* sda_at(sdarray * a, uint index);
 /**
  * insert into the dynamic array
  *
  * @param a array to insert into
  * @param item item to insert
- * @return the amount of used indecies in the array or 0 if error
+ * @return the amount of used indecies in the array on success
  */
-size_t sda_insert(sdarray *a, void* item);
+int sda_insert(sdarray *a, void* item);
 /**
  * remove the last element of the dynamic array
  *
@@ -128,15 +128,15 @@ void* sda_remove_last(sdarray *a);
  * @param item item to remove
  * @return a pointer to the removed item or null if error
  */
-void* sda_remove_at(sdarray *a, int index);
+void* sda_remove_at(sdarray *a, uint index);
 /**
  * merge two dynamic arrays, b will be put on the end of a and b will be freed
  *
  * @param a array to merge to (result array)
  * @param b array to merge with (will be freed)
- * @return the new size of the array (a) or 0 if error
+ * @return the new size of the array (a) on success
  */
-size_t sda_merge(sdarray *a, sdarray *b);
+int sda_merge(sdarray *a, sdarray *b);
 /**
  * check if the dynamic array is uninitialized
  *

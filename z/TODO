@@ -3,6 +3,8 @@
 //clean the code
 //write tests for the new stuff
 //make sure that initializing sda_init with NULL as freeObject function in bstree and hashtable doesnt crash them
+//need to check everything that had size_t (i changed from size_t to int/uint) heap/sheap, sdarray/darray, pq, hashtable checked
+//change from size_t to int/uint everywhere bstree and bitvectore left
 
 
 //LATER

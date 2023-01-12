@@ -456,7 +456,7 @@ bool bst_is_empty(const bstree tree)
     return tree == NULL;
 }
 
-static size_t write_sorted_to_array(const bstree tree, void* **array)
+static uint write_sorted_to_array(const bstree tree, void* **array)
 {
     return bst_toarray_inorder(tree, array);
 }
@@ -490,7 +490,7 @@ bstree bst_merge(bstree *bst1, bstree *bst2, int (*compare)(const void *, const 
     if ((*bst2) != NULL)
     {
         void* *array;
-        size_t size = write_sorted_to_array(*bst2, &array);
+        uint size = write_sorted_to_array(*bst2, &array);
         insert_from_sorted_array(bst1, array, 0, size - 1, compare);
         // free array
         free(array);
@@ -567,9 +567,9 @@ static void postorder(const bstree tree, const void * *a, int *index)
     }
 }
 
-static size_t get_array(const bstree tree, void (*order)(const bstree, const void * *, int *), void* **arr)
+static uint get_array(const bstree tree, void (*order)(const bstree, const void * *, int *), void* **arr)
 {
-    size_t size = bst_count(tree);
+    uint size = bst_count(tree);
     void* *a = (void* *)malloc(sizeof(void* *) * size);
 
     if (arr == NULL)
@@ -584,21 +584,21 @@ static size_t get_array(const bstree tree, void (*order)(const bstree, const voi
     return size;
 }
 
-size_t bst_toarray_preorder(const bstree tree, void* **array)
+uint bst_toarray_preorder(const bstree tree, void* **array)
 {
     if (tree == NULL)
         return 0;
     return get_array(tree, &preorder, array);
 }
 
-size_t bst_toarray_inorder(const bstree tree, void* **array)
+uint bst_toarray_inorder(const bstree tree, void* **array)
 {
     if (tree == NULL)
         return 0;
     return get_array(tree, &inorder, array);
 }
 
-size_t bst_toarray_postorder(const bstree tree, void* **array)
+uint bst_toarray_postorder(const bstree tree, void* **array)
 {
     if (tree == NULL)
         return 0;
@@ -697,7 +697,7 @@ bool bst_balance(bstree *tree, int (*compare)(const void *, const void *))
 
     // write all elements to an array
     void* *arr1;
-    size_t arraysize = write_sorted_to_array((*tree), &arr1);
+    uint arraysize = write_sorted_to_array((*tree), &arr1);
     if (arr1 == NULL)
     {
         return false;

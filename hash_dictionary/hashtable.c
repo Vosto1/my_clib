@@ -1,7 +1,7 @@
 #include "hashtable.h"
 
-static size_t indexof(hashtable *ht, const void* value_to_search_for);
-static size_t linear_probe(hashtable *ht, void* element, int* collisions);
+static int indexof(hashtable *ht, const void* value_to_search_for);
+static int linear_probe(hashtable *ht, void* element, int* collisions);
 
 hashtable ht_create_empty()
 {
@@ -13,16 +13,15 @@ hashtable ht_create_empty()
     return ht;
 }
 
-size_t ht_init(hashtable *ht, size_t size, size_t (*hash)(const void*, const hashtable *), int (*compare)(const void*, const void*), void (*freeObject)(void*))
+int ht_init(hashtable *ht, int size, int (*hash)(const void*, const hashtable *), int (*compare)(const void*, const void*), void (*freeObject)(void*))
 {
     ht->entries = (void*)malloc(sizeof(void*) * size);
     if (!ht->entries)
     {
-        //errcset(EMEM_ALLOC);
-        return 0;
+        return ERRMEM;
     }
     ht->size = size;
-    for (size_t i = 0; i < ht->size; i++)
+    for (int i = 0; i < ht->size; i++)
     {
         ht->entries[i] = UNUSED;
     }
@@ -40,7 +39,7 @@ bool ht_free(hashtable *ht)
     }
     else
     {
-        for (size_t i = 0; i < ht_size(ht); i++)
+        for (int i = 0; i < ht_size(ht); i++)
         {
             if (ht->entries[i] != UNUSED)
                 (*ht->freeObject)(ht->entries[i]);
@@ -71,27 +70,26 @@ bool ht_destroy(hashtable *ht)
     }
 }
 
-size_t ht_trim(hashtable *ht)
+int ht_trim(hashtable *ht)
 {
     sdarray a = ht_to_array(ht);
     // trim memory
-    size_t elementCount = sda_count(&a);
+    int elementCount = sda_count(&a);
     void* *temp = (void* *)realloc(ht->entries, elementCount * sizeof(void*));
     if (temp == NULL)
     {
-        //errcset(EHASH_TRIM_MEMALLOC);
-        return 0;
+        return ERRMEMR;
     }
     ht->entries = temp;
     ht->size = elementCount;
 
     // initialize ht
-    for (size_t i = 0; i < elementCount; i++)
+    for (int i = 0; i < elementCount; i++)
         ht->entries[i] = UNUSED;
 
     // re-insert elements
     void* e;
-    for (size_t i = 0; i < elementCount; i++)
+    for (int i = 0; i < elementCount; i++)
     {
         e = sda_remove_last(&a);
         ht_insert(ht, e);
@@ -105,7 +103,7 @@ size_t ht_trim(hashtable *ht)
 
 sdarray ht_to_array(hashtable* ht)
 {
-    size_t size = ht_size(ht);
+    int size = ht_size(ht);
     sdarray a = sda_create_empty();
     if (sda_init(&a, size, NULL) != size)
     {
@@ -113,13 +111,13 @@ sdarray ht_to_array(hashtable* ht)
     }
 
     // move all elements from the hashtable to an array
-    for (size_t i = 0; i < size; i++)
+    for (int i = 0; i < size; i++)
         if (ht->entries[i] != UNUSED)
             sda_insert(&a, ht->entries[i]);
     return a;
 }
 
-hashtable ht_from_array(sdarray* a, size_t (*hash)(const void*, const hashtable *), int (*compare)(const void*, const void*), void (*freeObject)(void*))
+hashtable ht_from_array(sdarray* a, int (*hash)(const void*, const hashtable *), int (*compare)(const void*, const void*), void (*freeObject)(void*))
 {
     hashtable ht = ht_create_empty();
     int count = sda_count(a);
@@ -135,7 +133,7 @@ hashtable ht_from_array(sdarray* a, size_t (*hash)(const void*, const hashtable 
 int ht_insert(hashtable *ht, void* element)
 {
     int collisions = 0;
-    size_t index = linear_probe(ht, element, &collisions);
+    int index = linear_probe(ht, element, &collisions);
     if (index > ht_size(ht))
         return -1;
     else
@@ -146,16 +144,16 @@ void* ht_delete(hashtable *ht, const void* element)
 {
     if (ht_size(ht) > 0 && ht_lookup(ht, element) != UNUSED)
     {
-        size_t index = indexof(ht, element);
+        int index = indexof(ht, element);
         // save deleted element for later and unoccupy its' former slot
         void* del = ht->entries[index];
         ht->entries[index] = UNUSED;
 
         // re-insert entries that might have been inserted with linear probing before
         void* temp;
-        size_t size = ht_size(ht);
-        size_t i = 1;
-        size_t entry = (index + i) % size;
+        int size = ht_size(ht);
+        int i = 1;
+        int entry = (index + i) % size;
         while (i < ht_size(ht) && ht->entries[entry] != UNUSED)
         {
             temp = ht->entries[entry];
@@ -174,11 +172,11 @@ void* ht_delete(hashtable *ht, const void* element)
 // look up element, returns null if not present in table
 void* ht_lookup(const hashtable *ht, const void* element)
 {
-    size_t size = ht_size(ht);
-    size_t index = 0;
-    size_t hash = (*ht->hash)(element, ht);
+    int size = ht_size(ht);
+    int index = 0;
+    int hash = (*ht->hash)(element, ht);
     void* e;
-    for (size_t i = 0; i < size; i++)
+    for (int i = 0; i < size; i++)
     {
         index = (hash + i) % size; // modulu size to "wrap around"
         e = ht->entries[index];
@@ -194,15 +192,16 @@ void* ht_lookup(const hashtable *ht, const void* element)
     return UNUSED; // element not in table (no free slots from start index to table end)
 }
 
-size_t ht_size(const hashtable *ht)
+int ht_size(const hashtable *ht)
 {
     return ht->size;
 }
 
-size_t ht_count(const hashtable *ht)
+int ht_count(const hashtable *ht)
 {
-    size_t count = 0;
-    for (size_t i = 0; i < ht_size(ht); i++)
+    int count = 0;
+    int size = ht_size(ht);
+    for (int i = 0; i < size; i++)
     {
         if (ht->entries[i] != UNUSED)
             count++;
@@ -210,17 +209,16 @@ size_t ht_count(const hashtable *ht)
     return count;
 }
 
-#define FLAG_INDEX_ERROR 1000
 
 // get index of an element in the table
 // returns a value bigger than the size of the htable if the element didnt exist
-static size_t indexof(hashtable *ht, const void* value_to_search_for)
+static int indexof(hashtable *ht, const void* value_to_search_for)
 {
-    size_t size = ht_size(ht);
-    size_t index = 0;
-    size_t hash = (*ht->hash)(value_to_search_for, ht);
+    int size = ht_size(ht);
+    int index = 0;
+    int hash = (*ht->hash)(value_to_search_for, ht);
     void* e;
-    for (size_t i = 0; i < size; i++)
+    for (int i = 0; i < size; i++)
     {
         index = (hash + i) % size;
         e = ht->entries[index];
@@ -232,20 +230,19 @@ static size_t indexof(hashtable *ht, const void* value_to_search_for)
     // this function should only be called if
     // we know that the element is present in the table
     // so we shouldnt get here
-    //errcset(EHASHDATA_DOESNT_EXIST);
-    return ht->size + FLAG_INDEX_ERROR;
+    return ERRINDEX;
 }
 
 // try find slot that is empty or has the same key and set
 // slot to new element of update the value of a present key
 // if failure then: hashtable overflow, double ht size
 // returns amount of collisions by reference, and index where the element was put by value
-static size_t linear_probe(hashtable *ht, void* element, int* collisions)
+static int linear_probe(hashtable *ht, void* element, int* collisions)
 {
-    size_t size = ht_size(ht);
-    size_t index;
-    size_t hash = (*ht->hash)(element, ht);
-    for (size_t i = 0; i < size; i++)
+    int size = ht_size(ht);
+    int index;
+    int hash = (*ht->hash)(element, ht);
+    for (int i = 0; i < size; i++)
     {
         index = (hash + i) % size; // modulu size to "wrap around"
         const void* e = ht->entries[index];
@@ -268,12 +265,11 @@ static size_t linear_probe(hashtable *ht, void* element, int* collisions)
     sdarray a = sda_create_empty();
     if (sda_init(&a, ht_size(ht), NULL) != ht_size(ht))
     {
-        //errcset(EHASHTABLE_OVERFLOW_BUFFER);
-        return ht->size + FLAG_INDEX_ERROR;
+        return ERRINIT;
     }
 
     // move all elements from the hashtable to an array
-    for (size_t i = 0; i < ht_size(ht); i++)
+    for (int i = 0; i < ht_size(ht); i++)
     {
         if (ht->entries[i] != UNUSED)
         {
@@ -291,20 +287,19 @@ static size_t linear_probe(hashtable *ht, void* element, int* collisions)
     void* *temp = (void* *)realloc(ht->entries, ht->size * sizeof(void*));
     if (temp == NULL)
     {
-        //errcset(EHASHTABLE_OVERFLOW_MEMALLOC);
-        return ht->size + FLAG_INDEX_ERROR; // fatal error
+        return ERRMEMR;
     }
     ht->entries = temp;
 
     // initialize to UNUSED
-    for (size_t i = 0; i < ht_size(ht); i++)
+    for (int i = 0; i < ht_size(ht); i++)
     {
         ht->entries[i] = UNUSED;
     }
 
     // re-insert all elements in the array into the new ht
-    size_t elements = sda_count(&a);
-    for (size_t i = 0; i < elements; i++)
+    int elements = sda_count(&a);
+    for (int i = 0; i < elements; i++)
     {
         void* e = sda_remove_last(&a);
         ht_insert(ht, e);

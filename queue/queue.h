@@ -30,7 +30,7 @@ queue q_create_new_empty();
  * @param size initial size of the queue
  * @return the size of the new queue or 0 if error
  */
-size_t q_init(queue *q, size_t size, void (*freeObject)(void*));
+int q_init(queue *q, uint size, void (*freeObject)(void*));
 /**
  * @brief check if the queue is empty
  * 

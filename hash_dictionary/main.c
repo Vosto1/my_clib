@@ -3,7 +3,7 @@
 int main(void)
 {
     //test_sequence();
-    unsigned long long operations = 0;
+    uint operations = 0;
     int tests = 100;
     printf("Running auto tests...\n");
     ticks start = now();
@@ -11,6 +11,6 @@ int main(void)
         operations += auto_tests(100, 10);
     ticks end = now();
     seconds secs = diff(start, end);
-    printf("Computed %lld operations in %d tests during %f seconds.\n", operations, tests, secs);
+    printf("Computed %d operations in %d tests during %f seconds.\n", operations, tests, secs);
     return 0;
 }

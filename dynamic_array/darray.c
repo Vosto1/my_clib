@@ -8,12 +8,12 @@
  */
 static MEM memory_decrease(darray *a);
 
-size_t da_count(darray *a)
+uint da_count(darray *a)
 {
     return a->used;
 }
 
-size_t da_size(darray *a)
+uint da_size(darray *a)
 {
     return a->size;
 }
@@ -28,7 +28,7 @@ darray da_create_empty()
     return a;
 }
 
-size_t da_init(darray *a, size_t initSize, int (*compare)(const void* x, const void* y), void (*freeObject)(void*))
+int da_init(darray *a, uint initSize, int (*compare)(const void* x, const void* y), void (*freeObject)(void*))
 {
     a->size = 0;
     a->used = 0;
@@ -45,8 +45,7 @@ size_t da_init(darray *a, size_t initSize, int (*compare)(const void* x, const v
     else
     {
         *a = da_create_empty();
-        //errcset(EMEM_ALLOC);
-        return 0;
+        return ERRMEM;
     }
 }
 
@@ -59,10 +58,6 @@ bool da_destroy(darray *a)
         return true;
     }
     return false;
-    /* else
-    {
-        errcset(EFREE_NULLPTR);
-    } */
 }
 
 bool da_free(darray *a)
@@ -79,13 +74,9 @@ bool da_free(darray *a)
         return true;
     }
     return false;
-    /* else
-    {
-        errcset(EFREE_NULLPTR);
-    } */
 }
 
-size_t da_clear(darray *a)
+int da_clear(darray *a)
 {
     if (da_is_empty(a))
     {
@@ -93,8 +84,7 @@ size_t da_clear(darray *a)
     }
     else if (da_is_null(a))
     {
-        //errcset(ENULL_ARG);
-        return 0;
+        return NULLARG;
     }
     int amount = a->used;
     void* d;
@@ -106,12 +96,11 @@ size_t da_clear(darray *a)
     return amount;
 }
 
-size_t da_insert(darray *a, void* item)
+int da_insert(darray *a, void* item)
 {
     if (a == NULL || a->array == NULL)
     {
-        //errcset(ENULL_ARG);
-        return 0;
+        return NULLARG;
     }
     // memory increase
     if (a->used == a->size)
@@ -126,8 +115,7 @@ size_t da_insert(darray *a, void* item)
         }
         else
         {
-            //errcset(EMEM_IREALLOC);
-            return 0;
+            return ERRMEMR;
         }
     }
     a->used += 1;
@@ -135,7 +123,7 @@ size_t da_insert(darray *a, void* item)
     return a->used;
 }
 
-const void* da_at(darray * a, size_t index)
+const void* da_at(darray * a, uint index)
 {
     if (da_count(a) < index)
     {
@@ -143,18 +131,15 @@ const void* da_at(darray * a, size_t index)
     }
     else
     {
-        // error
+        // out of bounds
         return NULL;
     }
 }
-
-
 
 void* da_remove_last(darray *a)
 {
     if (da_is_empty(a))
     {
-        //errcset(EARR_EMPTY);
         return NULL;
     }
     a->used -= 1;
@@ -173,26 +158,27 @@ void* da_remove_last(darray *a)
 
 void* da_remove_item(darray *a, void* item)
 {
-    for (int i = 0; i < a->used; i++)
+    uint count = da_count(a);
+    for (uint i = 0; i < count; i++)
     {
         if ((*a->compare)(item, a->array[i]) == 0)
         { // compare with user defined function
             return da_remove_at(a, i);
         }
     }
-    //errcset(EARRDATA_DOESNT_EXIST);
     return NULL;
 }
 
-void* da_remove_at(darray *a, int index)
+void* da_remove_at(darray *a, uint index)
 {
-    if (index > a->used)
+    uint count = da_count(a);
+    if (count <= index)
     {
-        //errcset(EINDEX_OUT_OF_BOUNDS);
+        // out of bounds
         return NULL;
     }
     void* *data = a->array[index];
-    for (int i = index; i < a->used - 1; i++)
+    for (uint i = index; i < count - 1; i++)
     {
         a->array[i] = a->array[i + 1];
     }
@@ -205,17 +191,16 @@ void* da_remove_at(darray *a, int index)
     else
     {
         a->used += 1;             // rollback
-        a->array[a->used] = data; // rollback
+        a->array[a->used] = data; // "rollback"
         return NULL;
     }
 }
 
-size_t da_merge(darray *a, darray *b)
+int da_merge(darray *a, darray *b)
 {
     if (a == NULL || b == NULL)
     {
-        //errcset(ENULL_ARG);
-        return 0;
+        return NULLARG;
     }
     for (int i = 0; i < b->used; i++)
     {
@@ -280,7 +265,6 @@ static MEM memory_decrease(darray *a)
         }
         else
         {
-            //errcset(EMEM_DREALLOC);
             return ERRMEM_DECREASE;
         }
     }

@@ -7,12 +7,16 @@ static int compare(const void* e1, const void* e2)
     return (int)en1->k - (int)en2->k;
 }
 
-static size_t hashfn(const void* e, const hashtable* ht)
+static int hashfn(const void* e, const hashtable* ht)
 {
     entry* f = (entry*)e;
     
-    size_t index = f->k * 37;
+    int index = f->k * 37;
     index %= ht_size(ht);
+    if (index < 0)
+    {
+        index *= -1;
+    }
     return index;
 }
 
@@ -37,8 +41,8 @@ char rascii()
 
 static entry* randomElement(hashtable* ht)
 {
-    size_t size = ht_size(ht);
-    size_t i = 0;
+    int size = ht_size(ht);
+    int i = 0;
     for (; i < size; i++)
     {
         if (ht->entries[i] != UNUSED)
@@ -68,21 +72,22 @@ static void print(hashtable* ht)
     printf("\n");
 }
 
-unsigned int auto_tests(int tests, int mod)
+uint auto_tests(int tests, int mod)
 {
     srand(time(NULL));
 
     hashtable ht = ht_create_empty();
     ht_init(&ht, 10, &hashfn, &compare, &free_entry);
-    unsigned int count;
+    uint count;
     #ifdef HT_VERBOSE
     ticks start, end, prgStart, prgEnd;
-    unsigned int operations = 0, deletions = 0, insertions = 0, lookups = 0, toarrays = 0, trims = 0;
+    uint deletions = 0, insertions = 0, lookups = 0, toarrays = 0, trims = 0;
     double avg_collisions;
     int collisions = 0;
     #endif
+    uint operations = 0;
     int tmp_col;
-    unsigned int random, nexttests, val;
+    uint random, nexttests, val;
     entry* element;
     entry* e;
     entry* del; 
@@ -92,13 +97,13 @@ unsigned int auto_tests(int tests, int mod)
     #ifdef HT_VERBOSE
     prgStart = now();
     #endif
-    for (unsigned int i = 0; i < tests; i++)
+    for (uint i = 0; i < tests; i++)
     {
         nexttests = rand() % mod;
         #ifdef HT_VERBOSE
         start = now();
         #endif
-        for (unsigned int j = 0; j < nexttests; j++)
+        for (uint j = 0; j < nexttests; j++)
         {
             val = rand(); // random integer instead to get more collisions //rascii(); // random ascii character
             random = rand() % 100;
@@ -117,7 +122,10 @@ unsigned int auto_tests(int tests, int mod)
                 // debug
                 //print(&ht);
                 if (!existsht) // if it already existed the element was "updated" (its not visible since its updated to the same values)
-                    assert(ht_count(&ht) == count + 1);
+                {
+                    int new_count = ht_count(&ht);
+                    assert(new_count == count + 1);
+                }
                 assert(ht_lookup(&ht, element) != NULL); // check if the element was inserted
                 #ifdef HT_VERBOSE
                 collisions += tmp_col;
@@ -202,9 +210,7 @@ unsigned int auto_tests(int tests, int mod)
                 }
                 sda_destroy(&a);
             }
-            #ifdef HT_VERBOSE
             operations++;
-            #endif
         }
         #ifdef HT_VERBOSE
         end = now();
@@ -231,10 +237,8 @@ unsigned int auto_tests(int tests, int mod)
     prgEnd = now();
     seconds programTime = diff(prgStart, prgEnd);
     printf("Test completed, computed %d operations during %fs\n", operations, programTime);
-    return operations;
-    #else
-    return 0;
     #endif
+    return operations;
 }
 
 void test_sequence()

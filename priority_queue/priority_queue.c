@@ -7,7 +7,7 @@ priorityqueue pq_create_empty()
     return pq;
 }
 
-size_t pq_init(priorityqueue *pq, size_t size, int (*compare)(const void* x, const void* y), void (*freeObject)(void*))
+int pq_init(priorityqueue *pq, uint size, int (*compare)(const void* x, const void* y), void (*freeObject)(void*))
 {
     return sh_init(&pq->h, size, compare, freeObject);
 }
@@ -19,12 +19,12 @@ bool pq_free(priorityqueue *pq)
     return r;
 }
 
-size_t pq_count(priorityqueue *pq)
+int pq_count(priorityqueue *pq)
 {
     return sh_size(&pq->h);
 }
 
-size_t pq_enqueue(priorityqueue *pq, void* item)
+int pq_enqueue(priorityqueue *pq, void* item)
 {
     return sh_insert(&pq->h, item);
 }

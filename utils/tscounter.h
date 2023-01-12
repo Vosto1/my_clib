@@ -14,6 +14,7 @@ struct _cntr
     uint (*CNT)(counter);
 };
 
+#ifdef __DIRECT_USE__
 /**
  * @brief increment counter
  *
@@ -29,6 +30,7 @@ void reset(counter *c);
  *
  */
 uint count(counter c);
+#endif
 /**
  * @brief get a new initialized counter
  * 

@@ -54,12 +54,12 @@ static void printData(sdarray *a)
         it = (item *)a->array[i];
         printf("value at %d: %d\n", i, it->value);
     }
-    printf("used: %ld\nsize: %ld\n\n", a->used, a->size);
+    printf("used: %d\nsize: %d\n\n", a->used, a->size);
 }
 
 static void insert_n(sdarray *a, int n)
 {
-    size_t e;
+    int e;
     item *item;
     for (int j = 0; j < n; j++)
     {
@@ -228,7 +228,7 @@ void test_sequence()
     assert(sda_insert(&a, (void *)itemptr) != 0);
 
     printData(&a);
-    printf("%ld %ld\n\n", a.used, a.size);
+    printf("%d %d\n\n", a.used, a.size);
 
     itemptr = create_item(5);
     assert(sda_insert(&a, (void *)itemptr) != 0);

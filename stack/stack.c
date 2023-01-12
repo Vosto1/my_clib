@@ -6,17 +6,17 @@ stack st_create_empty()
     return s;
 }
 
-size_t st_init(stack *s, size_t init_size, void (*freeObject)(void *))
+int st_init(stack *s, uint init_size, void (*freeObject)(void *))
 {
-    sda_init(s, init_size, freeObject);
+    return sda_init(s, init_size, freeObject);
 }
 
-size_t st_count(stack *s)
+uint st_count(stack *s)
 {
     return sda_count(s);
 }
 
-size_t st_clear(stack *s)
+int st_clear(stack *s)
 {
     return sda_clear(s);
 }

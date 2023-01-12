@@ -46,9 +46,9 @@ priorityqueue pq_create_empty();
  * @param pq pointer to the priority queue to initialize
  * @param size the initial size of the priority queue
  * @param compare a function that can compare two items of your data type
- * @return the size the priority queue is initialized to or 0 if error
+ * @return the size the priority queue is initialized to on success
  */
-size_t pq_init(priorityqueue *pq, size_t size, int (*compare)(const void* x, const void* y), void (*freeObject)(void*));
+int pq_init(priorityqueue *pq, uint size, int (*compare)(const void* x, const void* y), void (*freeObject)(void*));
 /**
  * @brief remove (free) all items in the priority queue and free it
  *
@@ -63,15 +63,15 @@ bool pq_free(priorityqueue *pq);
  * @param pq pointer to the priority queue to get the count from
  * @return item count
  */
-size_t pq_count(priorityqueue *pq);
+int pq_count(priorityqueue *pq);
 /**
  * @brief enqueue an item into the priority queue
  *
  * @param pq the priority queue to enqueue the item
  * @param item the item to enqueue
- * @return  the item count in the priority queue or 0 if error
+ * @return  the item count in the priority queue on success
  */
-size_t pq_enqueue(priorityqueue *pq, void* item);
+int pq_enqueue(priorityqueue *pq, void* item);
 /**
  * @brief dequeue an item from the priority queue
  *

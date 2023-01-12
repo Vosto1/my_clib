@@ -42,8 +42,8 @@ typedef enum
 struct dynamicArray
 {
     void* *array;
-    size_t size;
-    size_t used;
+    uint size;
+    uint used;
     int (*compare)(const void* x, const void* y);
     void (*freeObject)(void*);
 };
@@ -56,14 +56,14 @@ typedef struct dynamicArray darray;
  * @param a array to check
  * @return element count
  */
-size_t da_count(darray *a);
+uint da_count(darray *a);
 /**
  * @brief get size of an array
  *
  * @param a array to check
  * @return array size
  */
-size_t da_size(darray *a);
+uint da_size(darray *a);
 /**
  * create an empty dynamic array
  */
@@ -77,7 +77,7 @@ darray da_create_empty();
  * @param freeObject function to free an item
  * @return the initial size of the array or 0 if error
  */
-size_t da_init(darray *a, size_t init_size, int (*compare)(const void* x, const void* y), void (*freeObject)(void*));
+int da_init(darray *a, uint init_size, int (*compare)(const void* x, const void* y), void (*freeObject)(void*));
 /**
  * @brief free the array but not the items
  * 
@@ -98,7 +98,7 @@ bool da_free(darray *a);
  * @param a array to remove from
  * @return the amount of items that was removed or 0 if error
  */
-size_t da_clear(darray *a);
+int da_clear(darray *a);
 /**
  * insert into the dynamic array
  *
@@ -106,7 +106,7 @@ size_t da_clear(darray *a);
  * @param item item to insert
  * @return the amount of used indecies in the array or 0 if error
  */
-size_t da_insert(darray *a, void* item);
+int da_insert(darray *a, void* item);
 /**
  * remove the last element of the dynamic array
  *
@@ -121,7 +121,7 @@ void* da_remove_last(darray *a);
  * @param index index to get item at 
  * @return void pointer to item 
  */
-const void* da_at(darray * a, size_t index);
+const void* da_at(darray * a, uint index);
 /**
  * remove a specific item from the dynamic array
  *
@@ -137,7 +137,7 @@ void* da_remove_item(darray *a, void* item);
  * @param index index to remove item from
  * @return a pointer to the removed item
  */
-void* da_remove_at(darray *a, int index);
+void* da_remove_at(darray *a, uint index);
 /**
  * merge two dynamic arrays, b will be put on the end of a and b will be freed
  *
@@ -145,7 +145,7 @@ void* da_remove_at(darray *a, int index);
  * @param b array to merge with (will be freed)
  * @return the new size of the array (a) or 0 if error
  */
-size_t da_merge(darray *a, darray *b); // add array b on the end of array a O(n)
+int da_merge(darray *a, darray *b); // add array b on the end of array a O(n)
 /**
  * check if the dynamic array is uninitialized
  *

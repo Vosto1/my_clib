@@ -9,21 +9,21 @@
  * @param i index to get parent off of
  * @return parent index
  */
-static int parent(int i);
+static uint parent(uint i);
 /**
  * @brief get the left index of another index
  *
  * @param i index to get left off of
  * @return left index
  */
-static int left(int i);
+static uint left(uint i);
 /**
  * @brief get the right index of another index
  *
  * @param i index to get right off of
  * @return right index
  */
-static int right(int i);
+static uint right(uint i);
 /**
  * @brief swap the item on index i1 with the item on index i2
  *
@@ -31,21 +31,21 @@ static int right(int i);
  * @param i1 index of item 1
  * @param i2 index of item 2
  */
-static void swap(darray *a, int i1, int i2);
+static void swap(darray *a, uint i1, uint i2);
 /**
  * @brief compare parent with children, if there is a heap violation then switch parent and child then recursively continue down the heap
  *
  * @param h heap to heapify
  * @param index index to start on
  */
-static int min_heapify_down(heap *h, int index);
+static uint min_heapify_down(heap *h, uint index);
 /**
  * @brief compare child with parent, if there is a heap violation then swap the child and the parent and then recursively continue up the heap
  *
  * @param h heap to heapify
  * @param index index to start on
  */
-static int min_heapify_up(heap *h, int index);
+static uint min_heapify_up(heap *h, uint index);
 
 heap h_create_empty()
 {
@@ -57,8 +57,8 @@ heap h_create_empty()
     return h;
 }
 
-size_t h_init(heap *h,
-                size_t size,
+int h_init(heap *h,
+                uint size,
                 int (*compare)(const void* x, const void* y),
                 void* (*setKey)(void* x, void* key),
                 void (*minKey)(void* base, void* *out),
@@ -78,15 +78,11 @@ bool h_free(heap *h)
         return true;
     }
     return false;
-    /* else
-    {
-        errcset(EFREE_NULLPTR);
-    } */
 }
 
-size_t h_size(heap *h)
+uint h_size(heap *h)
 {
-    return h->items.used;
+    return da_count(&h->items);
 }
 
 /*
@@ -109,17 +105,16 @@ bool h_is_empty(heap *h)
 }
 
 
-#define FLAG_INDEX_ERROR 1000
 /*
  * Add to the heap.
  */
-size_t h_insert(heap *h, void* item)
+int h_insert(heap *h, void* item)
 {
-    size_t s = da_count(&h->items);
-    size_t s2 = da_insert(&(h->items), item);
+    int s = da_count(&h->items);
+    int s2 = da_insert(&(h->items), item);
     if (s + 1 != s2)
     {
-        return h_size(h) + FLAG_INDEX_ERROR;
+        return ERROPERATION;
     }
     min_heapify_up(h, h_size(h) - 1);
     return h_size(h);
@@ -181,7 +176,7 @@ void* h_extract_min(heap *h)
  * Increases the items priority by assigning it a higher value Key.
  * The properties of the data structure must be preserved.
  */
-size_t h_decrease_key(heap *h, void* item, void* newKey)
+int h_decrease_key(heap *h, void* item, void* newKey)
 {
     for (int i = 0; i < h_size(h); i++)
     {
@@ -189,21 +184,18 @@ size_t h_decrease_key(heap *h, void* item, void* newKey)
         {
             if ((*h->compare)(h->items.array[i], newKey) == 0)
             {
-                //errcset(EHNEW_KEY);
-                return h_size(h) + FLAG_INDEX_ERROR;
+                return SAMEKEY;
             }
             (*h->setKey)(h->items.array[i], newKey);
             int newindex = min_heapify_up(h, i);
             if ((*h->compare)(h->items.array[0], newKey) != 0)
             {
-                //errcset(EHNEWKEY_NOT_SET);
-                return h_size(h) + FLAG_INDEX_ERROR;;
+                return KEYNOTSET;
             }
             return newindex;
         }
     }
-    //errcset(EH_DATA_DOESNT_EXIST);
-    return h_size(h) + FLAG_INDEX_ERROR;;
+    return DATADOESNTEXIST;
 }
 
 /*
@@ -212,7 +204,7 @@ size_t h_decrease_key(heap *h, void* item, void* newKey)
  * builds heap from an unordered list (array)
  */
 heap h_build_min_heap(void* *unorderedList,
-                  size_t size,
+                  int size,
                   int (*compare)(const void* x, const void* y),
                   void* (*setKey)(void* x, void* key),
                   void (*minKey)(void* base, void* *out),
@@ -260,25 +252,25 @@ bool test_heap_integrity(heap *h)
  * https://stackoverflow.com/questions/22900388/why-in-a-heap-implemented-by-array-the-index-0-is-left-unused
  */
 /*given index for an item, returns index of parent*/
-static int parent(int i)
+static uint parent(uint i)
 {
     return (i - 1) / 2;
 }
 
 /*given index for an item, returns index of its left child*/
-static int left(int i)
+static uint left(uint i)
 {
     return (2 * i) + 1;
 }
 
 /*given index for an item, returns index of its right child*/
-static int right(int i)
+static uint right(uint i)
 {
     return (2 * i) + 2;
 }
 
 /*swap two items in a dynamic array*/
-static void swap(darray *a, int i1, int i2)
+static void swap(darray *a, uint i1, uint i2)
 {
     void* temp1 = a->array[i1];
     a->array[i1] = a->array[i2];
@@ -286,7 +278,7 @@ static void swap(darray *a, int i1, int i2)
 }
 
 /*Maintains the heap properties*/
-static int min_heapify_down(heap *h, int index)
+static uint min_heapify_down(heap *h, uint index)
 {
     int l = left(index);
     int r = right(index);
@@ -306,7 +298,7 @@ static int min_heapify_down(heap *h, int index)
         return smallest; // return the last index
 }
 /*Maintains the heap properties*/
-static int min_heapify_up(heap *h, int index)
+static uint min_heapify_up(heap *h, uint index)
 {
     int p = parent(index);
     int smallest;

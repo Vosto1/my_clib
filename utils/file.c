@@ -1,7 +1,7 @@
 #include "file.h"
 
 // return read bytes
-size_t read_file(const char *filepath, void **out)
+int read_file(const char *filepath, void **out)
 {
 	// make filepointer and open file
 	FILE *rfp = fopen(filepath, "rb"); // rb == read binary
@@ -23,7 +23,7 @@ size_t read_file(const char *filepath, void **out)
 	}
 
 	// read file contents
-	size_t readBytes = fread(file, BYTE, length, rfp);
+	int readBytes = fread(file, BYTE, length, rfp);
 	// close file
 	fclose(rfp);
 
@@ -32,7 +32,7 @@ size_t read_file(const char *filepath, void **out)
 }
 
 // return written bytes
-size_t write_file(const char *filepath, void *contents, size_t size)
+int write_file(const char *filepath, void *contents, uint size)
 {
 	// make filepointer and open file
 	FILE *wfp = fopen(filepath, "wb"); // wb == write binary
@@ -46,27 +46,27 @@ size_t write_file(const char *filepath, void *contents, size_t size)
 		return 0;
 	}
 
-	size_t writtenBytes = fwrite(contents, BYTE, size, wfp);
+	int writtenBytes = fwrite(contents, BYTE, size, wfp);
 	// close file
 	fclose(wfp);
 	return writtenBytes;
 }
 
 // read file and return contents as a string (by ref)
-size_t read_text_file(char *filepath, char **out)
+int read_text_file(char *filepath, char **out)
 {
 	void *buffer;
-	size_t readBytes = read_file(filepath, &buffer);
+	int readBytes = read_file(filepath, &buffer);
 	*out = (char *)buffer;
 	return readBytes;
 }
 
-size_t write_text_file(char *filepath, char **string, size_t size)
+int write_text_file(char *filepath, char **string, uint size)
 {
 	return write_file(filepath, (void *)string, size);
 }
 
-size_t get_file_size(char *filepath)
+int get_file_size(char *filepath)
 {
 	FILE *fp = fopen(filepath, "rb"); // rb == read binary
     // get file size (bytes)
@@ -81,5 +81,5 @@ size_t get_file_size(char *filepath)
 }
 
 // future functions
-// size_t append_file(); // append to the end of the file
-// size_t readBytesFile(int amountBytes, int offset); // read a specified amount of bytes from file (from offset to amountBytes)
+// int append_file(); // append to the end of the file
+// int readBytesFile(int amountBytes, int offset); // read a specified amount of bytes from file (from offset to amountBytes)

@@ -36,9 +36,9 @@ bool bst_is_empty(const bstree tree);
 
 bstree bst_merge(bstree *bst1, bstree *bst2, int (*compare)(const void*, const void*));
 
-size_t bst_toarray_preorder(const bstree tree, void* **array);
-size_t bst_toarray_inorder(const bstree tree, void* **array);
-size_t bst_toarray_postorder(const bstree tree, void* **array);
+uint bst_toarray_preorder(const bstree tree, void* **array);
+uint bst_toarray_inorder(const bstree tree, void* **array);
+uint bst_toarray_postorder(const bstree tree, void* **array);
 
 const void* bst_find(const bstree tree, void* element, int (*compare)(const void*, const void*));
 

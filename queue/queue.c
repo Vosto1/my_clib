@@ -16,7 +16,7 @@ queue q_create_new_empty()
     return q;
 }
 
-size_t q_init(queue *q, size_t size, void (*freeObject)(void*))
+int q_init(queue *q, uint size, void (*freeObject)(void*))
 {
     q->freeObject = freeObject;
     q->queue = (void**)malloc(sizeof(void*)*size);

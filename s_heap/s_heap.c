@@ -9,21 +9,21 @@
  * @param i index to get parent off of
  * @return parent index
  */
-static int parent(int i);
+static uint parent(uint i);
 /**
  * @brief get the left index of another index
  *
  * @param i index to get left off of
  * @return left index
  */
-static int left(int i);
+static uint left(uint i);
 /**
  * @brief get the right index of another index
  *
  * @param i index to get right off of
  * @return right index
  */
-static int right(int i);
+static uint right(uint i);
 /**
  * @brief swap the item on index i1 with the item on index i2
  *
@@ -31,21 +31,21 @@ static int right(int i);
  * @param i1 index of item 1
  * @param i2 index of item 2
  */
-static void swap(darray *a, int i1, int i2);
+static void swap(darray *a, uint i1, uint i2);
 /**
  * @brief compare parent with children, if there is a heap violation then switch parent and child then recursively continue down the sheap
  *
  * @param h sheap to heapify
  * @param index index to start on
  */
-static void min_heapify_down(sheap *h, int index);
+static void min_heapify_down(sheap *h, uint index);
 /**
  * @brief compare child with parent, if there is a heap violation then swap the child and the parent and then recursively continue up the sheap
  *
  * @param h sheap to heapify
  * @param index index to start on
  */
-static void min_heapify_up(sheap *h, int index);
+static void min_heapify_up(sheap *h, uint index);
 
 sheap sh_create_empty()
 {
@@ -55,7 +55,7 @@ sheap sh_create_empty()
     return h;
 }
 
-size_t sh_init(sheap *h, size_t size, int (*compare)(const void* x, const void* y), void (*freeObject)(void*))
+int sh_init(sheap *h, uint size, int (*compare)(const void* x, const void* y), void (*freeObject)(void*))
 {
     h->compare = compare;
     return da_init(&(h->items), size, compare, freeObject);
@@ -68,15 +68,11 @@ bool sh_free(sheap *h)
         return da_free(&h->items);
     }
     return false;
-    /* else
-    {
-        errcset(EFREE_NULLPTR);
-    } */
 }
 
-size_t sh_size(sheap *h)
+uint sh_size(sheap *h)
 {
-    return h->items.used;
+    return da_count(&h->items);
 }
 
 /*
@@ -98,18 +94,17 @@ bool sh_is_empty(sheap *h)
     return da_is_empty(&h->items);
 }
 
-#define FLAG_ERROR 1000
 
 /*
  * Add to the heap.
  */
-size_t sh_insert(sheap *h, void* item)
+int sh_insert(sheap *h, void* item)
 {
-    size_t s = da_count(&(h->items));
-    size_t s2 = da_insert(&(h->items), item);
+    int s = da_count(&(h->items));
+    int s2 = da_insert(&(h->items), item);
     if (s + 1 != s2)
     {
-        return sh_size(h) + FLAG_ERROR;
+        return ERROPERATION;
     }
     min_heapify_up(h, sh_size(h) - 1);
     return h->items.used;
@@ -123,12 +118,12 @@ void* sh_extract_min(sheap *h)
 {
     if (sh_is_null(h))
     {
-        //errcset(EHEAP_NULL);
+        // null arg
         return NULL;
     }
     if (sh_is_empty(h))
     {
-        //errcset(EHEAP_EMPTY);
+        // empty heap
         return NULL;
     }
     void* tempMin = h->items.array[0];
@@ -147,13 +142,13 @@ void* sh_extract_min(sheap *h)
  * go through the non-leafs "backwards" and heapify-down
  * builds heap from an unordered list (array)
  */
-sheap sh_build_min_heap(void* *unorderedList, size_t size, int (*compare)(const void* x, const void* y), void (*freeObject)(void*))
+sheap sh_build_min_heap(void* *unorderedList, uint size, int (*compare)(const void* x, const void* y), void (*freeObject)(void*))
 {
     sheap h;
     sh_init(&h, size, compare, freeObject);
-    for (int i = 0; i < size; i++)
+    for (uint i = 0; i < size; i++)
         da_insert(&h.items, unorderedList[i]);
-    for (int j = size / 2; j >= 0; j--)
+    for (uint j = size / 2; j >= 0; j--)
         min_heapify_down(&h, j);
     return h;
 }
@@ -191,25 +186,25 @@ bool sh_test_heap_integrity(sheap *h)
  * https://stackoverflow.com/questions/22900388/why-in-a-heap-implemented-by-array-the-index-0-is-left-unused
  */
 /*given index for an item, returns index of parent*/
-static int parent(int i)
+static uint parent(uint i)
 {
     return (i - 1) / 2;
 }
 
 /*given index for an item, returns index of its left child*/
-static int left(int i)
+static uint left(uint i)
 {
     return (2 * i) + 1;
 }
 
 /*given index for an item, returns index of its right child*/
-static int right(int i)
+static uint right(uint i)
 {
     return (2 * i) + 2;
 }
 
 /*swap two items in a dynamic array*/
-static void swap(darray *a, int i1, int i2)
+static void swap(darray *a, uint i1, uint i2)
 {
     void* temp1 = a->array[i1];
     a->array[i1] = a->array[i2];
@@ -217,7 +212,7 @@ static void swap(darray *a, int i1, int i2)
 }
 
 /*Maintains the heap properties*/
-static void min_heapify_down(sheap *h, int index)
+static void min_heapify_down(sheap *h, uint index)
 {
     int l = left(index);
     int r = right(index);
@@ -235,7 +230,7 @@ static void min_heapify_down(sheap *h, int index)
     }
 }
 /*Maintains the heap properties*/
-static void min_heapify_up(sheap *h, int index)
+static void min_heapify_up(sheap *h, uint index)
 {
     int p = parent(index);
     int smallest;

@@ -17,19 +17,19 @@ stack st_create_empty();
  * @param s stack to initialize
  * @param init_size initial size of the stack
  * @param freeObject a function that can free an item that will be in the stack
- * @return size_t 
+ * @return int 
  */
-size_t st_init(stack* s, size_t init_size, void (*freeObject)(void*));
+int st_init(stack* s, uint init_size, void (*freeObject)(void*));
 /**
  * @brief get item count in stack
  * 
  */
-size_t st_count(stack* s);
+uint st_count(stack* s);
 /**
  * @brief remove all items in stack
  * 
  */
-size_t st_clear(stack* s);
+int st_clear(stack* s);
 /**
  * @brief peek at item on the top of the stack
  * 

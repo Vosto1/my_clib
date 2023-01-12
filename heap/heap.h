@@ -12,8 +12,11 @@
 #define _HEAP_H
 
 #include "../dynamic_array/darray.h"
-//#include "../utils/error.h"
 #include "../datatype.h"
+
+#define SAMEKEY -1
+#define KEYNOTSET -2
+#define DATADOESNTEXIST -3
 
 /**
  * The heap stores pointers to the data as void* pointers.
@@ -68,10 +71,10 @@ heap h_create_empty();
  * @param setKey a function that can set a key of an item of your data type
  * @param minKey a function that based on a base element of your data type can create a smaller key
  * @param freeObject a function that frees an item
- * @return the size the heap is initialized to or 0 if error
+ * @return the size the heap is initialized to on success
  */
-size_t h_init(heap *h,
-                size_t size,
+int h_init(heap *h,
+                uint size,
                 int (*compare)(const void* x, const void* y),
                 void* (*setKey)(void* x, void* key),
                 void (*minKey)(void* base, void* *out),
@@ -90,7 +93,7 @@ bool h_free(heap *h);
  * @param h the heap to get the size of
  * @return item count
  */
-size_t h_size(heap *h);
+uint h_size(heap *h);
 /**
  * @brief peek the top item in the heap without removing it
  *
@@ -103,7 +106,7 @@ void* h_min(heap *h);
  *
  * @param h heap to check
  * @return true if null
- * @return false it not null
+ * @return false if not null
  */
 bool h_is_null(heap *h);
 /**
@@ -120,22 +123,22 @@ bool h_is_empty(heap *h);
  *
  * @param h heap to insert into
  * @param item a pointer to the memory of the item
- * @return the item count in the heap or a value larger than the size of the heap is error
+ * @return the item count in the heap on success
  */
-size_t h_insert(heap *h, void* item);
+int h_insert(heap *h, void* item);
 /**
  * @brief removes the specified item from the heap
  *
  * @param h heap to remove item from
  * @param item a pointer to the item which should be removed
- * @return a pointer to the item removed from the heap or null if error
+ * @return a pointer to the item removed from the heap on success
  */
 void* h_remove(heap *h, void* item);
 /**
  * @brief extracts the top item (with the smallest key) and removes it from the heap
  *
  * @param h heap to extract from
- * @return a pointer to the extracted item or null if error
+ * @return a pointer to the extracted item on success
  */
 void* h_extract_min(heap *h);
 /**
@@ -144,9 +147,9 @@ void* h_extract_min(heap *h);
  * @param h heap the item exists in
  * @param item the item to decrease key on
  * @param newKey the new key the item should have
- * @return the new index of the item or a value larger than the size of the heap is error
+ * @return the new index of the item on success
  */
-size_t h_decrease_key(heap *h, void* item, void* newKey);
+int h_decrease_key(heap *h, void* item, void* newKey);
 /**
  * @brief build a heap from an array
  *
@@ -159,7 +162,7 @@ size_t h_decrease_key(heap *h, void* item, void* newKey);
  * @return the heap that was created
  */
 heap h_build_min_heap(void* *unorderedList,
-                  size_t size,
+                  int size,
                   int (*compare)(const void* x, const void* y),
                   void* (*setKey)(void* x, void* key),
                   void (*minKey)(void* base, void* *out),

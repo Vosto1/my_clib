@@ -9,7 +9,7 @@ static void print_status(stats stat);*/
 static void print_results(testResult res);
 static item *create_item(int value);
 static void print_data(darray *a);
-static void insert_n(darray *a, int n);
+static void insert_n(darray *a, uint n);
 static void remove_all(darray *a);
 static void free_item(void* i);
 
@@ -67,14 +67,14 @@ static void print_data(darray *a)
         it = (item *)a->array[i];
         printf("value at %d: %d\n", i, it->value);
     }
-    printf("used: %ld\nsize: %ld\n\n", a->used, a->size);
+    printf("used: %u\nsize: %u\n\n", a->used, a->size);
 }
 
-static void insert_n(darray *a, int n)
+static void insert_n(darray *a, uint n)
 {
-    size_t e;
+    uint e;
     item *item;
-    for (int j = 0; j < n; j++)
+    for (uint j = 0; j < n; j++)
     {
         item = create_item(rand() % 1000);
         e = a->used + 1;

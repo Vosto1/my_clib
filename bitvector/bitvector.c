@@ -4,7 +4,7 @@
 static unsigned int bytes_to_bits(unsigned int bytes);
 static void freebit(void* bit);
 
-size_t bit_count(bitvector *bv)
+uint bit_count(bitvector *bv)
 {
     return sda_count(bv);
 }
@@ -15,12 +15,12 @@ bitvector bv_create_empty()
     return bv;
 }
 
-size_t bv_init(bitvector *bv)
+int bv_init(bitvector *bv)
 {
     return sda_init(bv, 1, &freebit);
 }
 
-size_t bv_add(bitvector *bv, bool value)
+uint bv_add(bitvector *bv, bool value)
 {
     bool *newbool = (bool *)malloc(sizeof(bool));
     if (newbool == NULL)
@@ -35,7 +35,7 @@ size_t bv_add(bitvector *bv, bool value)
     }
 }
 
-size_t bv_merge(bitvector *bv, bitvector *mergeWith)
+uint bv_merge(bitvector *bv, bitvector *mergeWith)
 {
     if (bv == NULL || mergeWith == NULL)
     {
@@ -71,10 +71,10 @@ bool *bv_at(bitvector *bv, int index)
         return (bool *)bv->array[index];
 }
 
-size_t bv_clear(bitvector *bv)
+uint bv_clear(bitvector *bv)
 {
-    size_t size = bv->used;
-    for (size_t i = 0; i < size; i++)
+    uint size = bv->used;
+    for (uint i = 0; i < size; i++)
         assert(bv_remove_last(bv));
     return size;
 }
@@ -164,12 +164,12 @@ bool bits2bools(binary *b, bitvector *out)
     return true;
 }
 
-size_t write_binary_to_file(binary *b, char *file)
+uint write_binary_to_file(binary *b, char *file)
 {
     byte *res = (byte *)&b->residualBits;
     // create memory buffer with the right amount of bytes
-    size_t byteSizeResidual = sizeof(unsigned int);
-    size_t byteSizeData = sizeof(byte) * b->amountOfBytes;
+    uint byteSizeResidual = sizeof(unsigned int);
+    uint byteSizeData = sizeof(byte) * b->amountOfBytes;
     byte *buffer = (byte *)malloc((byteSizeResidual + byteSizeData) * sizeof(byte));
     if (!buffer)
     {
@@ -196,7 +196,7 @@ size_t write_binary_to_file(binary *b, char *file)
         i++;
         j++;
     }
-    size_t fileSize = byteSizeResidual + byteSizeData;
+    uint fileSize = byteSizeResidual + byteSizeData;
 
     if (write_file(file, (void *)buffer, fileSize) == fileSize)
     {
@@ -211,14 +211,14 @@ size_t write_binary_to_file(binary *b, char *file)
     }
 }
 
-size_t read_binary_from_file(char *file, binary *b)
+uint read_binary_from_file(char *file, binary *b)
 {
     void *fileContents;
-    size_t fileSize = read_file(file, &fileContents);
+    uint fileSize = read_file(file, &fileContents);
     byte *byteBuffer = (byte *)fileContents; // set byte pointer to point to buffer to enable pointer arithmetic
 
-    size_t byteSizeResidual = sizeof(unsigned int);    // residual bits size in bytes
-    size_t byteSizeData = fileSize - byteSizeResidual; // get data size in bytes
+    uint byteSizeResidual = sizeof(unsigned int);    // residual bits size in bytes
+    uint byteSizeData = fileSize - byteSizeResidual; // get data size in bytes
 
     unsigned int residualBits = 0;
     byte *res = (byte *)&residualBits;
