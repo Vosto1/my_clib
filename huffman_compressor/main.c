@@ -1,4 +1,6 @@
 #include "./text_analysis.h"
+#include "huffman_tree.h"
+#include "node.h"
 
 void print(hashtable *ht)
 {
@@ -7,12 +9,31 @@ void print(hashtable *ht)
         if (ht->entries[i] != UNUSED)
         {
             entry *e = (entry *)ht->entries[i];
-            printf("index %d: [%c,%d]\n", i, e->k, e->v);
+            printf("index %d: [%c,%d]\n", i, e->key, e->value);
         }
         else
             printf("index %d: UNUSED\n", i);
     }
     printf("\n");
+}
+
+void print_inorder(huffmantree hft)
+{
+    if (hft->left != NULL)
+    {
+        printf("->left\n");
+        print_inorder(hft->left);
+    }
+    entry* e = (entry*)hft->value;
+    if (e->branch)
+        printf("branch: %d\n", e->value);
+    else
+        printf("leaf: %d %c\n", e->value, e->key);
+    if (hft->right != NULL)
+    {
+        printf("->right\n");
+        print_inorder(hft->right);
+    }
 }
 
 int main(void)
@@ -31,7 +52,11 @@ int main(void)
         c = (char)(i + b);
         a[i] = c;
     } */
-    hashtable ht = letter_occurances(d, str);
-    print(&ht);
+    hashtable ht_occurances = letter_occurances(d, str);
+    print(&ht_occurances);
+
+    huffmantree hft = create_huffman_tree(ht_occurances);
+    print_inorder(hft);
+
     return 0;
 }

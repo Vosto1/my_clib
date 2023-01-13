@@ -1,12 +1,12 @@
 ../btree/btree.c
 compressor.c
+../dynamic_array/darray.c
 ../hash_dictionary/hashtable.c
 huffman_tree.c
 main.c
 node.c
-../dynamic_array/darray.c
-../s_heap/s_heap.c
 ../priority_queue/priority_queue.c
-../s_dynamic_array/sdarray.c
 text_analysis.c
 ../utils/file.c
+../s_heap/s_heap.c
+-lm

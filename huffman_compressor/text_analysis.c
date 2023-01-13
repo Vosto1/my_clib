@@ -15,7 +15,7 @@ hashtable letter_occurances(char *string, int strsize)
     entry *l;
     for (int i = 0; i < strsize; i++)
     {
-        e = node_create_entry(string[i], 1);
+        e = node_create_entry(string[i], 1, false);
         l = ht_lookup(&ht, e); // the hash function is run only on the character --> i.e. the look up function checks if the character is already in the ht
         if (l == UNUSED)
         {
@@ -23,7 +23,7 @@ hashtable letter_occurances(char *string, int strsize)
         }
         else
         {
-            l->v += 1; // if the letter existed, increment value
+            l->value += 1; // if the letter existed, increment value
         }
     }
     ht_trim(&ht);
