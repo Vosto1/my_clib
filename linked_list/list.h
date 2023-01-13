@@ -44,7 +44,7 @@ const void* ll_remove_element(ll *head, const void* data, int (*compare)(const v
 const void* ll_search(const ll* head, const void* data, int (*compare)(const void*, const void*));
 
 // returnera hur manga noder som finns i listan
-int ll_node_count(const ll* head);
+uint ll_node_count(const ll* head);
 
 // tom listan /ta bort allt data (alla noder) ur listan
 void ll_clear(ll *head, void (*freeObject)(void*));

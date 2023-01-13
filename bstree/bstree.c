@@ -703,18 +703,18 @@ bool bst_balance(bstree *tree, int (*compare)(const void *, const void *))
         return false;
     }
     bstree new = bst_create_empty();
-    sdarray arr2 = sda_create_empty();
-    if (sda_init(&arr2, INIT_SIZE, NULL) != 0)
+    darray arr2 = da_create_empty();
+    if (da_init(&arr2, INIT_SIZE, NULL, NULL) != 0)
     {
         // get an array with unique elements
         void* tmp = arr1[0];
-        sda_insert(&arr2, tmp);
+        da_insert(&arr2, tmp);
         arr1[0] = NULL;
         for (int i = 1; i < arraysize; i++)
         {
             if (!is_equal(tmp, arr1[i], compare))
             {
-                sda_insert(&arr2, arr1[i]);
+                da_insert(&arr2, arr1[i]);
                 tmp = arr1[i];
                 arr1[i] = NULL;
             }
@@ -722,7 +722,7 @@ bool bst_balance(bstree *tree, int (*compare)(const void *, const void *))
 
         // insert unique elements in the tree balanced
         insert_from_sorted_array(&new, arr2.array, 0, arr2.used - 1, compare);
-        sda_destroy(&arr2); // free array and not the elements
+        da_destroy(&arr2); // free array and not the elements
 
         // add all the non-unique elements
         for (int i = 0; i < arraysize; i++)

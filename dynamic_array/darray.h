@@ -18,8 +18,6 @@
 //#include "../utils/error.h"
 #include "../datatype.h"
 
-#define QUARTER 0.25
-
 /**
  * The dynamic array stores pointers to the data as void* pointers.
  * This way the type is generic, but all data must be allocated as
@@ -31,13 +29,6 @@
  * than the right value, -1 when the opposite is true and
  * 0 when they are equal.
  */
-
-typedef enum
-{                               // decrease memory results
-    MEM_HALVED = 0,             // memory halved
-    MEM_MS_REACHED_NO_NEED = 1, // MEMory Min Size REACHED or no need
-    ERRMEM_DECREASE = 2,        // No MEMory DECREASE (error, check errc global)
-} MEM;
 
 struct dynamicArray
 {
@@ -177,4 +168,5 @@ int da_find(darray *a, void* item);
  * @return false if not exists
  */
 bool da_exists(darray *a, void* item);
+
 #endif

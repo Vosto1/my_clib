@@ -1,4 +1,3 @@
-#include "../bitvector/bitvector.h"
 #include "./text_analysis.h"
 
 void print(hashtable *ht)

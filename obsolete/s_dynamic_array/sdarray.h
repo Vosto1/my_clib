@@ -15,10 +15,8 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <math.h>
-//#include "../utils/error.h"
 #include "../datatype.h"
 
-#define QUARTER 0.25
 
 /**
  * The s_dynamic array stores pointers to the data as void* pointers.
@@ -34,12 +32,6 @@
  * and only has the main functionality: insert, remove and merge.
  */
 
-typedef enum
-{                               // decrease memory results
-    MEM_HALVED = 0,             // memory halved
-    MEM_OK = 1,                 // memory min size reached or no need
-    ERRMEM_DECREASE = 2,        // ERRor MEMory DECREASE
-} MEM;
 
 struct s_dynamicArray
 {

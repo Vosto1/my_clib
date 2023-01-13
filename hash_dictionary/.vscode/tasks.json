@@ -16,7 +16,7 @@
                 "-fdiagnostics-color=always",
                 "-g",
                 "/home/vosto/Programming/github/my_clib/hash_dictionary/main.c",
-                "../s_dynamic_array/sdarray.c",
+                "../dynamic_array/darray.c",
                 "test.c",
                 "hashtable.c",
                 "hash.c",

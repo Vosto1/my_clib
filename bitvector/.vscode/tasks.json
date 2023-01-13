@@ -9,7 +9,7 @@
 				"-fdiagnostics-color=always",
 				"-g",
 				"${file}",
-				"../s_dynamic_array/sdarray.c",
+				"../dynamic_array/darray.c",
 				"bitvector.c",
 				"../utils/file.c",
 				"../utils/timer.c",

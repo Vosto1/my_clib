@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include "../s_dynamic_array/sdarray.h"
+#include "../dynamic_array/darray.h"
 //#include "../utils/error.h"
 #include "../datatype.h"
 

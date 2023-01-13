@@ -1,5 +1,14 @@
 #include "sdarray.h"
 
+#define QUARTER 0.25
+
+typedef enum
+{                               // decrease memory results
+    MEM_HALVED = 0,             // memory halved
+    MEM_OK = 1,                 // memory min size reached or no need
+    ERRMEM_DECREASE = 2,        // ERRor MEMory DECREASE
+} MEM;
+
 static MEM sda_memory_decrease(sdarray *a);
 
 uint sda_count(sdarray *a)

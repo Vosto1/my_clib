@@ -186,7 +186,7 @@ const void* ll_search(const ll* head, const void* data, int (*compare)(const voi
 }
 
 
-static int _node_count(node** list)
+static uint _node_count(node** list)
 {
     if (list == NULL)
         return 0;
@@ -194,7 +194,7 @@ static int _node_count(node** list)
         return 1 + _node_count(&(*list)->next);
 }
 /*Returnera antalet noder i listan*/
-int ll_node_count(const ll* head)
+uint ll_node_count(const ll* head)
 {
     return _node_count(&(*head)->first);
 }

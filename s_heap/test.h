@@ -9,7 +9,7 @@
 #include <math.h>
 #include "../dynamic_array/darray.h"
 #include "../utils/timer.h"
-#include "s_heap.h"
+#include "../s_heap/s_heap.h"
 #include "../datatype.h"
 
 typedef char Element;

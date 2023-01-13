@@ -2,10 +2,10 @@
 #define STACK_H
 
 #include <stdbool.h>
-#include "../s_dynamic_array/sdarray.h"
+#include "../dynamic_array/darray.h"
 #include "../datatype.h"
 
-typedef sdarray stack;
+typedef darray stack;
 /**
  * @brief create new empty stack
  * 

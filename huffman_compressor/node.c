@@ -1,13 +1,20 @@
 #include "node.h"
 
-static int _compare(void * e1, void * e2)
+int node_compare(const void * e1, const void * e2)
+{
+    node n1 = (node)e1;
+    node n2 = (node)e2;
+    return node_entry_compare(n1->value, n2->value);
+}
+
+int node_entry_compare(const void * e1, const void * e2)
 {
     entry *en1 = (entry *)e1;
     entry *en2 = (entry *)e2;
     return (int)en1->k - (int)en2->k;
 }
 
-static unsigned int _hash(void * e, const hashtable *ht)
+uint node_hash(const void * e, const hashtable *ht)
 {
     entry *f = (entry *)e;
 
@@ -16,7 +23,12 @@ static unsigned int _hash(void * e, const hashtable *ht)
     return index;
 }
 
-static entry *_create_entry(key k, value v)
+node node_create(entry* e)
+{
+    return bt_new_node(e);
+}
+
+entry *node_create_entry(key k, value v)
 {
     entry *e = (entry *)malloc(sizeof(entry));
     e->k = k;
@@ -24,7 +36,14 @@ static entry *_create_entry(key k, value v)
     return e;
 }
 
-static void freeObject(void * e)
+void node_free_object(void * o)
 {
-    free(e);
+    node n = (node)o;
+    node_free_entry_object(n->value);
+    free((void*)n);
+}
+
+void node_free_entry_object(void * o)
+{
+    free(o);
 }

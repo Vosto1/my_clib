@@ -1,5 +1,14 @@
 #include "darray.h"
 
+#define QUARTER 0.25
+
+typedef enum
+{                               // decrease memory results
+    MEM_HALVED = 0,             // memory halved
+    MEM_MS_REACHED_NO_NEED = 1, // MEMory Min Size REACHED or no need
+    ERRMEM_DECREASE = 2,        // No MEMory DECREASE (error, check errc global)
+} MEM;
+
 /**
  * checks if the memory should be halved and does so if check is positive
  *
@@ -213,7 +222,6 @@ int da_merge(darray *a, darray *b)
     b->array = NULL;
     return a->size;
 }
-
 
 bool da_is_null(darray *a)
 {

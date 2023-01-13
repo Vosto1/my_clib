@@ -27,7 +27,7 @@ const void* llq_peek(llqueue* q)
     return ll_get_first(q);
 }
 
-size_t llq_count(llqueue* q)
+uint llq_count(llqueue* q)
 {
     return ll_node_count(q);
 }

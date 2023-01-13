@@ -3,6 +3,6 @@
 int main(void)
 {
     test_sequence();
-    auto_tests(100, 10);
+    auto_tests(100, 100);
     return 0;
 }
