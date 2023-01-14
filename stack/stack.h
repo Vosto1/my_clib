@@ -2,10 +2,10 @@
 #define STACK_H
 
 #include <stdbool.h>
-#include "../dynamic_array/darray.h"
+#include "../s_dynamic_array/sdarray.h"
 #include "../datatype.h"
 
-typedef darray stack;
+typedef sdarray stack;
 /**
  * @brief create new empty stack
  * 
@@ -17,7 +17,7 @@ stack st_create_empty();
  * @param s stack to initialize
  * @param init_size initial size of the stack
  * @param freeObject a function that can free an item that will be in the stack
- * @return int 
+ * @return initialized size 
  */
 int st_init(stack* s, uint init_size, void (*freeObject)(void*));
 /**
@@ -45,5 +45,29 @@ bool st_push(stack* s, const void* item);
  * 
  */
 void* st_pop(stack* s);
+/**
+ * @brief check if a stack is empty
+ * 
+ * @param s stack to check
+ * @return true if empty
+ * @return false
+ */
+bool st_is_empty(stack* s);
+/**
+ * @brief free a stack and it's contents
+ * 
+ * @param s stack to free
+ * @return true on success
+ * @return false 
+ */
+bool st_free(stack* s);
+/**
+ * @brief free a stack without freeing the items within the stack
+ * 
+ * @param s stack to free
+ * @return true on success
+ * @return false 
+ */
+bool st_destroy(stack* s);
 
 #endif

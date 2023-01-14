@@ -177,13 +177,13 @@ uint auto_tests(int tests, int mod)
                 #ifdef HT_DEBUG
                 printf("to array, element count: %d\n", ht_count(&ht));
                 #endif
-                darray a = ht_to_array(&ht);
-                int size = da_count(&a);
+                sdarray a = ht_to_array(&ht);
+                int size = sda_count(&a);
                 for (int i = 0; i < size; i++)
                 {
                     assert(ht_lookup(&ht, a.array[i]) != NULL);
                 }
-                da_destroy(&a);
+                sda_destroy(&a);
                 #ifdef HT_VERBOSE
                 toarrays++;
                 #endif
@@ -193,8 +193,8 @@ uint auto_tests(int tests, int mod)
                 #ifdef HT_DEBUG
                 printf("trim, element count: %d\n", ht_count(&ht));
                 #endif
-                darray a = ht_to_array(&ht);
-                int elementCount = da_count(&a);
+                sdarray a = ht_to_array(&ht);
+                int elementCount = sda_count(&a);
                 if (elementCount != 0)
                 {
                     ht_trim(&ht);
@@ -208,7 +208,7 @@ uint auto_tests(int tests, int mod)
                     trims++;
                     #endif
                 }
-                da_destroy(&a);
+                sda_destroy(&a);
             }
             operations++;
         }

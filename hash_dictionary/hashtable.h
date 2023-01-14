@@ -14,7 +14,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
-#include "../dynamic_array/darray.h"
+#include "../s_dynamic_array/sdarray.h"
 #include "../datatype.h"
 
 #define UNUSED NULL
@@ -34,8 +34,8 @@ int ht_init(hashtable *ht, int size, uint (*hash)(const void*, const hashtable *
 bool ht_destroy(hashtable *ht);
 bool ht_free(hashtable *ht);
 int ht_trim(hashtable *ht);
-darray ht_to_array(hashtable *ht);
-hashtable ht_from_array(darray* a, uint (*hash)(const void*, const hashtable *));
+sdarray ht_to_array(hashtable *ht);
+hashtable ht_from_array(sdarray* a, uint (*hash)(const void*, const hashtable *), int (*compare)(const void*, const void*));
 
 int ht_insert(hashtable *ht, void* element);
 void* ht_delete(hashtable *ht, const void* element);

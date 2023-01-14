@@ -8,8 +8,8 @@
  * @copyright Copyright (c) 2022
  *
  */
-#ifndef DYNAMIC_ARRAY_H
-#define DYNAMIC_ARRAY_H
+#ifndef S_DYNAMIC_ARRAY_H
+#define S_DYNAMIC_ARRAY_H
 
 #include <stdio.h>
 #include <stdlib.h>

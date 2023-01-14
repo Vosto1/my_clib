@@ -35,6 +35,11 @@ node node_create(entry* e)
 entry *node_create_entry(byte key, int value, bool branch)
 {
     entry *e = (entry *)malloc(sizeof(entry));
+    if (e == NULL)
+    {
+        printf("node create failed\n");
+        return NULL;
+    }
     e->key = key;
     e->value = value;
     e->branch = branch;

@@ -71,7 +71,7 @@ static void insert_n(sheap *h, int n)
 
 static void remove_all(sheap *h)
 {
-    assert(da_clear(&h->items) != 0);
+    assert(sda_clear(&h->items) != 0);
     assert(sh_size(h) == 0);
 }
 

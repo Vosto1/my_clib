@@ -6,6 +6,6 @@
 #include "node.h"
 
 
-hashtable letter_occurances(char *string, int strsize);
+hashtable letter_occurances(char *string, uint len);
 
 #endif

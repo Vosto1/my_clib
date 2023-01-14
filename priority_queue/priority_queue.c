@@ -19,6 +19,13 @@ bool pq_free(priorityqueue *pq)
     return r;
 }
 
+bool pq_destroy(priorityqueue *pq)
+{
+    bool r = sh_destroy(&pq->h);
+    *pq = pq_create_empty();
+    return r;
+}
+
 int pq_count(priorityqueue *pq)
 {
     return sh_size(&pq->h);

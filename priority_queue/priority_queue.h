@@ -56,7 +56,14 @@ int pq_init(priorityqueue *pq, uint size, int (*compare)(const void* x, const vo
  * @return true on success
  */
 bool pq_free(priorityqueue *pq);
-
+/**
+ * @brief free the priority queue but not it's items
+ * 
+ * @param pq priority queue to destroy
+ * @return true on success
+ * @return false 
+ */
+bool pq_destroy(priorityqueue *pq);
 /**
  * @brief get the item count of the priority queue
  *

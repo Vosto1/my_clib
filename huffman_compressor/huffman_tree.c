@@ -1,5 +1,4 @@
 #include "huffman_tree.h"
-#include "../s_heap/test.h"
 
 /*static void heapPrintTree(sheap *h)
 {
@@ -32,13 +31,14 @@ huffmantree create_huffman_tree(hashtable occurances)
     priorityqueue pq = pq_create_empty();
     assert(pq_init(&pq, size, &node_compare, &node_free_object) == size);
 
-    darray values = ht_to_array(&occurances);
-    uint count = da_count(&values);
+    sdarray values = ht_to_array(&occurances);
+    uint count = sda_count(&values);
     for (uint i = 0; i < count; i++)
     {
-        node n = node_create((void*)da_at(&values, i));
+        node n = node_create((void*)sda_at(&values, i));
         pq_enqueue(&pq, n);
     }
+    assert(sda_destroy(&values));
 
 
     //heapPrintTree(&pq.h);
@@ -50,8 +50,9 @@ huffmantree create_huffman_tree(hashtable occurances)
         pq_enqueue(&pq, new);
         //heapPrintTree(&pq.h);
     }
-
-    return (huffmantree)pq_dequeue(&pq);
+    huffmantree hft = (huffmantree)pq_dequeue(&pq);
+    assert(pq_destroy(&pq));
+    return hft;
 }
 
 static node merge(node n1, node n2)
@@ -78,4 +79,28 @@ static node merge(node n1, node n2)
         new->right = n1;
     }
     return new;
+}
+
+hashtable huffman_to_hash_dictionary(huffmantree hft)
+{
+    hashtable ht = ht_create_empty();
+    bitvector bv = bv_create_empty();
+    stack s = st_create_empty();
+
+    int size = 10;
+    assert(ht_init(&ht, size, NULL, NULL, NULL));
+    assert(bv_init(&bv));
+    assert(st_init(&s, size, NULL));
+
+    assert(st_push(&s, hft));
+    void* current = NULL;
+    while (!(st_is_empty(&s) && current == NULL))
+    {
+    }
+    return ht;
+}
+
+bool hft_free(huffmantree* hft)
+{
+    return bt_free((btree*)hft, &node_free_entry_object);
 }

@@ -14,12 +14,12 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include "../utils/file.h"
-#include "../dynamic_array/darray.h"
+#include "../s_dynamic_array/sdarray.h"
 #include "../datatype.h"
 
 #define ERRWRITE -1
 
-typedef darray bitvector;
+typedef sdarray bitvector;
 typedef struct b
 {
     uint residualBits;

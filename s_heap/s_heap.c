@@ -31,7 +31,7 @@ static uint right(uint i);
  * @param i1 index of item 1
  * @param i2 index of item 2
  */
-static void swap(darray *a, uint i1, uint i2);
+static void swap(sdarray *a, uint i1, uint i2);
 /**
  * @brief compare parent with children, if there is a heap violation then switch parent and child then recursively continue down the sheap
  *
@@ -51,28 +51,37 @@ sheap sh_create_empty()
 {
     sheap h;
     h.compare = NULL;
-    h.items = da_create_empty();
+    h.items = sda_create_empty();
     return h;
 }
 
 int sh_init(sheap *h, uint size, int (*compare)(const void* x, const void* y), void (*freeObject)(void*))
 {
     h->compare = compare;
-    return da_init(&(h->items), size, compare, freeObject);
+    return sda_init(&(h->items), size, freeObject);
 }
 
 bool sh_free(sheap *h)
 {
     if (!sh_is_null(h))
     {
-        return da_free(&h->items);
+        return sda_free(&h->items);
+    }
+    return false;
+}
+
+bool sh_destroy(sheap* h)
+{
+    if (!sh_is_null(h))
+    {
+        return sda_destroy(&h->items);
     }
     return false;
 }
 
 uint sh_size(sheap *h)
 {
-    return da_count(&h->items);
+    return sda_count(&h->items);
 }
 
 /*
@@ -86,12 +95,12 @@ void* sh_peek(sheap *h)
 
 bool sh_is_null(sheap *h)
 {
-    return da_is_null(&h->items);
+    return sda_is_null(&h->items);
 }
 
 bool sh_is_empty(sheap *h)
 {
-    return da_is_empty(&h->items);
+    return sda_is_empty(&h->items);
 }
 
 
@@ -100,8 +109,8 @@ bool sh_is_empty(sheap *h)
  */
 int sh_insert(sheap *h, void* item)
 {
-    int s = da_count(&(h->items));
-    int s2 = da_insert(&(h->items), item);
+    int s = sda_count(&(h->items));
+    int s2 = sda_insert(&(h->items), item);
     if (s + 1 != s2)
     {
         return ERROPERATION;
@@ -128,7 +137,7 @@ void* sh_extract_min(sheap *h)
     }
     void* tempMin = h->items.array[0];
     void* tempLast = h->items.array[sh_size(h) - 1];
-    da_remove_at(&(h->items), sh_size(h) - 1); // remove at last index
+    sda_remove_at(&(h->items), sh_size(h) - 1); // remove at last index
     if (sh_size(h) != 0)
     { // if the heap is not empty after removal
         h->items.array[0] = tempLast;
@@ -147,7 +156,7 @@ sheap sh_build_min_heap(void* *unorderedList, uint size, int (*compare)(const vo
     sheap h;
     sh_init(&h, size, compare, freeObject);
     for (uint i = 0; i < size; i++)
-        da_insert(&h.items, unorderedList[i]);
+        sda_insert(&h.items, unorderedList[i]);
     for (uint j = size / 2; j >= 0; j--)
         min_heapify_down(&h, j);
     return h;
@@ -204,7 +213,7 @@ static uint right(uint i)
 }
 
 /*swap two items in a dynamic array*/
-static void swap(darray *a, uint i1, uint i2)
+static void swap(sdarray *a, uint i1, uint i2)
 {
     void* temp1 = a->array[i1];
     a->array[i1] = a->array[i2];

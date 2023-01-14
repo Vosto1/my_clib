@@ -4,27 +4,20 @@
 static uint bytes_to_bits(uint bytes);
 static void freebit(void* bit);
 
-// this should never be called
-static int compare(const void* a, const void* b)
-{
-    printf("Error! You used a function within darray which uses the compare function which is illegal in this context.");
-    exit(EXIT_FAILURE);
-}
-
 uint bit_count(bitvector *bv)
 {
-    return da_count(bv);
+    return sda_count(bv);
 }
 
 bitvector bv_create_empty()
 {
-    bitvector bv = da_create_empty();
+    bitvector bv = sda_create_empty();
     return bv;
 }
 
 int bv_init(bitvector *bv)
 {
-    return da_init(bv, 1, &compare, &freebit);
+    return sda_init(bv, 1, &freebit);
 }
 
 int bv_add(bitvector *bv, bool value)
@@ -37,7 +30,7 @@ int bv_add(bitvector *bv, bool value)
     else
     {
         *newbool = value;
-        return da_insert(bv, (void *)newbool);
+        return sda_insert(bv, (void *)newbool);
     }
 }
 
@@ -54,7 +47,7 @@ int bv_merge(bitvector *bv, bitvector *mergeWith)
 
 bool bv_remove_last(bitvector *bv)
 {
-    bool *rm = da_remove_last(bv);
+    bool *rm = sda_remove_last(bv);
     if (rm == NULL)
         return false;
     else
@@ -67,12 +60,12 @@ bool bv_remove_last(bitvector *bv)
 // at, get value at index
 bool *bv_at(bitvector *bv, uint index)
 {
-    return (bool *)da_at(bv, index);
+    return (bool *)sda_at(bv, index);
 }
 
 uint bv_clear(bitvector *bv)
 {
-    uint size = da_count(bv);
+    uint size = sda_count(bv);
     for (uint i = 0; i < size; i++)
         assert(bv_remove_last(bv));
     return size;
@@ -80,7 +73,7 @@ uint bv_clear(bitvector *bv)
 
 bool bv_delete(bitvector *bv)
 {
-    return da_free(bv);
+    return sda_free(bv);
 }
 
 // converts a bitvector into an array of bytes

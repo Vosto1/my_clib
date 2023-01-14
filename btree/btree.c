@@ -62,6 +62,7 @@ bool bt_free(btree *tree, void (*freeObject)(void*))
     if ((*tree) != NULL)
     {
         btfree(tree, freeObject);
+        (*tree) = NULL;
         return true;
     }
     return false;

@@ -36,15 +36,20 @@ void print_inorder(huffmantree hft)
     }
 }
 
-int main(void)
+void print_string(char* str, uint len)
 {
-    char *d;
-    size_t str = read_text_file("textAnalysis.txt", &d);
-    for (int i = 0; i < str; i++)
+    for (int i = 0; i < len; i++)
     {
-        printf("%c", d[i]);
+        printf("%c", str[i]);
     }
     printf("\n");
+}
+
+int main(void)
+{
+    char *file_contents;
+    uint len = read_text_file("textAnalysis.txt", &file_contents);
+    print_string(file_contents, len);
     /* char* a = (char*)malloc(sizeof(char) * 10);
     int b = 32;
     char c;
@@ -52,11 +57,14 @@ int main(void)
         c = (char)(i + b);
         a[i] = c;
     } */
-    hashtable ht_occurances = letter_occurances(d, str);
-    print(&ht_occurances);
+    hashtable ht_occurances = letter_occurances(file_contents, len);
+    free(file_contents);
+    //print(&ht_occurances);
 
     huffmantree hft = create_huffman_tree(ht_occurances);
-    print_inorder(hft);
+    //print_inorder(hft);
+    ht_destroy(&ht_occurances);
 
+    assert(hft_free(&hft));
     return 0;
 }

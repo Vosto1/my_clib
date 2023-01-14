@@ -8,11 +8,11 @@
  * @copyright Copyright (c) 2022
  *
  */
-#ifndef _HEAP_H
-#define _HEAP_H
+#ifndef S_HEAP_H
+#define S_HEAP_H
 
 #include <limits.h>
-#include "../dynamic_array/darray.h"
+#include "../s_dynamic_array/sdarray.h"
 #include "../datatype.h"
 
 /**
@@ -36,7 +36,7 @@
 
 typedef struct
 {
-    darray items;
+    sdarray items;
     int (*compare)(const void* x, const void* y);
 } sheap;
 
@@ -63,6 +63,14 @@ int sh_init(sheap *h, uint size, int (*compare)(const void* x, const void* y), v
  * @return true on success
  */
 bool sh_free(sheap *h);
+/**
+ * @brief free the heap but not the items
+ * 
+ * @param h heap
+ * @return true on success
+ * @return false on success
+ */
+bool sh_destroy(sheap *h);
 /**
  * @brief get the size of the sheap (item count)
  *

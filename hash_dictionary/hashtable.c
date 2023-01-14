@@ -72,9 +72,9 @@ bool ht_destroy(hashtable *ht)
 
 int ht_trim(hashtable *ht)
 {
-    darray a = ht_to_array(ht);
+    sdarray a = ht_to_array(ht);
     // trim memory
-    int elementCount = da_count(&a);
+    int elementCount = sda_count(&a);
     void* *temp = (void* *)realloc(ht->entries, elementCount * sizeof(void*));
     if (temp == NULL)
     {
@@ -91,42 +91,41 @@ int ht_trim(hashtable *ht)
     void* e;
     for (int i = 0; i < elementCount; i++)
     {
-        e = da_remove_last(&a);
+        e = sda_remove_last(&a);
         ht_insert(ht, e);
     }
 
-    // free darray
-    da_destroy(&a);
+    // free sdarray
+    sda_destroy(&a);
 
     return ht->size;
 }
 
-darray ht_to_array(hashtable* ht)
+sdarray ht_to_array(hashtable* ht)
 {
     int size = ht_size(ht);
-    darray a = da_create_empty();
-    if (da_init(&a, size, ht->compare, ht->freeObject) != size)
+    sdarray a = sda_create_empty();
+    if (sda_init(&a, size, ht->freeObject) != size)
     {
-        return da_create_empty();
+        return sda_create_empty();
     }
 
     // move all elements from the hashtable to an array
     for (int i = 0; i < size; i++)
         if (ht->entries[i] != UNUSED)
-            da_insert(&a, ht->entries[i]);
+            sda_insert(&a, ht->entries[i]);
     return a;
 }
 
-hashtable ht_from_array(darray* a, uint (*hash)(const void*, const hashtable *))
+hashtable ht_from_array(sdarray* a, uint (*hash)(const void*, const hashtable *), int (*compare)(const void*, const void*))
 {
-    assert(a->compare != NULL);
     assert(a->freeObject != NULL);
     hashtable ht = ht_create_empty();
-    int count = da_count(a);
-    assert(ht_init(&ht, count, hash, a->compare, a->freeObject) == count);
+    int count = sda_count(a);
+    assert(ht_init(&ht, count, hash, compare, a->freeObject) == count);
     for (int i = 0; i < count; i++)
     {
-        ht_insert(&ht, da_remove_last(a));
+        ht_insert(&ht, sda_remove_last(a));
     }
     return ht;
 }
@@ -264,9 +263,9 @@ static int linear_probe(hashtable *ht, void* element, int* collisions)
     }
 
     // hashtable overflow
-    darray a = da_create_empty();
+    sdarray a = sda_create_empty();
     int errcode;
-    if ((errcode = da_init(&a, ht_size(ht), ht->compare, ht->freeObject)) != ht_size(ht))
+    if ((errcode = sda_init(&a, ht_size(ht), ht->freeObject)) != ht_size(ht))
     {
         return errcode;
     }
@@ -277,7 +276,7 @@ static int linear_probe(hashtable *ht, void* element, int* collisions)
         if (ht->entries[i] != UNUSED)
         {
             void* e = ht->entries[i];
-            da_insert(&a, e);
+            sda_insert(&a, e);
         }
     }
 
@@ -301,15 +300,15 @@ static int linear_probe(hashtable *ht, void* element, int* collisions)
     }
 
     // re-insert all elements in the array into the new ht
-    int elements = da_count(&a);
+    int elements = sda_count(&a);
     for (int i = 0; i < elements; i++)
     {
-        void* e = da_remove_last(&a);
+        void* e = sda_remove_last(&a);
         ht_insert(ht, e);
     }
 
-    // free darray
-    da_destroy(&a);
+    // free sdarray
+    sda_destroy(&a);
 
     // insert the element that we wanted to add from the beginning
     return ht_insert(ht, element);
