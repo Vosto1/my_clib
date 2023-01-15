@@ -68,7 +68,7 @@ static node merge(node n1, node n2)
     entry* e1 = (entry*)n1->value;
     entry* e2 = (entry*)n2->value;
     node new = node_create(node_create_entry((char)0, e1->value + e2->value, true));
-    if (e1->value < e2->value)
+    if (e1->value >= e2->value)
     {
         new->left = n1;
         new->right = n2;
@@ -84,19 +84,59 @@ static node merge(node n1, node n2)
 hashtable huffman_to_hash_dictionary(huffmantree hft)
 {
     hashtable ht = ht_create_empty();
-    bitvector bv = bv_create_empty();
+    bitvector code = bv_create_empty();
     stack s = st_create_empty();
 
     int size = 10;
-    assert(ht_init(&ht, size, NULL, NULL, NULL));
-    assert(bv_init(&bv));
-    assert(st_init(&s, size, NULL));
+    assert(ht_init(&ht, size, &encode_rule_hash, &encode_rule_compare, &encode_rule_free));
+    assert(bv_init(&code));
+    assert(st_init(&s, size, &node_free_object));
 
-    assert(st_push(&s, hft));
-    void* current = NULL;
+    encodeRule* er = NULL;
+    entry* e = NULL;
+    btree current = hft;
+    btree nil = node_create(NULL); // dummy node
+    btree previous = nil;
+    bitvector copy = bv_create_empty();
     while (!(st_is_empty(&s) && current == NULL))
     {
+        while (current != NULL)
+        {
+            assert(st_push(&s, current));
+            bv_add(&code, false);
+            current = current->left;
+        }
+
+        current = st_pop(&s);
+        bv_remove_last(&code);
+        e = (entry*)current->value;
+        if (!e->branch)
+        {
+            copy = bv_duplicate(&code);
+            er = encode_rule_create(e->key, copy);
+            ht_insert(&ht, er);
+        }
+        if (previous != current->right)
+        {
+            st_push(&s, current);
+            bv_add(&code, true);
+            current = current->right;
+        }
+        else
+        {
+            st_push(&s, current);
+            bv_add(&code, true);
+            current = NULL;
+        }
+        if (current == NULL) // if we went to the right and immediately hit NULL or backtracking toward root again
+        {
+            previous = st_pop(&s);
+            bv_remove_last(&code);
+        }
     }
+    bv_delete(&code);
+    st_free(&s);
+    free(nil);
     return ht;
 }
 

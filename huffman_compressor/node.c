@@ -1,5 +1,36 @@
 #include "node.h"
 
+uint encode_rule_hash(const void * o, const hashtable *ht)
+{
+    encodeRule *er = (encodeRule*)o;
+
+    int index = er->data * 37;
+    index %= ht_size(ht);
+    return index;
+}
+
+int encode_rule_compare(const void* o1, const void* o2)
+{
+    encodeRule* er1 = (encodeRule*)o1;
+    encodeRule* er2 = (encodeRule*)o2;
+    return (int)er1->data - (int)er2->data;
+}
+
+encodeRule* encode_rule_create(byte key, bitvector code)
+{
+    encodeRule* er = (encodeRule*)malloc(sizeof(encodeRule));
+    er->code = code;
+    er->data = key;
+    return er;
+}
+
+void encode_rule_free(void* o)
+{
+    encodeRule* er = (encodeRule*)o;
+    assert(bv_delete(&er->code));
+    free(er);
+}
+
 //used in the pq occurances is the comparison value
 int node_compare(const void * o1, const void * o2)
 {

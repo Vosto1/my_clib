@@ -2,19 +2,36 @@
 #include "huffman_tree.h"
 #include "node.h"
 
-void print(hashtable *ht)
+void print_hashtable(hashtable *ht, void (*print_item)(void* o))
 {
     for (int i = 0; i < ht_size(ht); i++)
     {
         if (ht->entries[i] != UNUSED)
         {
-            entry *e = (entry *)ht->entries[i];
-            printf("index %d: [%c,%d]\n", i, e->key, e->value);
+            printf("index %d: ", i);
+            (*print_item)(ht->entries[i]);
+            printf("\n");
         }
         else
             printf("index %d: UNUSED\n", i);
     }
     printf("\n");
+}
+
+void print_occurances(void* o)
+{
+    entry *e = (entry *)o;
+    printf("[%c,%d]", e->key, e->value);
+}
+
+void print_encode_rule(void* o)
+{
+    encodeRule* e = (encodeRule*)o;
+    printf("[");
+    printf("%c", e->data);
+    printf(",");
+    print_bitvector_concise(&e->code);
+    printf("]");
 }
 
 void print_inorder(huffmantree hft)
@@ -59,12 +76,17 @@ int main(void)
     } */
     hashtable ht_occurances = letter_occurances(file_contents, len);
     free(file_contents);
-    //print(&ht_occurances);
+    print_hashtable(&ht_occurances, &print_occurances);
 
     huffmantree hft = create_huffman_tree(ht_occurances);
-    //print_inorder(hft);
+    print_inorder(hft);
     ht_destroy(&ht_occurances);
 
+    hashtable encode_rule_table = huffman_to_hash_dictionary(hft);
     assert(hft_free(&hft));
+
+    print_hashtable(&encode_rule_table, &print_encode_rule);
+
+    assert(ht_free(&encode_rule_table));
     return 0;
 }

@@ -45,6 +45,23 @@ int bv_merge(bitvector *bv, bitvector *mergeWith)
     return bit_count(bv);
 }
 
+bitvector bv_duplicate(bitvector* bv)
+{
+    uint count = bit_count(bv);
+    bitvector new = bv_create_empty();
+    bv_init(&new);
+    bool* b;
+    for (uint i = 0; i < count; i++)
+    {
+        b = bv_at(bv, i);
+        if (*b)
+            bv_add(&new, true);
+        else
+            bv_add(&new, false);
+    }
+    return new;
+}
+
 bool bv_remove_last(bitvector *bv)
 {
     bool *rm = sda_remove_last(bv);
@@ -243,9 +260,10 @@ static void freebit(void* bit)
     free(bit);
 }
 
-void printbitvector(bitvector *bv)
+void print_bitvector(bitvector *bv)
 {
-    for (int i = 0; i < bit_count(bv); i++)
+    uint count = bit_count(bv);
+    for (uint i = 0; i < count; i++)
     {
         bool *b = (bool *)bv_at(bv, i);
         if (*b)
@@ -256,7 +274,21 @@ void printbitvector(bitvector *bv)
     printf("\n");
 }
 
-void printbinary(binary *bin)
+void print_bitvector_concise(bitvector* bv)
+{
+    uint count = bit_count(bv);
+    for (uint i = 0; i < count; i++)
+    {
+
+        bool *b = (bool *)bv_at(bv, i);
+        if (*b)
+            printf("1");
+        else
+            printf("0");
+    }
+}
+
+void print_binary(binary *bin)
 {
     byte b;
     printf("byte count: %d\n", bin->amountOfBytes);

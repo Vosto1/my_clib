@@ -129,7 +129,7 @@ void test_sequence()
             break;
         }
     }
-    printbitvector(&bv);
+    print_bitvector(&bv);
 
     binary b;
     b.residualBits = 0;
@@ -137,33 +137,33 @@ void test_sequence()
     b.bytes = NULL;
 
     assert(bools2bits(&bv, &b) != 0);
-    printbinary(&b);
+    print_binary(&b);
 
     bitvector out = bv_create_empty();
     bv_init(&out);
     assert(bits2bools(&b, &out) != false);
 
     printf("converted from:\n");
-    printbitvector(&bv);
+    print_bitvector(&bv);
     bv_delete(&bv); // free
     printf("convertion back, result:\n");
-    printbitvector(&out);
+    print_bitvector(&out);
     bv_delete(&out); // free
 
     printf("written bits:\n");
-    printbinary(&b);
+    print_binary(&b);
     assert(write_binary_to_file(&b, "./test2.txt") != 0);
     free(b.bytes); // free
     binary read;
     assert(read_binary_from_file("./test2.txt", &read) != 0);
     printf("read bits:\n");
-    printbinary(&read);
+    print_binary(&read);
 
     bitvector readbv = bv_create_empty();
     bv_init(&readbv);
     assert(bits2bools(&read, &readbv) != false);
     free(read.bytes); // free
 
-    printbitvector(&readbv);
+    print_bitvector(&readbv);
     assert(bv_delete(&readbv)); // free
 }
