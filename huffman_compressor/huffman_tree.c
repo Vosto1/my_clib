@@ -25,7 +25,7 @@
 
 static node merge(node n1, node n2);
 
-huffmantree create_huffman_tree(hashtable occurances)
+huffmantree hft_create(hashtable occurances)
 {
     uint size = 10;
     priorityqueue pq = pq_create_empty();
@@ -81,61 +81,61 @@ static node merge(node n1, node n2)
     return new;
 }
 
-hashtable huffman_to_hash_dictionary(huffmantree hft)
+hashtable hft_to_dictionary(huffmantree hft)
 {
     hashtable ht = ht_create_empty();
     bitvector code = bv_create_empty();
-    stack s = st_create_empty();
+    stack nodes = st_create_empty();
 
     int size = 10;
-    assert(ht_init(&ht, size, &encode_rule_hash, &encode_rule_compare, &encode_rule_free));
+    assert(ht_init(&ht, size, &encode_rule_hash, &encode_rule_compare, &encode_rule_free) == size);
     assert(bv_init(&code));
-    assert(st_init(&s, size, &node_free_object));
+    assert(st_init(&nodes, size, &node_free_object) == size);
 
     encodeRule* er = NULL;
     entry* e = NULL;
     btree current = hft;
     btree nil = node_create(NULL); // dummy node
-    btree previous = nil;
+    btree previous = nil; // to not screw up the first check if the first current->right is equal to null (then previous cannot be equal to null)
     bitvector copy = bv_create_empty();
-    while (!(st_is_empty(&s) && current == NULL))
+    while (!(st_is_empty(&nodes) && current == NULL))
     {
-        while (current != NULL)
+        while (current != NULL) // go to the node farthest to the left from current
         {
-            assert(st_push(&s, current));
+            assert(st_push(&nodes, current));
             bv_add(&code, false);
             current = current->left;
         }
 
-        current = st_pop(&s);
+        current = st_pop(&nodes); // pop that node
         bv_remove_last(&code);
         e = (entry*)current->value;
-        if (!e->branch)
+        if (!e->branch) // if its not a branch then add it to the ht
         {
             copy = bv_duplicate(&code);
             er = encode_rule_create(e->key, copy);
             ht_insert(&ht, er);
         }
-        if (previous != current->right)
+        if (previous != current->right) // if true then we already visited the right tree and need to backtrack
         {
-            st_push(&s, current);
+            st_push(&nodes, current);
             bv_add(&code, true);
             current = current->right;
         }
-        else
+        else // backtrack -> re-push node and bit that was popped
         {
-            st_push(&s, current);
+            st_push(&nodes, current);
             bv_add(&code, true);
-            current = NULL;
+            current = NULL; // so that we can backtrack
         }
-        if (current == NULL) // if we went to the right and immediately hit NULL or backtracking toward root again
+        if (current == NULL) // if we went to the right and immediately hit NULL or if we want to be backtracking toward root
         {
-            previous = st_pop(&s);
+            previous = st_pop(&nodes);
             bv_remove_last(&code);
         }
     }
     bv_delete(&code);
-    st_free(&s);
+    st_free(&nodes);
     free(nil);
     return ht;
 }
@@ -143,4 +143,63 @@ hashtable huffman_to_hash_dictionary(huffmantree hft)
 bool hft_free(huffmantree* hft)
 {
     return bt_free((btree*)hft, &node_free_entry_object);
+}
+
+bitvector hft_to_binary(huffmantree hft)
+{
+    stack nodes = st_create_empty();
+    bitvector hftbinary = bv_create_empty();
+
+    int size = 10;
+    assert(st_init(&nodes, size, &node_free_object) == size);
+    assert(bv_init(&hftbinary));
+
+    entry* e;
+    btree current = hft;
+    assert(st_push(&nodes, current));
+    while (!st_is_empty(&nodes))
+    {
+        current = st_pop(&nodes);
+        e = (entry*)current->value;
+        if (!e->branch)
+        {
+            bv_add(&hftbinary, false);
+            bool b;
+            for (uint i = 0; i < 8; i++)
+            {
+                b = (bool)(e->key & (1 << i));
+                bv_add(&hftbinary, b);
+            }
+        }
+        else
+        {
+            bv_add(&hftbinary, true);
+        }
+        if (current->right != NULL)
+            assert(st_push(&nodes, current->right));
+        if(current->left != NULL)
+            assert(st_push(&nodes, current->left));
+    }
+
+    st_free(&nodes);
+    return hftbinary;
+}
+
+void hft_print_inorder(huffmantree hft)
+{
+    if (hft->left != NULL)
+    {
+        printf("->left\n");
+        hft_print_inorder(hft->left);
+    }
+    entry* e = (entry*)hft->value;
+    if (e->branch)
+        printf("branch: %d\n", e->value);
+    else
+        printf("leaf: %d %c\n", e->value, e->key);
+    if (hft->right != NULL)
+    {
+        printf("->right\n");
+        hft_print_inorder(hft->right);
+    }
 }

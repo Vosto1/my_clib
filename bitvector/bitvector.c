@@ -15,9 +15,9 @@ bitvector bv_create_empty()
     return bv;
 }
 
-int bv_init(bitvector *bv)
+bool bv_init(bitvector *bv)
 {
-    return sda_init(bv, 1, &freebit);
+    return sda_init(bv, 1, &freebit) == 1;
 }
 
 int bv_add(bitvector *bv, bool value)

@@ -31,6 +31,16 @@ void encode_rule_free(void* o)
     free(er);
 }
 
+void encode_rule_print(void* o)
+{
+    encodeRule* e = (encodeRule*)o;
+    printf("[");
+    printf("%c", e->data);
+    printf(",");
+    print_bitvector_concise(&e->code);
+    printf("]");
+}
+
 //used in the pq occurances is the comparison value
 int node_compare(const void * o1, const void * o2)
 {
@@ -87,4 +97,10 @@ void node_free_object(void * o)
 void node_free_entry_object(void * o)
 {
     free(o);
+}
+
+void node_print_entry(void* o)
+{
+    entry *e = (entry *)o;
+    printf("[%c,%d]", e->key, e->value);
 }

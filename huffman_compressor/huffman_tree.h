@@ -11,8 +11,10 @@
 #include "node.h"
 
 typedef btree huffmantree;
-huffmantree create_huffman_tree(hashtable occurances);
-hashtable huffman_to_hash_dictionary(huffmantree hft);
+huffmantree hft_create(hashtable occurances);
+hashtable hft_to_dictionary(huffmantree hft);
 bool hft_free(huffmantree* hft);
+bitvector hft_to_binary(huffmantree hft);
+void hft_print_inorder(huffmantree hft);
 
 #endif

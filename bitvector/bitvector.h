@@ -29,7 +29,7 @@ typedef struct b
 
 uint bit_count(bitvector *bv);
 bitvector bv_create_empty();
-int bv_init(bitvector *bv);
+bool bv_init(bitvector *bv);
 int bv_add(bitvector *bv, bool value);
 int bv_merge(bitvector *bv, bitvector *unionWith);
 bitvector bv_duplicate(bitvector* bv); // duplicate the bitvector sent to the function, copy is returned.

@@ -19,11 +19,11 @@ hashtable letter_occurances(char *string, uint len)
     entry *l;
     for (int i = 0; i < len; i++)
     {
-        tmp.key = string[i];
-        l = ht_lookup(&ht, &tmp); // the hash function is run only on the character --> i.e. the look up function checks if the character is already in the ht
+        tmp.key = string[i]; // use variable on the stack in order to avoid creating new memory for each search. This is possible because
+        l = ht_lookup(&ht, &tmp); // the hash function is run only on the character --> i.e. the look up function checks if the character is a key already in the ht
         if (l == UNUSED)
         {
-            e = node_create_entry(string[i], 1, false);
+            e = node_create_entry(string[i], 1, false); // the node entry will be contained in the huffman tree node
             ht_insert(&ht, e); // if the letter did not exist add to ht
         }
         else

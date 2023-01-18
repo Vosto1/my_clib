@@ -25,6 +25,7 @@ sdarray sda_create_empty()
 {
     sdarray a;
     a.array = NULL;
+    a.freeObject = NULL;
     a.size = 0;
     a.used = 0;
     return a;
