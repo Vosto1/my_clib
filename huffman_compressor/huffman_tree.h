@@ -15,6 +15,7 @@ huffmantree hft_create(hashtable occurances);
 hashtable hft_to_dictionary(huffmantree hft);
 bool hft_free(huffmantree* hft);
 bitvector hft_to_binary(huffmantree hft);
+huffmantree hft_binary_to_huffmantree(bitvector* binary);
 void hft_print_inorder(huffmantree hft);
 
 #endif

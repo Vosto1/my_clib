@@ -185,6 +185,55 @@ bitvector hft_to_binary(huffmantree hft)
     return hftbinary;
 }
 
+huffmantree hft_binary_to_huffmantree(bitvector* binary)
+{
+    huffmantree tree_to_build = node_create(NULL);
+    stack nodes;
+    int index = 0; 
+
+    int size = 10;
+    assert(st_init(&nodes, size, &node_free_object) == size);
+
+
+    huffmantree current = tree_to_build;
+    bool* tmp;
+    byte b = (byte)0;
+
+    st_push(&nodes, current);
+
+    while (!st_is_empty(&nodes))
+    {
+        current = st_pop(&nodes);
+        tmp = bv_at(binary, index);
+        index++;
+        if (*tmp)
+        {
+            current->value = node_create_entry((char)0, -1, true); // don't need occurances anymore, set to -1
+            // since it was a branch it has to have 2 children, hence:
+            current->left = node_create(NULL);
+            current->right = node_create(NULL);
+            st_push(&nodes, current->right);
+            st_push(&nodes, current->left);
+        }
+        else
+        {
+            for (int i = 7 + index, j = 7; i >= 0 + index; i--, j--) // byte is backwards (i >= 0 + index to make it clear what it does)
+            {
+                tmp = bv_at(binary, i);
+                if (*tmp)
+                {
+                    b |= (1 << j); // set bit on pos j (j goes from 7 -> 0)
+                }
+            }
+            index += 8;
+            current->value = node_create_entry(b, -1, false); // don't need occurances
+            b = (byte)0; // reset
+        }
+    }
+    st_free(&nodes);
+    return tree_to_build;
+}
+
 void hft_print_inorder(huffmantree hft)
 {
     if (hft->left != NULL)

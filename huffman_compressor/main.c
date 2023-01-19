@@ -32,13 +32,7 @@ int main(void)
     char *file_contents;
     uint len = read_text_file("textAnalysis.txt", &file_contents);
     print_string(file_contents, len);
-    /* char* a = (char*)malloc(sizeof(char) * 10);
-    int b = 32;
-    char c;
-    for (int i = 0; i < 10; i++) {
-        c = (char)(i + b);
-        a[i] = c;
-    } */
+
     hashtable ht_occurances = letter_occurances(file_contents, len);
     free(file_contents);
     print_hashtable(&ht_occurances, &node_print_entry);
@@ -52,6 +46,13 @@ int main(void)
     binary hftbin;
     bools2bits(&hftvector, &hftbin);
     print_binary(&hftbin);
+
+    huffmantree from_binary = hft_binary_to_huffmantree(&hftvector);
+    assert(bv_delete(&hftvector));
+
+    hft_print_inorder(from_binary);
+
+    assert(hft_free(&from_binary));
 
     assert(hft_free(&hft));
 
