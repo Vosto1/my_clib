@@ -185,7 +185,7 @@ bitvector hft_to_binary(huffmantree hft)
     return hftbinary;
 }
 
-huffmantree hft_binary_to_huffmantree(bitvector* binary)
+huffmantree hft_binary_to_huffmantree(bitvector* binary, uint* index_out)
 {
     huffmantree tree_to_build = node_create(NULL);
     stack nodes;
@@ -231,6 +231,7 @@ huffmantree hft_binary_to_huffmantree(bitvector* binary)
         }
     }
     st_free(&nodes);
+    *index_out = index; // in order to know where to start decoding
     return tree_to_build;
 }
 
@@ -251,4 +252,129 @@ void hft_print_inorder(huffmantree hft)
         printf("->right\n");
         hft_print_inorder(hft->right);
     }
+}
+
+void print_hashtable(hashtable *ht, void (*print_item)(void* o))
+{
+    for (int i = 0; i < ht_size(ht); i++)
+    {
+        if (ht->entries[i] != UNUSED)
+        {
+            printf("index %d: ", i);
+            (*print_item)(ht->entries[i]);
+            printf("\n");
+        }
+        else
+            printf("index %d: UNUSED\n", i);
+    }
+    printf("\n");
+}
+
+void encode(dstring filename)
+{
+    char* file_contents;
+    uint file_length = read_text_file(filename, &file_contents);
+
+    hashtable ht_occurances = letter_occurances(file_contents, file_length);
+
+    huffmantree hft = hft_create(ht_occurances);
+    ht_destroy(&ht_occurances);
+
+    hashtable encode_rule_table = hft_to_dictionary(hft);
+
+    bitvector hftvector = hft_to_binary(hft);
+
+    byte b;
+    encodeRule er;
+    encodeRule* code;
+    er.data = (byte)0;
+    for (int i = 0; i < file_length; i++)
+    {
+        b = file_contents[i];
+        er.data = b;
+        code = ht_lookup(&encode_rule_table, &er);
+        bv_merge(&hftvector, &code->code); // adds the bits inside code to compressed
+    }
+    binary compressed;
+    bools2bits(&hftvector, &compressed);
+
+    assert(hft_free(&hft));
+    assert(bv_delete(&hftvector));
+    assert(ht_free(&encode_rule_table));
+
+    int i = ds_find_character(filename, '.');
+    dstring newname = ds_substring(filename, 0, i - 1);
+    dstring fullname = ds_concat(newname, ".hf");
+
+    write_binary_to_file(&compressed, fullname);
+
+    ds_delete(&newname);
+    ds_delete(&fullname);
+}
+
+static char* new_char(int value)
+{
+    char* c = (char*)malloc(sizeof(char));
+    if (c == NULL)
+    {
+        printf("malloc char failed\n");
+        exit(EXIT_FAILURE);
+    }
+    return c;
+}
+
+static void free_char(void* o)
+{
+    free(o);
+}
+
+void decode(dstring filename)
+{
+    binary file_contents;
+    int file_size = read_binary_from_file(filename, &file_contents);
+    bitvector data;
+    bits2bools(&file_contents, &data);
+
+    uint index;
+    huffmantree hft = hft_binary_to_huffmantree(&data, &index);
+
+
+    huffmantree current = hft;
+    int length = bit_count(&data);
+    stringBuilder string = sb_new_string_builder();
+    bool* tmp = NULL;
+    entry* e;
+
+    for (int i = index; i < length; i++)
+    {
+        tmp = bv_at(&data, index);
+        if (!(e = (entry*)(current->value))->branch)
+        {
+            char* c = new_char(e->key);
+            sb_add(&string, c);
+            // reset
+            current = hft;
+        }
+        else
+        {
+            if (*tmp)
+            {
+                current = current->right;
+            }
+            else
+            {
+                current = current->left;
+            }
+        }
+    }
+    int i = ds_find_character(filename, '.');
+    dstring newname = ds_substring(filename, 0, i);
+    dstring fullname = ds_concat(newname, ".txt");
+    dstring decoded = sb_to_string(&string);
+    assert(write_file(fullname, decoded, sda_count(&string)));
+
+    sb_delete(&string);
+    ds_delete(decoded);
+    ds_delete(newname);
+    ds_delete(fullname);
 }

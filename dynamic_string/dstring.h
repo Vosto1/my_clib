@@ -27,9 +27,9 @@ int ds_copy(dstring* dest, dstring src);
 
 dstring ds_substring(dstring string, int start, int end);
 
-int ds_find_character(dstring message, char character);
+int ds_find_character(dstring string, char character);
 
-int ds_find_character_start_at(dstring message, int start, char character);
+int ds_find_character_start_at(dstring string, int start, char character);
 
 //TODO:
 // Fix this implementation

@@ -2,7 +2,7 @@
 #include "huffman_tree.h"
 #include "node.h"
 
-void print_hashtable(hashtable *ht, void (*print_item)(void* o))
+/*void print_hashtable(hashtable *ht, void (*print_item)(void* o))
 {
     for (int i = 0; i < ht_size(ht); i++)
     {
@@ -16,7 +16,7 @@ void print_hashtable(hashtable *ht, void (*print_item)(void* o))
             printf("index %d: UNUSED\n", i);
     }
     printf("\n");
-}
+}*/
 
 void print_string(char* str, uint len)
 {
@@ -29,7 +29,9 @@ void print_string(char* str, uint len)
 
 int main(void)
 {
-    char *file_contents;
+    encode("textAnalysis.txt");
+    return 0;
+    /*char *file_contents;
     uint len = read_text_file("textAnalysis.txt", &file_contents);
     print_string(file_contents, len);
 
@@ -59,5 +61,5 @@ int main(void)
     print_hashtable(&encode_rule_table, &encode_rule_print);
 
     assert(ht_free(&encode_rule_table));
-    return 0;
+    return 0;*/
 }
