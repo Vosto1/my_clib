@@ -2,7 +2,7 @@
 //improve nesting https://www.youtube.com/watch?v=CFRhGnuXG-4
 //clean the code
 //write tests for the new stuff
-//make sure that initializing sda_init with NULL as freeObject function in bstree and hashtable doesnt crash them
+//make sure that initializing mda_init with NULL as freeObject function in bstree and hashtable doesnt crash them
 // debug/memory test huffman functions (hft_binary_to_huffmantree, encode and decode) debug and memory test string builder!!!!!
 
 
