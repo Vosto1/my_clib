@@ -46,17 +46,17 @@ void auto_tests(int tests, int lengthRange)
         assert(bit_count(&bv) == length);
 
         // convert to binary
-        assert(bools2bits(&bv, &bin) == bin_amount_bytes(bin));
+        assert(bv_bools2bits(&bv, &bin) == bin_amount_bytes(bin));
         // write to file
-        assert(write_binary_to_file(&bin, "autotestfile.bin") != 0);
+        assert(bv_write_binary_to_file(&bin, "autotestfile.bin") != 0);
         // read file that was written
-        assert(read_binary_from_file("autotestfile.bin", &fromFile) != 0);
+        assert(bv_read_binary_from_file("autotestfile.bin", &fromFile) != 0);
 
         // assure that both binaries are equal
         assert(bin_equal(bin, fromFile));
         
         assert(bv_init(&out) != 0);   // initialize
-        assert(bits2bools(&fromFile, &out) != false);
+        assert(bv_bits2bools(&fromFile, &out) != false);
         
         // check both bvs are equal (bv read from file and original)
         bool *a;
@@ -129,41 +129,41 @@ void test_sequence()
             break;
         }
     }
-    print_bitvector(&bv);
+    bv_print_bitvector(&bv);
 
     binary b;
     b.residualBits = 0;
     b.amountOfBytes = 0;
     b.bytes = NULL;
 
-    assert(bools2bits(&bv, &b) != 0);
-    print_binary(&b);
+    assert(bv_bools2bits(&bv, &b) != 0);
+    bin_print(&b);
 
     bitvector out = bv_create_empty();
     bv_init(&out);
-    assert(bits2bools(&b, &out) != false);
+    assert(bv_bits2bools(&b, &out) != false);
 
     printf("converted from:\n");
-    print_bitvector(&bv);
+    bv_print_bitvector(&bv);
     bv_delete(&bv); // free
     printf("convertion back, result:\n");
-    print_bitvector(&out);
+    bv_print_bitvector(&out);
     bv_delete(&out); // free
 
     printf("written bits:\n");
-    print_binary(&b);
-    assert(write_binary_to_file(&b, "./test2.txt") != 0);
+    bin_print(&b);
+    assert(bv_write_binary_to_file(&b, "./test2.txt") != 0);
     free(b.bytes); // free
     binary read;
-    assert(read_binary_from_file("./test2.txt", &read) != 0);
+    assert(bv_read_binary_from_file("./test2.txt", &read) != 0);
     printf("read bits:\n");
-    print_binary(&read);
+    bin_print(&read);
 
     bitvector readbv = bv_create_empty();
     bv_init(&readbv);
-    assert(bits2bools(&read, &readbv) != false);
+    assert(bv_bits2bools(&read, &readbv) != false);
     free(read.bytes); // free
 
-    print_bitvector(&readbv);
+    bv_print_bitvector(&readbv);
     assert(bv_delete(&readbv)); // free
 }

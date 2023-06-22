@@ -2,16 +2,16 @@
 
 clear
 
-mkdir bin release 2> /dev/null
+mkdir bin release release/include 2> /dev/null
 
-gcc -c -Wall -Wextra ./lib/*.c
+gcc -c -Wall -Wextra ./src/*.c
 mv ./*.o ./bin/
-ar -rcs ./bin/lib.a ./bin/*.o
+ar -rcs ./bin/libutil.a ./bin/*.o
 rm -f ./bin/*.o
 
-cp ./lib/*.h ./release/
-cp ./bin/lib.a ./release/
+cp ./src/*.h ./release/include/
+cp ./bin/libutil.a ./release/
 
-tar --create --file ./release/release.tar ./release/*.h ./release/*.a
+tar --create --file ./release/release.tar ./release/include ./release/*.a
 
-rm -f ./release/*.h ./release/*.a
+rm -rf ./release/include ./release/*.a

@@ -6,7 +6,7 @@ clear
 
 mkdir bin release 2> /dev/null
 
-gcc -c -Wall -Wextra ./lib/*.c
+gcc -c -Wall -Wextra ./src/*.c
 mv ./*.o ./bin/
-ar -rcs ./bin/lib.a ./bin/*.o
+ar -rcs ./bin/libutil.a ./bin/*.o
 rm -f ./bin/*.o

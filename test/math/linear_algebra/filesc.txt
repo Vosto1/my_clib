@@ -1,4 +1,0 @@
-linalg.c
-main.c
-test.c
--lm

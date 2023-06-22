@@ -1,2 +1,0 @@
-../dynamic_string/dstring.c
-stringbuilder.c

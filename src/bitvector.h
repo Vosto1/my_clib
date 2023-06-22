@@ -37,14 +37,14 @@ bool bv_remove_last(bitvector *bv);
 bool *bv_at(bitvector *bv, uint index);
 uint bv_clear(bitvector *bv);
 bool bv_delete(bitvector *bv);
-int bools2bits(bitvector *bv, binary *out);
-bool bits2bools(binary *b, bitvector *out);
-int write_binary_to_file(binary *b, char *file);
-int read_binary_from_file(char *file, binary *b);
+int bv_bools2bits(bitvector *bv, binary *out);
+bool bv_bits2bools(binary *b, bitvector *out);
+int bv_write_binary_to_file(binary *b, char *file);
+int bv_read_binary_from_file(char *file, binary *b);
 
-void print_bitvector(bitvector *bv);
-void print_bitvector_concise(bitvector* bv);
-void print_binary(binary *bin);
+void bv_print_bitvector(bitvector *bv);
+void bv_print_bitvector_concise(bitvector* bv);
+void bin_print(binary *bin);
 
 binary bin_new();
 bool bin_equal(binary x, binary y);
