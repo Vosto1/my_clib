@@ -80,6 +80,6 @@ mat4 rotate(vec3 v);
 mat4 perspec(double fov, double n, double f, double sw, double sh);
 mat4 ortho(double l, double r, double t, double b, double n, double f);
 mat4 lookat(vec3 u, vec3 v, vec3 w);
-void printmat4(char* name, mat4 m);// debug
+void printmat4(char* name, mat4 m); // debug
 
 #endif

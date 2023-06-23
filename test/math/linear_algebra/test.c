@@ -54,4 +54,5 @@ void test()
     assert(cd.x == 4/(2*sqrt(14)) && cd.y == 2/(2*sqrt(14)) && cd.z == 6/(2*sqrt(14)));
     cd = vsmul(c, 2);
     assert(cd.x == 8 && cd.y == 4 && cd.z == 12);
+    printf("Tests passed.\n");
 }
