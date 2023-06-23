@@ -6,7 +6,14 @@ clear
 
 mkdir bin release 2> /dev/null
 
-gcc -c -Wall -Wextra ./src/*.c
+printf "Building...\n"
+
+gcc -c -g -Wall -Wextra ./src/*.c # -g = debug flag
 mv ./*.o ./bin/
 ar -rcs ./bin/libutil.a ./bin/*.o
+
+printf "Cleaning up...\n"
+
 rm -f ./bin/*.o
+
+printf "Done\n"

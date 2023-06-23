@@ -9,9 +9,8 @@
 #include <time.h>
 #include <stdlib.h>
 #include <assert.h>
-#include "sdarray.h"
-//#include "../utils/error.h"
-#include "../utils/timer.h"
+#include "mdarray.h"
+#include "timer.h"
 
 typedef struct
 {

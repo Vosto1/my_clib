@@ -289,7 +289,7 @@ void test_sequence()
     assert(compare(h_min(&h), item8) == 0);
     rm = h_extract_min(&h);
     assert(compare(rm, item8) == 0);
-    item comp = *item8; // make copy
+    item comp = *item8; // make stack copy
     free(rm);
     rm = h_remove(&h, &comp);
     assert(rm == NULL);

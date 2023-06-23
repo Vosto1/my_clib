@@ -1,46 +1,46 @@
 #include "print_color.h"
 
-void red()
+void pcred()
 {
   printf("\033[1;31m");
 }
 
-void yellow()
+void pcyellow()
 {
   printf("\033[1;33m");
 }
 
-void green()
+void pcgreen()
 {
   printf("\033[0;32m");
 }
 
-void cyan()
+void pccyan()
 {
   printf("\033[0;36m");
 }
 
-void blue()
+void pcblue()
 {
   printf("\033[0;34m");
 }
 
-void purple()
+void pcpurple()
 {
   printf("\033[0;35m");
 }
 
-void white()
+void pcwhite()
 {
   printf("\033[0;37m");
 }
 
-void black()
+void pcblack()
 {
   printf("\033[0;30m");
 }
 
-void reset()
+void pcreset()
 {
   printf("\033[0m");
 }

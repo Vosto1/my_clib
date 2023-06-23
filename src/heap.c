@@ -134,7 +134,7 @@ void* h_remove(heap *h, void* item)
     }
     void* temp;
     (*h->minKey)(h_min(h), &temp);
-    if (h_decrease_key(h, item, temp) > (int)h_size(h))
+    if (h_decrease_key(h, item, temp) < 0)
     {
         free(temp); // this is not good, assumes the user minkey function allocates memory
         return NULL; // error

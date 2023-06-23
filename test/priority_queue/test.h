@@ -2,8 +2,8 @@
 #define TEST_PRIORITY_QUEUE_H
 
 #define __TESTING__
-#include "priority_queue.h"
-#include "../utils/timer.h"
+#include "priorityqueue.h"
+#include "timer.h"
 #include <assert.h>
 #include <stdbool.h>
 

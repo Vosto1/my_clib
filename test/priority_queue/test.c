@@ -39,13 +39,13 @@ void freeObject(void* i)
     free(i);
 }
 
-void heapPrintTree(sheap *h)
+void heapPrintTree(mheap *h)
 {
     int y = 0;
     int x = 0;
-    for (int i = 0; i < sh_size(h); i++)
+    for (int i = 0; i < mh_size(h); i++)
     {
-        for (int j = 0; j < pow(2, i) && j + pow(2, i) <= sh_size(h); j++)
+        for (int j = 0; j < pow(2, i) && j + pow(2, i) <= mh_size(h); j++)
         {
             x = j + (int)pow(2, i) - 1;
             y = h->items.used;
@@ -96,7 +96,7 @@ bool integrity_check(int n)
             { // 20%
                 if (pq_count(&pq) != 0)
                 {
-                    min = sh_peek(&pq.h);
+                    min = mh_peek(&pq.h);
                     it = pq_dequeue(&pq);
                     assert(it != NULL);
                     result = compare(min, it);
@@ -107,7 +107,7 @@ bool integrity_check(int n)
             }
             else if (val > 87 && val < 95)
             {
-                min = sh_peek(&pq.h);
+                min = mh_peek(&pq.h);
                 if (pq_trydequeue(&pq, (void *)&out))
                 {
                     assert(out != NULL);
@@ -119,7 +119,7 @@ bool integrity_check(int n)
             }
             else
             { // if (val > 94)
-                min = sh_peek(&pq.h);
+                min = mh_peek(&pq.h);
                 if (pq_peek(&pq, (void *)&out))
                 {
                     result = compare(min, out);
@@ -127,7 +127,7 @@ bool integrity_check(int n)
                 // inc peeks
                 pcount++;
             }
-            if (!sh_test_heap_integrity(&pq.h))
+            if (!mh_test_heap_integrity(&pq.h))
             {
                 system("clear");
                 printf("priorityqueue: heap integrity broken\n");

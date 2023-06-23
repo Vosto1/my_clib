@@ -5,12 +5,14 @@
             "label": "C/C++: gcc build active file",
             "command": "/usr/bin/gcc",
             "args": [
+                "-g",
                 "-fdiagnostics-color=always",
                 "-I${workspaceFolder}/src",
                 "${file}",
                 "${fileDirname}/test.c",
                 "-L${workspaceFolder}/bin",
                 "-lutil",
+                "-lm",
                 "-o",
                 "${workspaceFolder}/program"
             ],

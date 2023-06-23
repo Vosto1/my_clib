@@ -55,7 +55,7 @@ void auto_tests(int tests, int lengthRange)
         // assure that both binaries are equal
         assert(bin_equal(bin, fromFile));
         
-        assert(bv_init(&out) != 0);   // initialize
+        assert(bv_init(&out) != 0); // initialize
         assert(bv_bits2bools(&fromFile, &out) != false);
         
         // check both bvs are equal (bv read from file and original)

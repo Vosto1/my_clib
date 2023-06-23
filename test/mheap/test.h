@@ -7,10 +7,10 @@
 #include <assert.h>
 #include <stdio.h>
 #include <math.h>
-#include "../s_dynamic_array/sdarray.h"
-#include "../utils/timer.h"
-#include "s_heap.h"
-#include "../datatype.h"
+#include "mdarray.h"
+#include "timer.h"
+#include "mheap.h"
+#include "datatype.h"
 
 typedef char Element;
 typedef double Key;

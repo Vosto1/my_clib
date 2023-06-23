@@ -1,4 +1,4 @@
-#include "stringbuilder.h"
+/*#include "stringbuilder.h"
 
 #define QUARTER 0.25
 
@@ -131,4 +131,4 @@ static MEM sb_memory_decrease(stringBuilder *sb)
         }
     }
     return MEM_OK;
-}
+}*/

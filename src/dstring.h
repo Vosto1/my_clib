@@ -7,7 +7,12 @@
 #include <stdlib.h>
 #include <assert.h>
 
-typedef char *dstring;
+typedef struct dynamic_string
+{
+    char* string;
+    uint length;
+    uint size;
+}dstring;
 
 dstring ds_new_string(int length);
 
@@ -30,6 +35,8 @@ dstring ds_substring(dstring string, uint start, uint end);
 int ds_find_character(dstring string, char character);
 
 int ds_find_character_start_at(dstring string, uint start, char character);
+
+char ds_at(dstring string, uint index);
 
 //TODO:
 // Fix this implementation

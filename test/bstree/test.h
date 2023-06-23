@@ -3,8 +3,7 @@
 
 #include <assert.h>
 #include "bstree.h"
-#include "../utils/timer.h"
-#include "../utils/error.h"
+#include "timer.h"
 
 typedef char item;
 

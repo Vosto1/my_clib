@@ -64,7 +64,7 @@ void test(int amount)
 
     for (int i = 0; i < amount; i++)
     {
-        switch (rand() % 3)
+        switch (rand() % 5)
         {
             case 0: // fall through
             case 1: // fall through
@@ -74,6 +74,7 @@ void test(int amount)
         default:
             // cant happen
             printf("wut?");
+            exit(-1);
             break;
         }
     }

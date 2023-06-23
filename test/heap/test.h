@@ -6,10 +6,10 @@
 #include <stdbool.h>
 #include <assert.h>
 #include <stdio.h>
-#include "../dynamic_array/darray.h"
-#include "../utils/timer.h"
+#include "darray.h"
+#include "timer.h"
 #include "heap.h"
-#include "../datatype.h"
+#include "datatype.h"
 
 typedef char Element;
 typedef double Key;

@@ -7,7 +7,8 @@
 #include <stdbool.h>
 #include <assert.h>
 #include "quicksort.h"
-#include "../../utils/timer.h"
+#include "timer.h"
+#include "print_color.h"
 #define SIZE 2000
 
 void test(void);

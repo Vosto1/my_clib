@@ -73,18 +73,28 @@ void test(void)
             exit(-1);
         sinner = now();
         init(a, SIZE, 100);
-        printf("before: ");
+        pcblue();
+        printf("before:\n");
+        pcreset();
         print(a);
         quicksort(a, SIZE, &compare);
-        printf("after: ");
+        pcblue();
+        printf("after:\n");
+        pcreset();
         print(a);
         assert(is_sorted(a, SIZE));
         einner = now();
         dinner = diff(sinner, einner);
-        printf("Success, time: %fs.\n", dinner);
+        pcblue();
+        printf("Success");
+        pcreset();
+        printf(", time: %fs.\n", dinner);
         free_array(a, SIZE);
     }
     ticks end = now();
     seconds s = diff(start, end);
-    printf("Tests passed. %fs\n", s);
+    pcgreen();
+    printf("Tests passed");
+    pcreset();
+    printf(". %fs\n", s);
 }

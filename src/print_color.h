@@ -6,14 +6,14 @@
 
 #include <stdio.h>
 
-void red();
-void yellow();
-void green();
-void cyan();
-void blue();
-void purple();
-void white();
-void black();
-void reset();
+void pcred();
+void pcyellow();
+void pcgreen();
+void pccyan();
+void pcblue();
+void pcpurple();
+void pcwhite();
+void pcblack();
+void pcreset();
 
 #endif

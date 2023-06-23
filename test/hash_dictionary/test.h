@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include <assert.h>
 #include "hashtable.h"
-#include "../utils/timer.h"
+#include "timer.h"
 
 //#define HT_DEBUG
 //#define HT_VERBOSE
