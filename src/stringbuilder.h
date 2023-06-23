@@ -1,4 +1,4 @@
-/*#ifndef STRINGBUILDER_H
+#ifndef STRINGBUILDER_H
 #define STRINGBUILDER_H
 
 #include <stdbool.h>
@@ -18,4 +18,4 @@ void sb_remove(stringBuilder*sb, uint amount);
 dstring sb_to_string(stringBuilder* sb);
 void sb_delete(stringBuilder* sb);
 
-#endif*/
+#endif

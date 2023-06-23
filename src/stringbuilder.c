@@ -1,4 +1,4 @@
-/*#include "stringbuilder.h"
+#include "stringbuilder.h"
 
 #define QUARTER 0.25
 
@@ -49,9 +49,9 @@ bool sb_add(stringBuilder* sb, char c)
     return true;
 }
 
-bool sb_append(stringBuilder* sb, dstring string, uint length)
+bool sb_append(stringBuilder* sb, dstring string)
 {
-    if (sb == NULL || sb->string == NULL || string == NULL)
+    if (sb == NULL || sb->string == NULL || string.string == NULL)
     {
         return false;
     }
@@ -59,12 +59,12 @@ bool sb_append(stringBuilder* sb, dstring string, uint length)
     MEM m = sb_memory_increase(sb);
     assert(m == MEM_OK || m == MEM_DOUBLED);
 
-    for (uint i = sb->used; i < sb->used + length; i++)
+    for (uint i = sb->used; i < sb->used + string.length; i++)
     {
-        sb->string[i] = string[i];
+        sb->string[i] = string.string[i];
     }
 
-    sb->used += length;
+    sb->used += string.length;
     sb->string[sb->used] = '\0';
     return true;
 }
@@ -131,4 +131,4 @@ static MEM sb_memory_decrease(stringBuilder *sb)
         }
     }
     return MEM_OK;
-}*/
+}
