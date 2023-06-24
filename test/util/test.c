@@ -16,5 +16,5 @@ void test(const char* string)
     }
     printf("\n");
 
-    //printf("Tests passed\n");
+    ds_delete(&sentence);
 }
