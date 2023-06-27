@@ -25,6 +25,8 @@ stringBuilder sb_new_string_builder()
     sb.used = 0;
     char* temp = (char*)malloc(sizeof(char));
 
+    temp[0] = '\0';
+
     if (temp != NULL)
         sb.string = temp;
     else

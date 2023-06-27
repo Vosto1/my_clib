@@ -159,7 +159,7 @@ dstring ds_substring(dstring string, uint start, uint end)
 	assert(string.length > end);
 
 
-	int len = end - start+2; // plus 2 because they are index and 1 space for the null terminator
+	int len = end - start+1; // plus 1 because they are index
 	dstring s = ds_new_string(len);
 	uint i, j;
 	for (i = start, j = 0; i <= end; i++, j++)
@@ -167,6 +167,7 @@ dstring ds_substring(dstring string, uint start, uint end)
 		s.string[j] = string.string[i];
 	}
 	s.string[j] = '\0';
+    s.length = j; // the index the null term is at == length of string
 	return s;
 }
 
@@ -206,6 +207,27 @@ char ds_at(dstring string, uint index)
 
 ////////////////////////////////////////////////////////////
 // constant string functions
+////////////////////////////////////////////////////////////
+
+dstring s_substring(char* string, uint start, uint end)
+{
+    uint len = strlen(string);
+	assert(start <= end);
+	assert(len > end);
+
+
+	uint new_len = end - start+1; // plus 1 because they are index
+	dstring s = ds_new_string(new_len);
+	uint i, j;
+	for (i = start, j = 0; i <= end; i++, j++)
+	{
+		s.string[j] = string[i];
+	}
+	s.string[j] = '\0';
+    s.length = j; // the index the null term is at == length of string
+	return s;
+}
+
 // return index of first occurance of the character
 int s_find_character(char* message, char character)
 {
@@ -215,9 +237,9 @@ int s_find_character(char* message, char character)
 int s_find_character_start_at(char* message, uint start, char character)
 {
 	assert(message != NULL);
-	assert(start < strlen(message));
-    uint i;
     uint len = strlen(message);
+	assert(start < len);
+    uint i;
     for (i = start; i < len; i++)
     {
         if (message[i] == character)

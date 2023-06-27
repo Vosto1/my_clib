@@ -6,7 +6,10 @@ mkdir bin release release/include release/bin 2> /dev/null
 
 printf "Building source files...\n"
 
-gcc -c -march=native -mtune=native -O3 ./src/*.c 2> /dev/null
+# optimized release without debug info
+#gcc -c -march=native -mtune=native -O3 ./src/*.c 2> /dev/null
+# release with debug info
+gcc -c  -g ./src/*.c 2> /dev/null
 mv ./*.o ./bin/
 ar -rcs ./bin/libutil.a ./bin/*.o
 rm -f ./bin/*.o
