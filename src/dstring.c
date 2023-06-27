@@ -203,3 +203,39 @@ char ds_at(dstring string, uint index)
     assert(index < string.length);
     return string.string[index];
 }
+
+////////////////////////////////////////////////////////////
+// constant string functions
+// return index of first occurance of the character
+int s_find_character(char* message, char character)
+{
+    return s_find_character_start_at(message, 0, character);
+}
+
+int s_find_character_start_at(char* message, uint start, char character)
+{
+	assert(message != NULL);
+	assert(start < strlen(message));
+    uint i;
+    uint len = strlen(message);
+    for (i = start; i < len; i++)
+    {
+        if (message[i] == character)
+        {
+            break;
+        }
+    }
+
+	if (i == len)
+	{
+		return -1;
+	}
+
+    return i;
+}
+
+char s_at(char* string, uint index)
+{
+    assert(index < strlen(string));
+    return string[index];
+}

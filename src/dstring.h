@@ -46,11 +46,17 @@ int ds_find_character_start_at(dstring string, uint start, char character);
 
 char ds_at(dstring string, uint index);
 
+int s_find_character(char* message, char character);
+
+int s_find_character_start_at(char* message, uint start, char character);
+
+char s_at(char* string, uint index);
+
 //TODO:
 // Fix this implementation
 // create better tests
 //functions to make:
-// string.split
+// string.split // charreplace (need regex for more complicated replace)
 // string.replace
 
 #endif
