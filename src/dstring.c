@@ -59,6 +59,34 @@ dstring ds_concat(dstring str1, dstring str2)
 	return temp;
 }
 
+dstring ds_bcstrconcat(dstring str, const char* cstr)
+{
+    dstring tmp = ds_new_string_initialize(cstr);
+    dstring res = ds_concat(str, tmp);
+    ds_delete(&tmp);
+    return res;
+}
+
+dstring ds_bcharconcat(dstring str, char ch)
+{
+    char char2str[2] = { ch, '\0'};
+    return ds_bcstrconcat(str, char2str);
+}
+
+dstring ds_fcstrconcat(const char* cstr, dstring str)
+{
+    dstring tmp = ds_new_string_initialize(cstr);
+    dstring res = ds_concat(tmp, str);
+    ds_delete(&tmp);
+    return res;
+}
+
+dstring ds_fcharconcat(char ch, dstring str)
+{
+    char char2str[2] = { ch, '\0'};
+    return ds_fcstrconcat(char2str, str);
+}
+
 int ds_truncate(dstring* dest, unsigned int truncated_len)
 {
 	assert(dest != NULL);

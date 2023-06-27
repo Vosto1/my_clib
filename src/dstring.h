@@ -22,6 +22,14 @@ dstring ds_new_string_initialize(const char *s);
 
 dstring ds_concat(dstring str1, dstring str2);
 
+dstring ds_bcstrconcat(dstring str, const char* cstr);
+
+dstring ds_bcharconcat(dstring str, char ch);
+
+dstring ds_fcstrconcat(const char* cstr, dstring str);
+
+dstring ds_fcharconcat(char ch, dstring str);
+
 int ds_truncate(dstring *dest, unsigned int truncated_len);
 
 void ds_print(dstring s, FILE *file);
