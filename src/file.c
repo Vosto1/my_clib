@@ -7,7 +7,7 @@ int read_file(const char *filepath, void **out)
 	FILE *rfp = fopen(filepath, "rb"); // rb == read binary
 	if (!rfp)
 	{
-		return 0;
+		return -1;
 	}
 
 	// get file size (bytes)
@@ -19,7 +19,7 @@ int read_file(const char *filepath, void **out)
 	void *file = (void *)malloc(length);
 	if (!file)
 	{
-		return 0;
+		return -2;
 	}
 
 	// read file contents
@@ -38,12 +38,12 @@ int write_file(const char *filepath, void *contents, uint size)
 	FILE *wfp = fopen(filepath, "wb"); // wb == write binary
 	if (!wfp)
 	{
-		return 0;
+		return -1;
 	}
 
 	if (contents == NULL)
 	{
-		return 0;
+		return -2;
 	}
 
 	int writtenBytes = fwrite(contents, BYTE, size, wfp);
@@ -57,7 +57,18 @@ int read_text_file(char *filepath, char **out)
 {
 	void *buffer;
 	int readBytes = read_file(filepath, &buffer);
+    if (readBytes < 0)
+    {
+        return readBytes;
+    }
 	*out = (char *)buffer;
+    char* tmp = (char*)realloc(*out, readBytes + 1); // add space for '\0'
+    if (tmp == NULL)
+    {
+        return -3;
+    }
+    tmp[readBytes] = '\0';
+    *out = tmp;
 	return readBytes;
 }
 
@@ -72,7 +83,7 @@ int get_file_size(char *filepath)
     // get file size (bytes)
 	if (fp == NULL)
 	{
-		return 0;
+		return -1;
 	}
 	fseek(fp, 0, SEEK_END);
 	long length = ftell(fp);

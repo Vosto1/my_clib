@@ -5,7 +5,7 @@ int main()
 {
     // remove seeding before debugging!
     srand(time(0));
-    //test();
+    test();
     auto_tests(100);
     return 0;
 }

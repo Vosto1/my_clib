@@ -2,9 +2,11 @@
 
 void test()
 {
+    char* cstr1 = "Department of ";
+    char* cstr2 = "Redundancy ";
 	dstring str1, str2;
-	str1 = ds_new_string_initialize("Department of ");
-	str2 = ds_new_string_initialize("Redundancy ");
+	str1 = ds_new_string_initialize(cstr1);
+	str2 = ds_new_string_initialize(cstr2);
 	dstring str3 = ds_concat(str1, str2); 
 
 	assert(str1.string != NULL);
@@ -17,6 +19,7 @@ void test()
 	assert(str3.size == 25+1); 
 
 	ds_print(str3, stdout);
+    ds_delete(&str3);
 
 	ds_print(str1, stdout);	
 	ds_truncate(&str1, 10);	
@@ -25,6 +28,7 @@ void test()
     assert(str1.size == 10+1);
     assert(str2.size == 11+1);
 	ds_print(str1, stdout);	
+
 
 	ds_delete(&str1);
 	ds_delete(&str2);
@@ -35,6 +39,10 @@ void test()
 	dstring r = ds_random(10);
 	ds_print(r, stdout);
 	ds_delete(&r);
+
+    dstring trimmed = s_remove_last_n(cstr1, 4);
+    assert(strcmp(trimmed.string, "Department") == 0);
+    ds_delete(&trimmed);
 
 	printf("\n");
 	printf("Tests passed.\n");

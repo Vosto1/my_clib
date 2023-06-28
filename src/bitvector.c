@@ -42,7 +42,7 @@ int bv_merge(bitvector *bv, bitvector *mergeWith)
     }
     uint count = bit_count(mergeWith);
     for (uint i = 0; i < count; i++)
-        bv_add(bv, mergeWith->array[i]);
+        bv_add(bv, *(bool*)mergeWith->array[i]);
     return bit_count(bv);
 }
 
@@ -294,7 +294,7 @@ void bin_print(binary *bin)
     byte b;
     printf("byte count: %d\n", bin->amountOfBytes);
     printf("residual: %d\n", bin->residualBits);
-    printf("binary: ");
+    /*printf("binary: ");
     for (uint i = 0; i < bin->amountOfBytes; i++)
     {                      // for every byte
         b = bin->bytes[i]; // extract byte at position i
@@ -309,6 +309,27 @@ void bin_print(binary *bin)
                 printf("0");
             }
         }
+    }*/
+    printf("binary: ");
+    for (uint i = 0; i < bin->amountOfBytes - bin->residualBits; i++)
+    {                      // for every byte
+        b = bin->bytes[i]; // extract byte at position i
+        for (uint j = 0; j < bv_bytes_to_bits(sizeof(byte)); j++)
+        { // for each bit in a byte
+            if (b & (1 << j))
+            { // extract bit at position j
+                printf("1");
+            }
+            else
+            {
+                printf("0");
+            }
+        }
+    }
+    printf("  ");
+    for (uint i = 0; i < bin->residualBits; i++)
+    {
+        printf("0");
     }
     printf("\n");
 }

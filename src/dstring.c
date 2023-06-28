@@ -14,6 +14,35 @@ dstring ds_new_string(int length)
 	return temp;
 }
 
+dstring ds_new_string_initialize(const char* s)
+{
+	assert(s != NULL);
+	dstring temp;
+    int length = strlen(s);
+	temp = ds_new_string(length);
+	strcpy(temp.string, s);
+    temp.length = length;
+	assert(strlen(temp.string) == strlen(s));
+	assert(!(strcmp(temp.string, s)));
+	return temp;
+}
+
+dstring ds_new_string_mem(void* mem, uint length)
+{
+    // add memory space for '\0',
+    // and to make sure that [mem size == length] is not a lie
+    char* tmp = (char*)realloc(mem, length + 1);
+
+    tmp[length] = '\0';
+
+    dstring str;
+    str.string = tmp;
+    str.length = length;
+    str.size = length + 1;
+
+    return str;
+}
+
 dstring ds_random(int length)
 {
 	static int min = 32;
@@ -28,18 +57,6 @@ dstring ds_random(int length)
 	return s;
 }
 
-dstring ds_new_string_initialize(const char* s)
-{
-	assert(s != NULL);
-	dstring temp;
-    int length = strlen(s);
-	temp = ds_new_string(length);
-	strcpy(temp.string, s);
-    temp.length = length;
-	assert(strlen(temp.string) == strlen(s));
-	assert(!(strcmp(temp.string, s)));
-	return temp;
-}
 
 dstring ds_concat(dstring str1, dstring str2)
 {
@@ -52,6 +69,24 @@ dstring ds_concat(dstring str1, dstring str2)
 	uint len2 = str1.length;
 	char* tp = temp.string+len2;
 	chpcopy(tp, str2.string);
+	temp.string[length] = '\0';
+    temp.length = length;
+	assert(temp.string != NULL);
+	assert(temp.length == length);
+	return temp;
+}
+
+dstring ds_cstrconcat(const char* str1, const char* str2)
+{
+	assert(str1 != NULL);
+	assert(str2!= NULL);
+
+	uint length = strlen(str1) + strlen(str2);
+	dstring temp = ds_new_string(length);
+	chpcopy(temp.string, (char*)str1);
+	uint len2 = strlen(str1);
+	char* tp = temp.string+len2;
+	chpcopy(tp, (char*)str2);
 	temp.string[length] = '\0';
     temp.length = length;
 	assert(temp.string != NULL);
@@ -104,6 +139,13 @@ int ds_truncate(dstring* dest, unsigned int truncated_len)
     (*dest).length = truncated_len;
     (*dest).size = truncated_len + 1;
 	return 1;
+}
+
+int ds_remove_last_n(dstring* str, unsigned int to_remove)
+{
+    int len = str->length - to_remove;
+    assert(ds_truncate(str, len) == 1);
+    return len;
 }
 
 void ds_print(dstring s, FILE* file)
@@ -171,21 +213,41 @@ dstring ds_substring(dstring string, uint start, uint end)
 	return s;
 }
 
-// return index of first occurance of the character
-int ds_find_character(dstring message, char character)
+int ds_find_last_char_occurance(dstring string, char character)
 {
-    return ds_find_character_start_at(message, 0, character);
+    assert(string.string != NULL);
+    int i;
+    for (i = string.length - 1; i >= 0; i--)
+    {
+        if (string.string[i] == character)
+        {
+            break;
+        }
+    }
+
+    if (i == 0)
+    {
+        return -1;
+    }
+
+    return i;
 }
 
-int ds_find_character_start_at(dstring message, uint start, char character)
+// return index of first occurance of the character
+int ds_find_character(dstring string, char character)
 {
-	assert(message.string != NULL);
-	assert(start < message.length);
+    return ds_find_character_start_at(string, 0, character);
+}
+
+int ds_find_character_start_at(dstring string, uint start, char character)
+{
+	assert(string.string != NULL);
+	assert(start < string.length);
     uint i;
-    uint len = message.length;
+    uint len = string.length;
     for (i = start; i < len; i++)
     {
-        if (message.string[i] == character)
+        if (string.string[i] == character)
         {
             break;
         }
@@ -209,6 +271,14 @@ char ds_at(dstring string, uint index)
 // constant string functions
 ////////////////////////////////////////////////////////////
 
+dstring s_remove_last_n(char* str, unsigned int to_remove)
+{
+    int len = strlen(str) - to_remove;
+    dstring tmp = ds_new_string_initialize(str);
+    assert(ds_truncate(&tmp, len) == 1);
+    return tmp;
+}
+
 dstring s_substring(char* string, uint start, uint end)
 {
     uint len = strlen(string);
@@ -228,21 +298,42 @@ dstring s_substring(char* string, uint start, uint end)
 	return s;
 }
 
-// return index of first occurance of the character
-int s_find_character(char* message, char character)
+int s_find_last_char_occurance(char* string, char character)
 {
-    return s_find_character_start_at(message, 0, character);
+    assert(string != NULL);
+    int len = strlen(string);
+    int i;
+    for (i = len - 1; i >= 0; i--)
+    {
+        if (string[i] == character)
+        {
+            break;
+        }
+    }
+
+    if (i == 0)
+    {
+        return -1;
+    }
+
+    return i;
 }
 
-int s_find_character_start_at(char* message, uint start, char character)
+// return index of first occurance of the character
+int s_find_character(char* string, char character)
 {
-	assert(message != NULL);
-    uint len = strlen(message);
+    return s_find_character_start_at(string, 0, character);
+}
+
+int s_find_character_start_at(char* string, uint start, char character)
+{
+	assert(string != NULL);
+    uint len = strlen(string);
 	assert(start < len);
     uint i;
     for (i = start; i < len; i++)
     {
-        if (message[i] == character)
+        if (string[i] == character)
         {
             break;
         }
