@@ -37,7 +37,7 @@ dstring ds_new_string_mem(void* mem, uint length)
 
     dstring str;
     str.string = tmp;
-    str.length = length;
+    str.length = strlen(str.string); // instead of len, because there might be a '\0' somewhere before str.string[length]
     str.size = length + 1;
 
     return str;
