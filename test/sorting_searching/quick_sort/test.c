@@ -9,7 +9,7 @@ int* create_value(int v)
     return tmp;
 }
 
-int compare(void* i, void* j)
+int compare(const void* i, const void* j)
 {
     int *k = (int *)i;
     int *l = (int *)j;

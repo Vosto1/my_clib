@@ -7,7 +7,7 @@ static void swap(void* a[], uint i, uint j)
     a[j] = temp;
 }
 
-static uint sort_partition(void* array[], uint start, uint end, int (*compare)(void*, void*))
+static uint sort_partition(void* array[], uint start, uint end, int (*compare)(const void*, const void*))
 {
     uint pivot = start;
     uint store_index = pivot + 1;
@@ -23,7 +23,7 @@ static uint sort_partition(void* array[], uint start, uint end, int (*compare)(v
     return store_index - 1;
 }
 
-static void sort(void* array[], uint start, uint end, int (*compare)(void*, void*))
+static void sort(void* array[], uint start, uint end, int (*compare)(const void*, const void*))
 {
     if (start < end)
     {
@@ -33,7 +33,7 @@ static void sort(void* array[], uint start, uint end, int (*compare)(void*, void
     }
 }
 
-void quicksort(void* array[], uint array_size, int (*compare)(void*, void*))
+void quicksort(void* array[], uint array_size, int (*compare)(const void*, const void*))
 {
     sort(array, 0, array_size, compare);
 }
