@@ -3,18 +3,6 @@
 #include <assert.h>
 
 
-/*doubly-linked list*/
-typedef struct node
-{
-    const void* data;
-    struct node *next;
-    struct node *previous;
-}node;
-
-struct head {
-    node* first;
-    node* last;
-};
 /*Hjalpfunktion till add
   Allokerar minne for en ny nod
   om allokeringen lyckades initieras data samt pekare (pekare initieras till NULL).
@@ -35,9 +23,12 @@ static struct node *create_list_node(const void* data)
 }
 
 /*Returnera en tom lista*/
-ll ll_create_empty(void)
+linkedlist ll_create_empty(void)
 {
-    return NULL;
+    linkedlist list;
+    list.first = NULL;
+    list.last = NULL;
+    return list;
 }
 
 /*Ar listan tom?
@@ -47,9 +38,11 @@ static bool list_is_empty(struct node* list)
     return list == NULL;
 }
 
-bool ll_is_empty(const ll* head)
+
+
+bool ll_is_empty(linkedlist* head)
 {
-    return (*head)->first == NULL;
+    return head->first == NULL;
 }
 
 static void _add_first(node** list, const void* data)
@@ -74,21 +67,22 @@ static void _add_first(node** list, const void* data)
 }
 
 /*Lagg till nod forst i listan*/
-void ll_add_first(const ll *head, const void* data)
+void ll_add_first(linkedlist *head, const void* data)
 {
-    _add_first(&(*head)->first, data);
+    _add_first(&head->first, data);
 }
 
-static void _add_last(node** list, const void* data, const ll* head)
+static void _add_last(node** list, const void* data, linkedlist* head)
 {
     if ((*list)->next == NULL)
     {
         node* temp = create_list_node(data);
         if (temp != NULL)
         {
+            
             (*list)->next = temp;
             (*list)->next->previous = *list;
-            (*head)->last = temp;
+            head->last = temp;
         }
     }
     else
@@ -96,51 +90,51 @@ static void _add_last(node** list, const void* data, const ll* head)
 }
 
 /*Lagg till nod sist i listan*/
-void ll_add_last(const ll *head, const void* data)
+void ll_add_last(linkedlist* head, const void* data)
 {
-    if ((*head)->first == NULL)
+    if (head->first == NULL)
     {
         node* temp = create_list_node(data);
         if (temp != NULL)
         {
-            (*head)->first = temp;
-            (*head)->last = (*head)->first;
+            head->first = temp;
+            head->last = head->first;
         }
     }
     else
     {
-        _add_last(&(*head)->first, data, head);
+        _add_last(&head->first, data, head);
     }
 }
 
 
-static const void* _remove_first(node** list, const ll* head)
+static const void* _remove_first(node** list, linkedlist* head)
 {
     node* temp = (*list);
     (*list) = (*list)->next;
     if ((*list) != NULL)
         (*list)->previous = NULL;
     else
-        (*head)->last = NULL;
+        head->last = NULL;
     const void* element = temp->data;
     free(temp);
     return element;
 }
 /*Ta bort forsta noden i listan*/
-const void* ll_remove_first(const ll *head)
+const void* ll_remove_first(linkedlist* head)
 {
     assert(!ll_is_empty(head)); // kommentera f�r att menyn ska fungera
-    return _remove_first(&(*head)->first, head);
+    return _remove_first(&head->first, head);
 }
 
 /*Ta bort sista noden i listan*/
-const void* ll_remove_last(const ll *head)
+const void* ll_remove_last(linkedlist* head)
 {
     assert(!ll_is_empty(head));
-    node* rm = (*head)->last;
+    node* rm = head->last;
     const void* element = rm->data;
-    (*head)->last = rm->previous;
-    (*head)->last->next = NULL;
+    head->last = rm->previous;
+    head->last->next = NULL;
     free(rm);
     return element;
 }
@@ -167,9 +161,9 @@ static const void* _remove_element(node** list, const void* data, int (*compare)
 }
 /*Ta bort data ur listan (forsta forekomsten)
   Returnera true om datat finns, annars false*/
-const void* ll_remove_element(const ll *head, const void* data, int (*compare)(const void*, const void*))
+const void* ll_remove_element(linkedlist* head, const void* data, int (*compare)(const void*, const void*))
 {
-    return _remove_element(&(*head)->first, data, compare);
+    return _remove_element(&head->first, data, compare);
 }
 
 static const void* _search(node** list, const void* data, int (*compare)(const void*, const void*))
@@ -185,9 +179,9 @@ static const void* _search(node** list, const void* data, int (*compare)(const v
 }
 /*ll_search for data in the list
 Om datat finns returneras true, annars false*/
-const void* ll_search(const ll* head, const void* data, int (*compare)(const void*, const void*))
+const void* ll_search(linkedlist* head, const void* data, int (*compare)(const void*, const void*))
 {
-    return _search(&(*head)->first, data, compare);
+    return _search(&head->first, data, compare);
 }
 
 
@@ -199,9 +193,9 @@ static uint _node_count(node** list)
         return 1 + _node_count(&(*list)->next);
 }
 /*Returnera antalet noder i listan*/
-uint ll_node_count(const ll* head)
+uint ll_node_count(linkedlist* head)
 {
-    return _node_count(&(*head)->first);
+    return _node_count(&head->first);
 }
 
 
@@ -219,23 +213,23 @@ static void _clear(node** list, void (*freeObject)(void*))
 /*Ta bort alla noder ur listan
   Glom inte att frigora minnet
   Postcondition: Listan ar tom, *list �r NULL (testa med assert)*/
-void ll_clear(const ll *head, void (*freeObject)(void*))
+void ll_clear(linkedlist* head, void (*freeObject)(void*))
 {
-    _clear(&(*head)->first, freeObject);
+    _clear(&head->first, freeObject);
 }
 
 /*Returnera forsta datat i listan
   Precondition: listan ar inte tom (testa med assert)*/
-const void* ll_get_first(const ll* head)
+const void* ll_get_first(linkedlist* head)
 {
     assert(!ll_is_empty(head));
-    return (*head)->first->data;
+    return head->first->data;
 }
 
 /*Returnera sista datat i listan
   Precondition: listan ar inte tom (testa med assert)*/
-const void* ll_get_last(const ll* head)
+const void* ll_get_last(linkedlist* head)
 {
     assert(!ll_is_empty(head)); // kommentera f�r att menyn ska fungera
-    return (*head)->last->data;
+    return head->last->data;
 }

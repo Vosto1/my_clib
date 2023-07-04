@@ -3,7 +3,7 @@
 
 int main(void)
 {
-    ll head = ll_create_empty();
+    linkedlist head = ll_create_empty();
     // testFunction(head);
     return 0;
 }

@@ -1,4 +1,4 @@
-#include "llqueue.h"
+/*#include "llqueue.h"
 
 llqueue llq_create_new_empty()
 {
@@ -30,4 +30,4 @@ const void* llq_peek(llqueue* q)
 uint llq_count(llqueue* q)
 {
     return ll_node_count(q);
-}
+}*/

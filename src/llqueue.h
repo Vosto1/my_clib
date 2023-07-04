@@ -6,7 +6,7 @@
 #include "datatype.h"
 #include "list.h"
 
-typedef ll llqueue;
+typedef linkedlist llqueue;
 /**
  * @brief create new empty queue
  * 
@@ -48,5 +48,6 @@ const void* llq_peek(llqueue* q);
  * @return element count
  */
 uint llq_count(llqueue* q);
+
 
 #endif
