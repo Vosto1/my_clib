@@ -1,6 +1,6 @@
 #!/bin/bash
 
-mkdir /home/"$USER"/.clib/bin /home/"$USER"/.clib/include /home/"$USER"/.clib/bin 2> /dev/null
+mkdir -p /home/"$USER"/.clib/bin /home/"$USER"/.clib/include /home/"$USER"/.clib/bin 2> /dev/null
 
 cd ./release/ || exit $((-1))
 tar -x -f release.tar
