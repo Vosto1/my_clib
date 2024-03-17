@@ -8,6 +8,7 @@ printf "Building source files...\n"
 
 # optimized release without debug info
 #gcc -c -march=native -mtune=native -O3 ./src/*.c 2> /dev/null
+
 # release with debug info
 gcc -c  -g ./src/*.c 2> /dev/null
 mv ./*.o ./bin/
