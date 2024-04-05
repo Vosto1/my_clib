@@ -44,5 +44,6 @@ int main(int argc, char* argv[])
 	for (i = j; i >= 0; i--)
 		printf("%c", hex[i]);
 	printf("\n");
+    free(hex);
 	exit(EXIT_SUCCESS);
 }
