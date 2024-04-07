@@ -1,7 +1,11 @@
 #!/bin/bash
 
+clear
+
 BIN_INSTALL_DIR=/home/"$USER"/.clib/bin
 INCLUDE_DIR=/home/"$USER"/.clib/include
+
+printf "Installing...\n"
 
 mkdir -p "$BIN_INSTALL_DIR" "$INCLUDE_DIR"  2> /dev/null
 
