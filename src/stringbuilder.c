@@ -68,9 +68,9 @@ bool sb_append(stringBuilder* sb, dstring string)
         assert(m == MEM_INCREASED);
     }
 
-    for (uint i = sb->used; i < sb->used + string.length; i++)
+    for (uint i = sb->used, j = 0; i < sb->used + string.length; i++, j++)
     {
-        sb->string[i] = string.string[i];
+        sb->string[i] = string.string[j];
     }
 
     sb->used += string.length;
@@ -95,9 +95,9 @@ bool sb_appends(stringBuilder* sb, char* string)
         assert(m == MEM_INCREASED);
     }
 
-    for (uint i = sb->used; i < sb->used + length; i++)
+    for (uint i = sb->used, j = 0; i < sb->used + length; i++, j++)
     {
-        sb->string[i] = string[i];
+        sb->string[i] = string[j];
     }
 
     sb->used += length;
