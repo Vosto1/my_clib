@@ -71,6 +71,28 @@ bool sb_append(stringBuilder* sb, dstring string)
     return true;
 }
 
+bool sb_appends(stringBuilder* sb, char* string)
+{
+    if (sb == NULL || sb->string == NULL || string == NULL)
+    {
+        return false;
+    }
+
+    MEM m = sb_memory_increase(sb);
+    assert(m == MEM_OK || m == MEM_DOUBLED);
+    int length = strlen(string);
+
+    for (uint i = sb->used; i < sb->used + length; i++)
+    {
+        sb->string[i] = string[i];
+    }
+
+    sb->used += length;
+    sb->string[sb->used] = '\0';
+    return true;
+
+}
+
 void sb_remove(stringBuilder*sb, uint amount)
 {
     sb->used = sb->used - amount;

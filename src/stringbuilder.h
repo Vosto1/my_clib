@@ -14,6 +14,7 @@ uint sb_length(stringBuilder* sb);
 stringBuilder sb_new_string_builder();
 bool sb_add(stringBuilder* sb, char c);
 bool sb_append(stringBuilder* sb, dstring string);
+bool sb_appends(stringBuilder* sb, dstring string);
 void sb_remove(stringBuilder*sb, uint amount);
 dstring sb_to_string(stringBuilder* sb);
 void sb_delete(stringBuilder* sb);
