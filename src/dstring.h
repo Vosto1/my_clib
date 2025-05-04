@@ -3,6 +3,7 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
 #include "datatype.h"
+#include "mdarray.h"
 #include <string.h>
 #include <stdlib.h>
 #include <assert.h>
@@ -42,6 +43,8 @@ void ds_print(dstring s, FILE *file);
 
 void ds_delete(dstring *del);
 
+void ds_delete_dynamically_allocated_dstring(void* str);
+
 int ds_copy(dstring* dest, dstring src);
 
 dstring ds_substring(dstring string, uint start, uint end);
@@ -54,11 +57,16 @@ int ds_find_character_start_at(dstring string, uint start, char character);
 
 char ds_at(dstring string, uint index);
 
+mdarray ds_split(dstring str, char delim);
+
+void ds_replace_char(dstring str, char old_char, char new_char);
+
+int ds_count_char(dstring str, char target_char);
+
 //TODO:
 // create better tests
 //functions to make:
-// string.split // ... char_replace(...) (need regex for more complicated replace)
-// string.replace
+// string.replace (need regex for more complicated replace)
 
 ////////////////////////////////////////////////////////////
 // const char* functions

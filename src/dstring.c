@@ -1,4 +1,5 @@
 #include "dstring.h"
+#include "mdarray.h"
 
 static void copy(dstring d, dstring s);
 static void chpcopy(char* d, char* s);
@@ -166,6 +167,13 @@ void ds_delete(dstring* del)
     (*del).length = 0;
 }
 
+void ds_delete_dynamically_allocated_dstring(void* str)
+{
+    ds_delete(str);
+    free(str);
+}
+
+
 static void chpcopy(char* d, char* s)
 {
 	strcpy(d, s);
@@ -265,6 +273,131 @@ char ds_at(dstring string, uint index)
 {
     assert(index < string.length);
     return string.string[index];
+}
+
+mdarray ds_split(dstring str, char delim)
+{
+    dstring splitted;
+    dstring* dynamic = NULL;
+    int prev_index = 0;
+
+    mdarray results = mda_create_empty();
+    mda_init(&results, str.length / 4, &ds_delete_dynamically_allocated_dstring);
+
+    int index = ds_find_character(str, delim);
+
+    if (index == -1)
+    {
+        return results;
+    }
+
+    // edge case: first character is equal to delim
+    if (index == 0)
+    {
+        // skip until find non-delim char
+        index++;
+        if (str.string[index] == delim)
+        {
+            while (str.string[index] == delim)
+            {
+                index++;
+            }
+        }
+
+        // edge case: there was only delim in the string
+        if (index >= (int)str.length)
+        {
+            return results;
+        }
+
+        // handle edge case
+        prev_index = index;
+        index = ds_find_character_start_at(str, index, delim);
+
+        if (index == -1)
+        {
+            splitted = ds_substring(str, prev_index, str.length-1);
+
+            dynamic = (dstring*)malloc(sizeof(dstring));
+            dynamic->length = splitted.length;
+            dynamic->size = splitted.size;
+            dynamic->string = splitted.string;
+
+            assert((uint)mda_insert(&results, dynamic) == results.used);
+
+            return results;
+        }
+    }
+
+    do
+    {
+        splitted = ds_substring(str, prev_index, index-1);
+
+        dynamic = (dstring*)malloc(sizeof(dstring));
+        dynamic->length = splitted.length;
+        dynamic->size = splitted.size;
+        dynamic->string = splitted.string;
+
+        assert((uint)mda_insert(&results, dynamic) == results.used);
+        uint next_index = index+1;
+        // edge case: delim is in the end of the string
+        if (next_index >= str.length)
+        {
+            return results;
+        }
+
+        // edge case: delim is beside each other
+        while (str.string[next_index] == delim)
+        {
+            next_index++;
+        }
+
+        // edge case: rest of string was equal to delim
+        if (next_index >= str.length)
+        {
+            return results;
+        }
+
+        prev_index = next_index;
+        index = ds_find_character_start_at(str, next_index, delim);
+    } while (index != -1);
+    
+    // todo: handle edge case: last char is equal to delim
+
+    splitted = ds_substring(str, prev_index, str.length-1);
+
+    dynamic = (dstring*)malloc(sizeof(dstring));
+    dynamic->length = splitted.length;
+    dynamic->size = splitted.size;
+    dynamic->string = splitted.string;
+
+    assert(mda_insert(&results, dynamic) == (int)results.used);
+
+    return results;
+}
+
+void ds_replace_char(dstring str, char old_char, char new_char)
+{
+    for (uint i = 0; i < str.length; i++)
+    {
+        if (str.string[i] == old_char)
+        {
+            str.string[i] = new_char;
+        }
+    }
+}
+
+int ds_count_char(dstring str, char target_char)
+{
+    int count = 0;
+    for (uint i = 0; i < str.length; i++)
+    {
+        if (str.string[i] == target_char)
+        {
+            count++;
+        }
+    }
+    return count;
 }
 
 ////////////////////////////////////////////////////////////
