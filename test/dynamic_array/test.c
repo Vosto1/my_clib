@@ -111,85 +111,85 @@ void auto_tests(int n, int mod)
     for (int i = 0; i < n; i++)
     {
         int next_tests = rand() % mod + 1;
-        int type = rand() % 5;
+        int type = rand() % 6;
 
         switch (type)
         {
-        case 0:
-            sprintf(operation, "insert item");
-            start = now();
-            for (int j = 0; j < next_tests; j++)
-            {
-                d = create_item(rand() % 1000);
-                assert(da_insert(&a, (void *)d) != 0);
-            }
-            end = now();
-            remove_all(&a);
-            break;
-        case 1:
-            sprintf(operation, "remove item");
-            insert_n(&a, next_tests);
-            start = now();
-            for (int j = 0; j < next_tests; j++)
-            {
-                d = (item *)da_remove_item(&a, a.array[rand() % a.used]);
-                assert(d != NULL);
-                free(d);
-            }
-            end = now();
-            break;
-        case 2:
-            sprintf(operation, "remove at");
-            insert_n(&a, next_tests);
-            start = now();
-            for (int j = 0; j < next_tests; j++)
-            {
-                d = (item *)da_remove_at(&a, rand() % a.used);
-                assert(d != NULL);
-                free(d);
-            }
-            end = now();
-            break;
-        case 3:
-            sprintf(operation, "remove last");
-            insert_n(&a, next_tests);
-            start = now();
-            for (int j = 0; j < next_tests; j++)
-            {
-                d = (item *)da_remove_last(&a);
-                assert(d != NULL);
-                free(d);
-            }
-            end = now();
-            break;
-        case 4:
-            start = now();
-            unsigned long long operations = 0;
-            for (int j = 0; j < next_tests; j++)
-            {
-                int size = rand() % 100 + 1;
-                darray c = da_create_empty();
-                assert(da_init(&c, size, &compare, &free_item) == size);
-                for (int k = 0; k < size; k++)
-                    da_insert(&c, create_item(rand() % 1000));
-                for (int k = 0; k < size; k++)
-                    da_insert(&a, create_item(rand() % 1000));
-                assert(da_merge(&a, &c) != 0);
-                operations += size + size;
-            }
-            end = now();
-            assert(da_clear(&a) != 0);
-            sprintf(operation, "merge (%lld insertions)", operations);
+            case 0:
+                sprintf(operation, "insert item");
+                start = now();
+                for (int j = 0; j < next_tests; j++)
+                {
+                    d = create_item(rand() % 1000);
+                    assert(da_insert(&a, (void *)d) != 0);
+                }
+                end = now();
+                remove_all(&a);
+                break;
+            case 1:
+                sprintf(operation, "remove item");
+                insert_n(&a, next_tests);
+                start = now();
+                for (int j = 0; j < next_tests; j++)
+                {
+                    d = (item *)da_remove_item(&a, a.array[rand() % a.used]);
+                    assert(d != NULL);
+                    free(d);
+                }
+                end = now();
+                break;
+            case 2:
+                sprintf(operation, "remove at");
+                insert_n(&a, next_tests);
+                start = now();
+                for (int j = 0; j < next_tests; j++)
+                {
+                    d = (item *)da_remove_at(&a, rand() % a.used);
+                    assert(d != NULL);
+                    free(d);
+                }
+                end = now();
+                break;
+            case 3:
+                sprintf(operation, "remove last");
+                insert_n(&a, next_tests);
+                start = now();
+                for (int j = 0; j < next_tests; j++)
+                {
+                    d = (item *)da_remove_last(&a);
+                    assert(d != NULL);
+                    free(d);
+                }
+                end = now();
+                break;
+            case 4:
+                start = now();
+                unsigned long long operations = 0;
+                for (int j = 0; j < next_tests; j++)
+                {
+                    int size = rand() % 100 + 1;
+                    darray c = da_create_empty();
+                    assert(da_init(&c, size, &compare, &free_item) == size);
+                    for (int k = 0; k < size; k++)
+                        da_insert(&c, create_item(rand() % 1000));
+                    for (int k = 0; k < size; k++)
+                        da_insert(&a, create_item(rand() % 1000));
+                    assert(da_merge(&a, &c) != 0);
+                    operations += size + size;
+                }
+                end = now();
+                assert(da_clear(&a) != 0);
+                sprintf(operation, "merge (%lld insertions)", operations);
 
-            // extra tests
-            darray b = da_create_empty();
-            assert(da_init(&b, 10, &compare, &free_item) == 10);
-            for (int i = 0; i < rand() % 20; i++)
-                da_insert(&b, create_item(rand() % 100));
-            assert(da_clear(&b) != 0);
-            assert(da_destroy(&b));
-            // clear followed by destroy is the same as free
-            break;
+                // extra tests
+                darray b = da_create_empty();
+                assert(da_init(&b, 10, &compare, &free_item) == 10);
+                for (int i = 0; i < rand() % 20; i++)
+                    da_insert(&b, create_item(rand() % 100));
+                assert(da_clear(&b) != 0);
+                assert(da_destroy(&b));
+                // clear followed by destroy is the same as free
+                break;
         }
         seconds s = diff(start, end);
         strcpy(test_r.operation, operation);

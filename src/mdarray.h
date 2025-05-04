@@ -130,6 +130,12 @@ void* mda_remove_at(mdarray *a, uint index);
  */
 int mda_merge(mdarray *a, mdarray *b);
 /**
+ * reverse order of array items
+ *
+ * @param a array to reverse
+ */
+void mda_reverse(mdarray *a);
+/**
  * check if the dynamic array is uninitialized
  *
  * @param a array to try

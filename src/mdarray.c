@@ -199,6 +199,17 @@ int mda_merge(mdarray *a, mdarray *b)
     return a->size;
 }
 
+void mda_reverse(mdarray *a)
+{
+    void** tmp = (void**)malloc(sizeof(void*)*a->used);
+    for (int i = a->used - 1, j = 0; i >= 0; i--, j++)
+    {
+        tmp[i] = a->array[j];
+    }
+    free(a->array);
+    a->array = tmp;
+}
+
 bool mda_is_null(mdarray *a)
 {
     return a->array == NULL;

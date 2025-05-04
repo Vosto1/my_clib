@@ -95,7 +95,7 @@ void auto_tests(int n, int mod)
     testResult test_r;
     ticks start;
     ticks end;
-    char operation[64];
+    char operation[128];
 
     for (int i = 0; i < n; i++)
     {
@@ -104,68 +104,89 @@ void auto_tests(int n, int mod)
 
         switch (type)
         {
-        case 0:
-            sprintf(operation, "insert item");
-            start = now();
-            for (int j = 0; j < next_tests; j++)
-            {
-                d = create_item(rand() % 1000);
-                assert(mda_insert(&a, (void *)d) != 0);
-            }
-            end = now();
-            remove_all(&a);
-            break;
-        case 1:
-            sprintf(operation, "remove at");
-            insert_n(&a, next_tests);
-            start = now();
-            for (int j = 0; j < next_tests; j++)
-            {
-                d = (item *)mda_remove_at(&a, rand() % a.used);
-                assert(d != NULL);
-                free(d);
-            }
-            end = now();
-            break;
-        case 2:
-            sprintf(operation, "remove last");
-            insert_n(&a, next_tests);
-            start = now();
-            for (int j = 0; j < next_tests; j++)
-            {
-                d = (item *)mda_remove_last(&a);
-                assert(d != NULL);
-                free(d);
-            }
-            end = now();
-            break;
-        case 3: // merge + some extra tests
-            start = now();
-            unsigned long long operations = 0;
-            for (int j = 0; j < next_tests; j++)
-            {
-                int size = rand() % 100 + 1;
-                mdarray c = mda_create_empty();
-                assert(mda_init(&c, size, &freeObject) == size);
-                for (int k = 0; k < size; k++)
-                    mda_insert(&c, create_item(rand() % 1000));
-                for (int k = 0; k < size; k++)
-                    mda_insert(&a, create_item(rand() % 1000));
-                assert(mda_merge(&a, &c) != 0);
-                operations += size + size;
-            }
-            end = now();
-            mda_clear(&a);
-            sprintf(operation, "merge (%lld insertions)", operations);
-            // extra tests
-            mdarray b = mda_create_empty();
-            assert(mda_init(&b, 10, &freeObject) == 10);
-            for (int i = 0; i < rand() % 20; i++)
-                mda_insert(&b, create_item(rand() % 100));
-            mda_clear(&b);
-            assert(mda_destroy(&b));
-            // clear followed by destroy is the same as free
-            break;
+            case 0:
+                sprintf(operation, "insert item");
+                start = now();
+                for (int j = 0; j < next_tests; j++)
+                {
+                    d = create_item(rand() % 1000);
+                    assert(mda_insert(&a, (void *)d) != 0);
+                }
+                end = now();
+                remove_all(&a);
+                break;
+            case 1:
+                sprintf(operation, "remove at");
+                insert_n(&a, next_tests);
+                start = now();
+                for (int j = 0; j < next_tests; j++)
+                {
+                    d = (item *)mda_remove_at(&a, rand() % a.used);
+                    assert(d != NULL);
+                    free(d);
+                }
+                end = now();
+                break;
+            case 2:
+                sprintf(operation, "remove last");
+                insert_n(&a, next_tests);
+                start = now();
+                for (int j = 0; j < next_tests; j++)
+                {
+                    d = (item *)mda_remove_last(&a);
+                    assert(d != NULL);
+                    free(d);
+                }
+                end = now();
+                break;
+            case 3: // merge + some extra tests
+                start = now();
+                unsigned long long operations = 0;
+                for (int j = 0; j < next_tests; j++)
+                {
+                    int size = rand() % 100 + 1;
+                    mdarray c = mda_create_empty();
+                    assert(mda_init(&c, size, &freeObject) == size);
+                    for (int k = 0; k < size; k++)
+                        mda_insert(&c, create_item(rand() % 1000));
+                    for (int k = 0; k < size; k++)
+                        mda_insert(&a, create_item(rand() % 1000));
+                    assert(mda_merge(&a, &c) != 0);
+                    mda_free(&c);
+                    operations += size + size;
+                }
+                mda_clear(&a);
+                // extra tests
+                unsigned long long operations2 = 0;
+                for (int j = 0; j < next_tests; j++)
+                {
+                    int extra_tests_amount = rand() % 100 + 1;
+                    mdarray b = mda_create_empty();
+                    mdarray d = mda_create_empty();
+                    assert(mda_init(&b, 10, &freeObject) == 10);
+                    assert(mda_init(&d, 10, &freeObject) == 10);
+                    for (int i = 0; i < extra_tests_amount; i++)
+                    {
+                        const void* item = create_item(rand() % 100);
+                        mda_insert(&b, (void*)item);
+                        mda_insert(&d, (void*)item);
+                    }
+                    mda_reverse(&d);
+                    for (int i = 0, j = d.used - 1; i < mda_count(&d); i++, j--)
+                    {
+                        const void* item1 = mda_at(&d, i);
+                        const void* item2 = mda_at(&b, j);
+                        assert(item1 == item2);
+                    }
+                    mda_clear(&b);
+                    assert(mda_destroy(&b));
+                    mda_destroy(&d);
+                    operations2 += extra_tests_amount;
+                }
+                end = now();
+                sprintf(operation, "reverse (%lld insertions) and merge (%lld insertions)", operations2 * 2, operations);
+                // clear followed by destroy is the same as free
+                break;
         }
         seconds s = diff(start, end);
         strcpy(test_r.operation, operation);
